@@ -89,6 +89,7 @@ class Externals(object):
         try:
             self.botresponse_host = configfile['botresponse']['ip']
             self.botresponse_port = int(configfile['botresponse']['port'])
+            self.music_host = configfile['musique']['ip']
             self.music_port = int(configfile['musique']['port'])
         except:
             self.music_port = 5007

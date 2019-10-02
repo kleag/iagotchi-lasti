@@ -1,5 +1,6 @@
 from __future__ import print_function, division
 import sys, osc, os
+import vlc, pafy
 
 
 class BotResponse(object):
@@ -26,6 +27,13 @@ class BotResponse(object):
 
     def osc_server_message(self, message):
         print("message entrant {}".format(message))
+        #if '/music' in message:
+            #url = 'https://www.youtube.com/watch?v=g0eO74UmRBs'
+            #video = pafy.new(url)
+            #best = video.getbest()
+            #media = vlc.MediaPlayer(best.url)
+            #media.play()
+            
         if message == '/result/botresponse':
             print('get: {}'.format(message))
             #result = self.generate(200, prime='<eos>', temperature=0.9)

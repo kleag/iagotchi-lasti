@@ -37,7 +37,7 @@ class ASR(object):
         self.externals = Externals(botname=self.botname)
         try:
             self.osc_client = osc.Client(self.externals.botresponse_host, self.externals.botresponse_port)
-            self.osc_client_music = osc.Client(osc_client_host, self.externals.music_port)
+            self.osc_client_music = osc.Client(self.externals.music_host, self.externals.music_port)
         except:
             self.osc_client = None
 
@@ -112,6 +112,7 @@ class ASR(object):
             self.transcript = mess.decode('utf8')
 #            osc.client.send_sentence(self.sentence_num, mess)
             self.sentence_num += 1
+            self.osc_client.send('/result/botresponse {}'.format(self.transcript))
             reps = self.externals.run(self.transcript, self.osc_client)
             if  "_stop_" in reps:
                 reps = reps.replace('_stop_', '')
