@@ -1,0 +1,45 @@
+version: '3.3'
+services:
+    iagotchi:
+        image: iagotchi:latest
+        build: 
+            context: ./iagotchi-bot/
+            dockerfile: Dockerfile
+        ports:
+            - "8088:8088"
+            - "5005:5005"
+        networks:
+            - demo
+        volumes:
+            - ~/Projects/IAGOTCHI/Dist/data:/Dist/data
+        #devices:
+            #- "/dev/snd:/dev/snd"
+        environment:
+            PYTHONUNBUFFERED: 1
+            #BOT_RESPONSE_ENDPOINT: http://10.8.29.154:5007
+            #BOT_RESPONSE_ENDPOINT: http://is227204.intra.cea.fr:5007
+            #BOT_RESPONSE_ENDPOINT: http://172.17.0.1:5007
+        links:
+            - limaserver
+        environment:
+            NAME: iagotchi
+        #depends_on:
+            #- limaserver
+        
+            
+    limaserver:
+        image: limaserver:latest
+        ports:
+            - "8090:8080"
+        environment:
+            NAME: limaserver
+        networks:
+            - demo
+        tty: true
+        command: limaserver
+
+        
+networks:
+  demo:
+    driver: bridge
+
