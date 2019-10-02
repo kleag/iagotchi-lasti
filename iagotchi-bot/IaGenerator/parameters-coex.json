@@ -1,0 +1,9 @@
+{
+    "source": "datasets/coexistence.txt",
+    "new_model": true,
+    "rnn_bidirectional": true,
+    "rnn_size": 64,
+    "dim_embeddings": 300,
+    "num_epochs":50,
+    "model_name": "coexistence2"
+}

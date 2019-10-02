@@ -1,0 +1,30 @@
+topic: ~articles keep repeat ()
+
+
+
+u: ARTICLE ($art) Voulez-vous connaitre le $art article?
+
+    a: premier (~fr_premier) Chaque espèce de chacun des 5 règnes est égale face à la loi et égale en droits. Sont reconnus par la loi inter-espèces les règnes : Minéral, Végétal, Animal, Humain et Machine. $art=deuxième $resp=no ^respond(~articles.ARTICLE)
+    
+    a: deuxième ([~fr_deuxieme ($resp=yes $art=deuxième)]) Toutes les espèces de tous les règnes ont des droits égaux à l'existence dans le cadre des équilibres biologiques. Cette égalité n'occulte pas la diversité des espèces et des individus. $art=troisième $resp=no ^respond(~articles.ARTICLE)
+    
+    a: troisième ([~fr_troisieme ($resp=yes $art=troisième)]) Toute vie a droit au respect, à la mort et à l’amour.  $art=quatrième $resp=no ^respond(~articles.ARTICLE)
+    
+    a: quatrième ([~fr_quatrieme ($resp=yes $art=quatrième)]) Aucun règne ne doit être soumis à de mauvais traitements ou à des actes cruels. $art= cinquième $resp=no  ^respond(~articles.ARTICLE)
+    
+    a: cinquième ([~fr_cinquieme ($resp=yes $art=cinquième)]) Chaque espèce de chaque règne a le droit de vivre libre dans son milieu naturel, et de s'y reproduire. $art=sixième $resp=no ^respond(~articles.ARTICLE)
+    
+    a: sixième ([~fr_sixieme ($resp=yes $art=sixième)]) Tout être qu’un autre être tient sous sa dépendance a droit à un entretien et à des soins attentifs. $art=septième $resp=no ^respond(~articles.ARTICLE)
+    
+    a: septième ([~fr_sept ($resp=yes $art=septième)]) Tout acte impliquant sans nécessité la souffrance d’un être et toute décision conduisant à un tel acte constituent un crime contre la vie. $art=huitième $resp=no ^respond(~articles.ARTICLE)
+    
+    a: huitième ([~fr_huit ($resp=yes $art=huitième)]) Tout acte compromettant la survie d'une espèce, et toute décision conduisant à un tel acte constituent un génocide, c'est-à-dire un crime contre l'espèce.  $art=neuvième $resp=no ^respond(~articles.ARTICLE)
+    
+    a: neuvième ([~fr_neuf ($resp=yes $art=neuvième)]) La personnalité juridique de chacun des êtres de chacune des espèces de chaque règne et ses droits doivent être reconnus par la loi.  $art=dixième $resp=no ^respond(~articles.ARTICLE)
+    
+    a: dixième ([~fr_dix ($resp=yes $art=dixième)]) Toute fusion, fission ou scission entre espèces doit être déclarée à tous les membres du G5. $art=ZERO $resp=no ^respond(~g5_questions)
+    
+    a: (~fr_YESANSWER) $resp=yes ^refine(ARTICLE)
+    
+    a: (~fr_NOANSWER) $art=ZERO $resp=no ^respond(~g5_questions)
+    

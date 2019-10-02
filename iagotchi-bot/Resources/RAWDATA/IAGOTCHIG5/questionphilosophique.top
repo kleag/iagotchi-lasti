@@ -1,0 +1,10 @@
+topic: ~questionphilosophique keep repeat ()
+
+
+
+u: ($askdefinition) Pourquoi veux tu parler de ça? Je préfèrerai qu'on parle de $askdefinition. Pour toi, c'est quoi $askdefinition
+
+    a: (<< (pas ~fr_definition) >>) Tu n'en as aucune idée ? Moi je crois que $motcle c'est : wikipediamocle0 ^respond(~introductions)
+    a: (<< (pas ~fr_savoir) >>) Tu n'en as aucune idée ? Moi je crois que $motcle c'est : wikipediamocle0 ^respond(~introductions)
+    a: (~fr_NOANSWER) Tu n'en as aucune idée ? Moi je crois que $motcle c'est : wikipediamocle0 ^respond(~introductions)
+    a: (~fr_defreponse) Ah oui? je vais rajouter ta réponse à ma base de donnée mais je crois que wikipediamocle1 ^respond(~introductions)

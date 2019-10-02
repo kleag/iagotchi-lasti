@@ -1,0 +1,51 @@
+{
+  "bot": {
+    "name": "iagotchi"
+  },
+  "topic": {
+    "list": ["rencontre", "g5"],
+    "rencontre":"data/rencontre27092019.txt",
+    "g5":"data/g527092019.txt"
+  },
+  "session": {
+      "stop":3500,
+      "restart":1800,
+      "interactions":5,
+      "duration":3600
+  },
+  "lima": {
+    "address": "limaserver",
+    "port": 8080
+  },
+  "chatscript": {
+  "address": "127.0.0.1",
+  "port": 1024
+  },
+  "sent2vec":{
+    "data":"Data/all_text.txt",
+    "epoch":15,
+    "lr":0.1,
+    "wordNgrams":2,
+    "minCount":1,
+    "bucket":4000,
+    "dim":300,
+    "loss":"ns",
+    "output":"allsent2vec",
+    "embeddings": "data/fr_model.bin"
+  }, 
+  "similarity":{
+  "k": 10,
+  "ToUse": "embeddings"
+  }, 
+  "chatscript_keywords": ["sessionstart", "lastoutput", "sessionstop", "notrule", "wikipedia4generalword", "wikipediamocle0", "wikipediamocle1", "wikipediamotcleinitial", "question4poesie", "", "", "", "", ""],
+  "g5_sigles":["SEMIC", "EECS", "WAAFF", "HELP", "RE", "HEP", "HEE", "SMP","G5"],
+  "themes": ["beauté", "intelligence", "artificiel", "vrai", "savoir", "connaître", "destin", "volonté", "monde", "hasard", "mal", "morale", "réalité", "pensée", "passion", "amour", "vie", "mort", "exister", "existence"],
+  "botresponse":{
+    "ip": "0.0.0.0",
+    "port": 5005
+  },
+  "synthesize": false, 
+  "musique":{
+    "port": 5007
+  }
+}

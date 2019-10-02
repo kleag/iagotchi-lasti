@@ -1,0 +1,2 @@
+RAWDATA/IAGOTCHIG5/
+language = FRENCH 

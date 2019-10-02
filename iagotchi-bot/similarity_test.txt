@@ -1,0 +1,30 @@
+on peut se rencontrer : 1
+on se voit : 1
+on se croise : 1
+est-ce une rencontre : 2
+n'est-ce pas une coïcidence: 2
+dit moi si c'est une rencontre: 2
+j'ai l'impression : 3
+c'est mon impression : 3
+c'est bien ce que je pense : 3
+qu'est-ce tu rencontres quand tu rencontres quelqu'un: 4
+que vosi tu à une rencontre : 4
+nous nouos rencontrons : 5
+n'est-ce pas qu'on se rencontre nous: 5
+c'est quoi une coïcidence : 6
+c'est quoi un hasard : 6
+qu'est-ce que c'est qu'une coïcidence: 6
+je suis le produit de la sérendipité : 7
+je suis le résultat de la sérendipité: 7
+quelle est la dernière rencontre que tu as faites : 8
+c'est quoi la toute dernière rencontre qui ait un sens que tu as faites: 8
+racontes moi : 9
+dit moi un peu: 9
+parles-moi un peu: 9
+qu'attends tu de cette rencontre: 10
+qu'est-ce que tu espères de cette rencontre: 10
+quelle sont tes attentes de cette rencontre: 10
+que se passe-t-il lors d'une rencontre: 27
+quand tu rencontres quelqu'un que peut-il se passer: 27
+pourquoi on se rencontre pas: 31
+pourquoi on ne se voit pas: 31

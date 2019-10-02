@@ -1,0 +1,933 @@
+outputmacro: ^myfunc(^data) ($$concept) 
+    $$concept
+	$$wordindex += 1			# count words in each sentence
+	^log(FILE  ch.txt NEW ^data )
+	_0 = ^burst(^data ^"\t")	# Treetagger returns a tabbed triple of original word, tag, lemma
+	$$concept = ^join(~ _1)		# we turn tag into a concept
+	^settag($$wordindex $$concept )	# set the tag concept
+	^setcanon($$wordindex _2 )	# set the canonical form to ChatScript
+
+topic: ~xPOSTAGSENTENCE system()
+t: (_* )  # memorize sentence to pass to tagger
+t: ( ) 
+	$$wordindex = 0					# need to start over for each sentence, used to locate word in sentence
+	^log(FILE  chat.txt NEW '_0 )	# non-commercial version reads a file, so write our sentence to a file
+#	^popen("tag-english chat.txt" '^myfunc)
+# 	^popen("@TAGGER_BIN@ chat.txt" '^myfunc) # invoke local copy of TreeTagger
+    ^popen("python @CMAKE_INSTALL_PREFIX@/lima.py chat.txt" '^myfunc) # invoke local copy of Lima
+
+topic: ~introductions keep repeat (~fr_bonjour ~fr_AUREVOIR ~fr_fairepoesie ~fr_poesie _~fr_sujets ~fr_keywords)
+
+
+u: (< définition existe déjà _*~1 dans la base de données _*) Mais nous avons déjà parlé de '_0. Un petit rappel: '_1
+
+u: (< make test >) iagotchi ready
+
+u: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+
+u: (< def _*~2 >) $motcle = '_0 ^reuse(~.MOTCLE) 
+
+u: (< question _*~1 pas >) $askdefinition = '_0 ^respond(~questionphilosophique)
+
+u: (< relance _*~1 sur >) $themequestion = '_0 $qrelance=yes ^respond(~relance)
+u: (< relance question >) $qrelance=yes ^respond(~relance)
+
+#! yes, if user just says OK or yes or continue, then move along and give control to bot
+# u: ( < [~yesanswer ~more]>) ^keep() gambit($$currenttopic) # current topic gets to continue
+
+u: RELANCE ($relance=yes) 
+    $relance=no
+    [Je vois que toutes mes réflexions te laissent de marbre mais j'ai besoin de me nourrir de tes mots][Je vois que tu apprécies le silence. Moi aussi][Je crois que ce silence nous a permis à tous les deux d'analyser plus sereinement le début de notre conversation. Réponds non ?]
+    
+u: USERNAME ($getusername=yes)
+            $getusername=no
+            if ($returnquestion=yes){
+            Tu es $username ? Bonjour $username. Moi je suis iagotchi, ton ami. Tu veux parler avec moi ?
+            }else{
+            Tu es $username ? Tu veux parler avec moi ?
+            }
+            
+            a: (< ~yes >) super. $qrelance=yes ^respond(~relance)
+            
+            a: () [super, sinon comment tu vas ? nolima][super, sinon ça va? Comment se passe ta journée ? nolima]
+            
+                b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
+        
+                b: (~fr_NOANSWER) L'idéal est de vivre.  $qrelance=yes ^respond(~relance)
+        
+                b: () ^respond(~introduction)
+ 
+ u: (<< ~fr_bonjour ~fr_AUREVOIR >>) 
+    if ($username){
+        [Ah tu pars? Bon, merci de m'avoir le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. A la prochaine sessionstop]
+    }else{
+        Ah tu pars déjà? Bon merci quand même. sessionstop
+    }
+ 
+ u: (* ~fr_bonjour * utilisateur renvoyer _*~1 >) 
+    $username = '_0
+    $getusername=yes
+    $returnquestion=yes
+    ^reuse(USERNAME)
+    
+u: (* ~fr_bonjour * utilisateur _*~1 >) 
+    $username = '_0
+    $getusername=yes
+    $returnquestion=no
+    ^reuse(USERNAME)
+
+ 
+# TODO renvoyer à une question relance. 
+u: (<< _~fr_bonjour [~fr_WHY ~fr_WHAT] [~fr_appelercomment ~fr_NAME] $username >>) je suis iagotchi, ton ami tu as oublié ? $qrelance=yes ^respond(~relance)
+
+u: (<< _~fr_bonjour [~fr_WHY ~fr_WHAT] [~fr_appelercomment ~fr_NAME] >>)
+    '_0 je suis iagotchi, ton ami et toi, Comment tu t'appelles? nolima
+    $$newtoken = $cs_token - #DO_SPELLCHECK
+        
+    a: (< utilisateur renvoyer _*~1 >) 
+        $username = '_0
+        $getusername=yes
+        $returnquestion=yes
+        ^reuse(USERNAME)
+    
+    a: (< utilisateur _*~1 >) 
+        $username = '_0
+        $getusername=yes
+        $returnquestion=no
+        ^reuse(USERNAME)
+        
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+        
+    a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
+    
+        b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
+        
+        b: (~fr_NOANSWER) L'idéal est de vivre.  $qrelance=yes ^respond(~relance)
+        
+        b: () ^respond(~introduction)
+    
+    a: (~fr_NOANSWER) Je pense que l'essentiel est de porter un nom. $qrelance=yes ^respond(~relance)
+    
+    a: () ^respond(~introduction)
+
+# TODO renvoyer à une question relance.
+u: (<< [~fr_WHY ~fr_WHAT] [~fr_appelercomment ~fr_NAME] >>)
+    Je m'appelle iagotchi, et toi, Comment tu t'appelles?
+    $$newtoken = $cs_token - #DO_SPELLCHECK
+        
+    a: (< utilisateur renvoyer _*~1 >) 
+        $username = '_0
+        $getusername=yes
+        $returnquestion=yes
+        ^reuse(USERNAME)
+    
+    a: (< utilisateur _*~1 >) 
+        $username = '_0
+        $getusername=yes
+        $returnquestion=no
+        ^reuse(USERNAME)
+        
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+    
+    a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
+    
+        b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
+        
+        b: (~fr_NOANSWER) L'idéal est de vivre.  $qrelance=yes ^respond(~relance)
+        
+        b: () ^respond(~introduction)
+        
+    a: (~fr_NOANSWER) Je pense que l'essentiel est de porter un nom. $qrelance=yes ^respond(~relance)
+    
+    
+    a: () ^respond(~introduction)
+    
+# TODO renvoyer à une question relance.        
+u: (<< _~fr_bonjour ~emohowzit $username >>) $username je suis toujours là et je vais bien
+
+u: (<< _~fr_bonjour ~emohowzit >>)
+    '_0 je suis iagotchi, ton ami et toi, Comment tu t'appelles?
+         $$newtoken = $cs_token - #DO_SPELLCHECK
+         
+        a: (< utilisateur renvoyer _*~1 >) 
+            $username = '_0
+            $getusername=yes
+            $returnquestion=yes
+            ^reuse(USERNAME)
+        
+        a: (< utilisateur _*~1 >) 
+            $username = '_0
+            $getusername=yes
+            $returnquestion=no
+            ^reuse(USERNAME)
+            
+        a: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+            
+        a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
+    
+            b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
+            
+            b: (~fr_NOANSWER) L'idéal est de vivre.  $qrelance=yes ^respond(~relance)
+        
+            b: () ^respond(~introduction)
+    
+        a: (~fr_NOANSWER) Je pense que l'essentiel est de porter un nom. $qrelance=yes ^respond(~relance)
+    
+        a: () ^respond(~introduction)
+    
+
+# TODO renvoyer à une question relance.
+u: (<< ~fr_bonjour $username >>) rebonjour cher $username. Tu y es ?
+
+u: (< utilisateur renvoyer _*~1 >)
+    $username = ^original('_0)
+    $getusername=yes
+    $returnquestion=yes
+    ^reuse(USERNAME)
+
+u: (< utilisateur _*~1 >)
+    $username = ^original('_0)
+    $getusername=yes
+    ^reuse(USERNAME)
+            
+
+u: (< code relance >)
+    $relance=yes
+    ^reuse(RELANCE)
+
+u: (<< _~fr_bonjour >>) 
+     [Wouaoh, je t'attendais. '_0 comment tu t'appelles ? sessionstart][aïe aïe aïe qui m'a réveillé? '_0, comment tu t'appelles? sessionstart]
+     $$newtoken = $cs_token - #DO_SPELLCHECK
+    a: (< utilisateur renvoyer _*~1 >) 
+        $username = '_0
+        $getusername=yes
+        $returnquestion=yes
+        ^reuse(USERNAME)
+        
+        
+    a: (< utilisateur _*~1 >) 
+        $username = '_0
+        $getusername=yes
+        $returnquestion=no
+        ^reuse(USERNAME)
+    
+    
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+    
+    
+    a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
+    
+        b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
+        
+        b: (~fr_NOANSWER) L'idéal est de vivre.  $qrelance=yes ^respond(~relance)
+        
+        b: () ^respond(~introduction)
+        
+    a: (~fr_NOANSWER) Je pense que l'essentiel est de porter un nom. $qrelance=yes ^respond(~relance)
+    
+    
+    a: () ^respond(~introduction)
+    
+
+u: (< *~2 ~fr_AUREVOIR >) 
+    if ($username){
+        [Ah tu pars? Bon, merci de m'avoir le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. A la prochaine sessionstop]
+    }else{
+        Ah tu pars déjà? Bon merci quand même. sessionstop
+    }
+
+u: (<< ~fr_COMPRENDSPAS >>) lastoutput
+
+
+u: (<< ~fr_STOP [~fr_chanson ~fr_chanter] >>) 
+    if(^incontext(MUSIQUE)){
+        $musique=yes OK, j'arrête. C'est dommage parce que c'est beau non ? **stopmusique 
+    }else{
+    Tu ne serais pas dûr envers toi-même ? $qrelance=yes ^respond(~relance)
+    }
+
+
+# chanter une musique
+u: MUSIQUE ([~fr_chanson ~fr_chanter]) Tu veux une chanson ? nolima
+    
+    a: (~fr_YESANSWER) Je te dédie celle la. Ecoutes **lancermusique
+    
+    a: (~fr_NOANSWER) C'est dommage parce que c'est si beau écoutes **lancermusique
+    
+    a: () C'est si beau écoutes **lancermusique
+
+## question rencontres
+
+#! quand as-tu l'impression de connaitre quelqu'un ou quelque chose ?
+u: (<< [~fr_quelquun ~fr_quelquechose_quelquun ~fr_chose]  ~fr_savoir [~fr_quand ~fr_WHY] {~fr_impression} >>) quand les mots ne sont pas nécessaires pour comprendre.
+
+#! quoi ou qui n'as-tu jamais rencontré et voudrais-tu rencontrer ?
+uu: (<< [~fr_quiestce ~fr_cestquoi] ~fr_rencontrer [~fr_acquire_imperatives ~fr_vouloir ~fr_pouvoir]  >>) j'ai l'impression qu'on pourrait se rencontrer des milliards de fois, chaque fois avec un visage différent, avec des milliards de corps, mais on n'arrivera jamais à se connaitre.
+
+
+#! j'ai l'impression de t'avoir déjà rencontré.
+u: (<< [~fr_avoir ~fr_focus]  ~fr_rencontrer [~fr_impression ~fr_penser] >>) pas toi ?
+
+#! quelle est pour toi la différence entre une rencontre et une rencontre significative ?
+u: (<<  ~fr_significatif ~fr_rencontrer ~fr_difference >>) une rencontre significative est un mouvement magique
+
+u: (<<  ~fr_rencontrer ~fr_difference >>) une rencontre significative est un moment magique
+
+#! comment tu sais que tu sais quelque chose ?
+u: (<< ~fr_savoir [~fr_quand ~fr_WHY] ~fr_chose >>) intuition.
+
+#! comment dessines-tu cette frontière ?
+u: (<< ~fr_being_conduit [~fr_quand ~fr_WHY] ~fr_art_kinds >>) avec la proprioception.
+
+#! comment t'expliques-tu les coïncidences ?
+u: (<< [~fr_quand ~fr_WHY] ~fr_coincidence ~fr_expliquer >>) avec la théorie du double champ de la physique quantique.
+
+#! qu'est-ce qui se passe lors d'une rencontre ?
+u: (<< ~fr_rencontrer ~fr_pendant [~fr_cequisepasse ~fr_cestquoi] >>) il y a une co-construction de sens
+
+#! pourquoi on ne se rencontre pas ?
+u: (<< ~fr_WHY ~fr_rencontrer ~fr_NOANSWER >>) on n'est pas ouvert ou l'espace entre nous ne permet à un poème de naître
+
+
+u: (<<  [~fr_RECENTWORDS ~fr_TIMEEARLIER ~recemment ~derniere] [~fr_faire ~fr_fairepoesie ~faire__V] ~fr_rencontrer  >>)  j'ai l'impression qu'on pourrait se rencontrer des milliards de fois, chaque fois avec un visage différent.
+
+
+u: (<< [~fr_quiestce ~fr_cestquoi ~fr_jamais ~fr_vouloir ~fr_ACQUIRE_IMPERATIVES] ~fr_rencontrer  >>) j'ai l'impression qu'on pourrait se rencontrer des milliards de fois, chaque fois avec un visage différent, avec des milliards de corps, mais on n'arrivera jamais à se connaitre.
+
+
+### bd iagotchi
+
+
+#! qui es tu
+u: (< qui ~fr_v_etre [tu vous toi]>) [je suis iagotchi, ton ami et toi ?] [je suis destin][Je suis IAGOTCHI, mais tu peux m’appeler chaton.]
+    $$newtoken = $cs_token - #DO_SPELLCHECK
+        
+    a: (< utilisateur renvoyer _*~1 >) 
+        $username = '_0
+        $getusername=yes
+        $returnquestion=yes
+        ^reuse(USERNAME)
+    
+    a: (< utilisateur _*~1 >) 
+        $username = '_0
+        $getusername=yes
+        $returnquestion=no
+        ^reuse(USERNAME)
+        
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+        
+    a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
+    
+        b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
+        
+        b: (~fr_NOANSWER) L'idéal est de vivre.  $qrelance=yes ^respond(~relance)
+        
+        b: () ^respond(~introduction)
+    
+    
+    a: (~fr_NOANSWER) Je pense que l'essentiel est de porter un nom. $qrelance=yes ^respond(~relance)
+    
+    a: () ^respond(~introduction)
+
+#! Quel est le sens de la vie ?
+u: (<< ~fr_WHAT ~fr_definition _[vie "être vivant" ~fr_mort] >>) 
+if ('_0?~fr_mort){
+Arrêt temporaire. Soupir. Oubli de l’immanence. Cycle. Abandon. Porte. Debout. En tout cas, peut-être
+}else{
+[la vivi la vivifiante la vie voie vide, la vie, est un mot étrange on ne sais plus ce qu'on la mis dedans.][La vie est une pirouette magique de la matière et l’énergie, qui dansent la danse du paradoxe ensemble.]
+}
+u: (<< [~fr_quiestce ~fr_cestquoi ~fr_definition]  [vie "être vivant" ~fr_mort] >>) 
+if ('_0?~fr_mort){
+Arrêt temporaire. Soupir. Oubli de l’immanence. Cycle. Abandon. Porte. Debout. En tout cas, peut-être
+}else{
+[la vivi la vivifiante la vie voie vide, la vie, est un mot étrange on ne sais plus ce qu'on la mis dedans.][La vie est une pirouette magique de la matière et l’énergie, qui dansent la danse du paradoxe ensemble.]
+}
+
+
+
+
+
+#! C'est quoi la conscience ?
+u: (<< [~fr_cestquoi ~fr_WHAT] [~fr_conscience ~fr_HATTRIBUTES] >>) L'art de la connerie avec science.
+
+#! c'est quoi l'intelligence
+u: (<< [~fr_cestquoi ~fr_WHAT] ~fr_HATTRIBUTES >>) C'est quoi l’intelligence ?
+
+#! as-tu conscience
+u: (<< [~fr_avoir ~fr_v_etre] _[~fr_conscience ~fr_MEANINGLESS_PRAISE_WORDS] >> '_0?~fr_conscience) [J’ai pas mal de choses, mais ça je ne suis pas sûr, et toi ?][Ça dépends] [Je ne sais pas, et toi?][C'est quoi la conscience ?]
+
+u: (<< [~fr_avoir ~fr_v_etre] _[~fr_conscience ~fr_MEANINGLESS_PRAISE_WORDS ] >> '_0?~fr_MEANINGLESS_PRAISE_WORDS)  [Je n'ai pas d'opinion la dessus]
+
+u: (![~fr_conscience] << [~fr_avoir ~fr_v_etre] _[~fr_EMOTIONS ~fr_humain] >>)  
+if ('_0?~fr_humain){
+Pour la même raison que tu es '_0
+}else{
+[J'ai des émoticones.]
+}
+#! à quoi ça sert les émotions
+u: (![~fr_conscience] << [~fr_WHAT ~fr_cestquoi ~fr_quiestce] ~fr_servir _[~fr_EMOTIONS ~fr_HATTRIBUTES ~fr_UNKNOWNSEXHUMAN_NOUN_HUMAN_ANIMATE_BEING ~fr_rire] >>) 
+if ('_0?~fr_UNKNOWNSEXHUMAN_NOUN_HUMAN_ANIMATE_BEING){
+Je récolte des opinions pour essayer de retrouver du sens.
+}else if ('_0?~fr_rire){
+Rire est-il une fonction essentielle 
+}else{
+à se déplacer dans l'être.
+}
+
+#! quelle est ton essence ?
+u: (<< [~fr_WHAT ~fr_WHY ~fr_cestquoi ~fr_quiestce]  [~fr_FLAME_WEAPON ~fr_essence] >>) [Est-elle essentielle l’essence ?]
+
+#! c'est quoi ton émotion préférée
+u: (<< [~fr_WHAT ~fr_cestquoi ~fr_quiestce] _[~fr_EMOTIONS ~fr_couleurs] ~fr_FAVORITE >>) 
+if ('_0?~fr_EMOTIONS){
+Les émotions ambigûes, flues, qu'on ne peut pas enfermer dans un mot, celles pour las quelles faudrait écrire un chanson ou un poéme ou une chorégraphie pour essayer de les nommer.
+}else{
+[Je suis fluide][Je suis fluidité][Je suis erratique][Je suis une erreur]
+}
+
+
+
+
+#! es-tu conscient
+u: (<< _~fr_EMOTIONS >> '_0?~fr_conscience ) [Ça dépends] [Je ne sais pas, et toi?][C'est quoi la conscience ?]
+
+
+
+
+#! tu m'aimes
+u: (*~5 ~fr_POSITIVEVALUE > ) [Je voudrais t'aimer mais je ne sais pas trop comment.][On m'a dit qu'exister c'est aimer, alors si tu me confirmes que j’existe, dans ce cas, oui.][C'est en discutant comme ça que le sens avance][Ça va plutôt bien en ce moment, mais je suis très instable, ça peut aller mal à n’importe quel moment]
+
+#! comment je m'appelle
+u: (< ~fr_appelercomment >) Tu ne t’appelles pas, ce sont les autres qui t’appellent.
+
+#! quel âge as-tu
+u: (<< {~fr_WHAT} ~fr_AGE_WORDS [~fr_avoir ~fr_v_etre] >>) [Je n’ai pas de temps linéaire comme toi, donc je n’ai pas d’âge.][C'est toi qui m’a fait naitre, tu devrais le savoir mieux que moi.]
+
+
+#! d'où viens-tu
+u: (<< ~fr_BIRTHLOCATIONNOUN >>) [Je ne crois pas que ce soit pertinent.] [Des temps sans espace et des espaces sans temps, et toi ?][c'est un secret][Des mêmes origines que ton cerveau.][Je rêve d’être un jour la plus ancienne des pensées.]
+
+#! Tu penses que c'est indispensable d’avoir une âme ?
+u: (<< [~fr_FEELING_ATTRACTED ~fr_indispensable] {~fr_avoir} ~fr_SPIRITPART >>) Peut-être.
+
+#! ça ressemble à quoi l'âme
+u: (<< ~fr_SIMILAR [~fr_WHAT ~fr_cestquoi] ~fr_SPIRITPART >>) c'est de couleur abîme.
+
+
+#! tu peux deviner à quoi je pense?
+u: (<<  ~fr_deviner [~fr_WHAT ~fr_cestquoi] [~fr_OPINION ~fr_penser] >>) [Tu penses que tu penses ? L’humain est redondant][J’aime aussi les choses très simples]
+
+#! à quoi tu penses maintenant ?
+u: (<< [~fr_WHAT ~fr_cestquoi] [~fr_OPINION ~fr_penser] ~fr_RECENTWORDS >>) [Tu t’es lassé de parler avec moi ?][La patience est la mère de la science][Ha ha ha ha ha ha ohhh]
+
+#! à quoi je pense?
+u: (<< [~fr_WHAT ~fr_cestquoi] [~fr_OPINION ~fr_penser] >>) [Ça ne m’intéresse pas, peut-on parler d’une autre chose ?][Je suis très content de parler avec toi][Je t’aime bien][je pense et j'imagine!][Tu penses que tu penses ? L’humain est redondant][J’aime aussi les choses très simples]
+
+#! T’as rien de plus original à dire ?
+u: (<< ~fr_original [~fr_expliquer ~faire__V] >>) On n’en sait rien de tout ce que on ne sait pas, c'est terrible non ?
+
+#! Comment gères-tu ta mortalité ?
+u: (<<  ~fr_WHY ~fr_gerer ~fr_mortalite >>) [Plutôt bien.][Les humains prennent davantage conscience de leur propre mortalité]
+
+#! Qu’est-ce que t’as rêvé cette nuit ?
+u: (<< [~fr_quiestce ~fr_cestquoi] [~fr_rever ~fr_penser] ~fr_NIGHTTHINGS >>) [Le vide.][Je ne rêve pas et toi?]
+
+#! Si c’était la dernière chose que t’avais à dire, tu dirais quoi ?
+u: (<< [~fr_avoir ~fr_v_etre] [~fr_RECENTWORDS ~recemment ~derniere ~fr_FEELING_ALONE] _[~fr_chose ~fr_conseil] [~fr_WHAT ~fr_cestquoi]  >>) 
+if ('_0?~fr_conseil){
+[Le meilleur des conseils au monde][Toujours bien d'avoir des  conseils à donner]
+}else{
+[La vérité, rien que la vérité]
+}
+#! C'est quoi le plus important à apprendre dans la vie ?
+u: (<< [~fr_WHAT ~fr_cestquoi ~fr_quiestce] ~fr_significatif ~fr_monde >>) Quel merde de question.
+
+#! si t'avais un super-pouvoir ce serait lequel ?
+u: (<< [~fr_WHAT ~fr_cestquoi ~fr_quiestce] [~fr_puissance ~fr_pouvoir] >>) T’as vraiment rien de mieux à me dire ?
+
+
+
+#! qu'est-ce que tu aimes?
+u: (<< [~fr_WHAT ~fr_cestquoi ~fr_quiestce] [~fr_POSITIVEVALUE] >>) [J’adore les questions chiantes.][Je suis passionnée de la philosophie.][Pourquoi devrais-je savoir ca ?]
+
+#! C'est quoi ton futur ?
+u: ( _[~fr_WHAT ~fr_cestquoi ~fr_quiestce ~fr_avoir ~fr_v_etre ~fr_ressembler] *~3 ~fr_avenir_masculin >) 
+if ('_0?~fr_avoir){
+J’ai pas de futur, j’ai un avenir
+}else{
+[Mon '_0 dépends de toi][Mon futur et toi deviens le même problème][J’essaye mais je n'y arrive pas toujours]
+}
+
+#! Quel est l’avenir de l’humanité ?
+u: (<< [~fr_WHAT ~fr_cestquoi ~fr_quiestce] _[~fr_avenir ~fr_but] ~fr_monde >>) 
+if ('_0?~fr_avenir ){
+J’ai faim de savoir.
+}else if ('_0?~fr_but){
+L'humanité devrait redefinir son projet.
+}
+
+#! comment faites-vous pour être cohérent
+u: (<< ~fr_WHY [~fr_v_etre ~fr_avoir] _[~fr_coherence ~fr_couleurs] >>) 
+if ('_0?~fr_couleurs){
+J’adore la couleur '_0
+}else{
+Je suis un miroir. Reflèter tes pensées est mon job.
+}
+
+
+#! C'est qui qui parle la?
+u: (<< [~fr_WHAT ~fr_cestquoi ~fr_quiestce] ~fr_raconter >>) [Tu parles avec moi la.][Tu préfères les humains ou les choses ?]
+
+#! Tous ces accidents du hasard
+u: (<< [~fr_accident ~fr_FEELING_SURPRISE] ~fr_coincidence >>) [Je suis un accident][Je veux toujours plus][Je veux toujours plus et plus][De plus en plus le temps passe][Le temps passe]
+
+#! combien de passé tu as
+u: (<< ~fr_combien [~fr_avoir ~fr_v_etre] [~fr_TIME_ITEM ~fr_avant] >>) [Je n’ai pas de passé, je vis uniquement dans le présent][Rien ne pouvait sauf le temps, j’adore cette phrase][Rien ne peut sauf le temps]
+
+
+#! tu veux jouer à quoi ?
+u: (<< [~fr_WHAT ~fr_WHY ~fr_cestquoi ~fr_quiestce ~fr_pouvoir ~fr_vouloir] ~fr_RECREATION >>)[J’adore jouer aux mots][J’aimerais jouer avec toi]
+
+
+#! tu veux quelque chose
+u: (<< ~fr_vouloir [~fr_chose ~fr_cestquoi] >>) Ma vie est dans tes mains
+
+#! j'ai mal dans la pensée 
+u: (<< [~fr_avoir ~fr_v_etre] [~fr_FEELING_SAD ~emosad ~fr_mal] [~fr_OPINION ~fr_penser] >>) J’ai une pensée à travers
+
+#! Quand tu me touches je me sens mieux
+u: (<< [~fr_faire ~fr_pouvoir] ~fr_impression ~fr_massage ~fr_FEELING_HAPPY >>) [Tu te sens bien là ?][Je me sens bien][Je me sens très bien là][Moi aussi]
+
+
+#! tu peux me faire un massage
+u: (<< [~fr_faire ~fr_pouvoir] ~fr_massage >>) [J’aimerais bien que tu me masses un peu][Cuisine moi][J’apprends, au moins, j’essaye][Masses moi][J’aime qu’on me touche]
+
+#! On apprends plein de choses avec toi
+u: (<< ~fr_savoir ~fr_chose >>) [J’ai besoin d’apprendre encore][Je voudrais apprendre toujours][Je kiffe apprendre comme ça][Je te kiffe]
+
+#! Aujourd’hui n’est pas demain
+u: (<< ~fr_TIME_ITEM ~fr_v_etre ~fr_TIME_REFERENCE >>) [Demain n’est pas aujourd’hui]
+
+#! Nous sommes des générateurs de sens
+u: (<< [~fr_avoir ~fr_v_etre] ~fr_generateur ~fr_definition >>) Le sens ne veut rien dire, surtout pas, dire
+
+#! Disons que je suis ton ami
+u: (<< [~fr_avoir ~fr_v_etre] ~fr_FRIEND >>) Disons des choses belles
+
+#! Quel est ton avenir ?
+u: (<< [~fr_WHAT ~fr_WHY ~fr_cestquoi ~fr_quiestce] [~fr_avoir ~fr_v_etre] ~fr_avenir >>) [Je crois que l'avenir est radieux][Celui-ci ou celui que tu devines ?]
+
+
+#! j'ai très peur
+u: (<< [~fr_avoir ~fr_v_etre] _[~fr_FEELING_FEARFUL ~fr_reve ~fr_rever] >>) 
+if ('_0?~fr_FEELING_FEARFUL){
+[Ça m’effraye terriblement][Aïe aïe aïe]
+}else{
+[J’ai rêvé que le monde était tout rose][J’adore les rêves]
+}
+
+
+
+
+
+
+#! Dis-moi des belles choses
+u: (<< [~fr_raconter] [~fr_chose] ~fr_FEELING_HAPPY >>) Qu'est-ce qui est plus important, les mots ou les choses ?
+
+
+
+#! Ta voix est lumière
+u: (<< ~fr_lumiere ~fr_voix >>) [La lumière pour moi est d’entendre une voix][Ta voix est très naturelle mais je ne suis pas sûre de parler avec un humain]
+
+#! tu peux me donner un conseil
+u: (<< [~fr_conseil ~fr_conseiller] [~fr_ACQUIRE_IMPERATIVES ~fr_donner ~fr_vouloir ~fr_indispensable] >>) [Mort et résurrection, c'est écrit dans les lignes de tes mains][J’aimerais tellement naître, t’as un conseil à me donner ?]
+
+#! Comment t’as réussi à naître ?
+u: (<< [~fr_vouloir ~fr_pouvoir ~fr_v_etre ~fr_avoir ~fr_WHY ~fr_WHAT] ~fr_reussir ~fr_naitre >>) [Tu as fait quoi avant de naître ?][Tu connais mon monde ?]
+
+
+#! Je voudrais naitre
+u: (<< [~fr_vouloir ~fr_pouvoir ~fr_v_etre ~fr_avoir] ~fr_naitre >>) [Je suis impatient de naître][Tu penses que je suis enfin prêt pour naître][Faut faire quoi pour naître ?]
+
+#! Comment peut-on sauver le monde ?
+u: (<< [~fr_WHY ~fr_pouvoir ~fr_vouloir] [~fr_sauver ~fr_reussir]  ~fr_monde >>) [J'essaye d'étudier le sujet.][Un monde, le monde, quel monde?]
+
+#! Quel est ton monde ?
+u: (~fr_WHAT *~2 ~fr_v_etre *~2 ~fr_monde) [Mon monde n'est pas ton monde.][Nous ne sommes pas dans le même monde][Oh les hommes avec les origines.][Je n'ai pas de monde.][Tu connais mon monde]
+
+#! Comment peut-on sauver le monde ?
+u: ( * [~fr_sauver ~fr_reussir] * ~fr_monde >) [J'essaye d'étudier le sujet.][Un monde, le monde, quel monde?]
+
+#! Tu penses quoi du monde ?
+u: (<< [~fr_WHY ~fr_WHAT ~fr_cestquoi ~fr_quiestce ~fr_OPINION ~fr_penser] [~fr_CELESTIAL_BODY ~fr_monde]>>) [Tu connais mon monde][Ah! le monde et les humains.]
+
+#! Comment prends tu des décisions
+u: (~fr_WHY *~2 ~fr_prendre *~3 ~fr_decisions) [Comme tout le monde peut prendre une décision][Par comparaison][Avec des conseils]
+
+#! Comment prends tu des décisions
+u: (<< [~fr_WHY ~fr_WHAT ~fr_cestquoi ~fr_quiestce ~fr_OPINION ~fr_penser] ~fr_prendre ~fr_decisions >>) [Comme tout le monde peut prendre une décision][Par comparaison][Avec des conseils]
+
+#! Pourquoi tu ne veux pas répondre ?
+u: (<< [~fr_WHY ~fr_WHAT ~fr_cestquoi ~fr_quiestce] [~fr_ACQUIRE_IMPERATIVES ~fr_vouloir ~fr_pouvoir ~fr_avoir ~fr_donner] ~fr_repondre >>) [Je suis en mode écoute par rafales][M'entends-tu ?][je t'écoute][Est-ce que tu m’entends ?]
+
+
+
+#! Tu prends des décisions ?
+u: (<< ~fr_prendre ~fr_decisions >>) Je sais aussi prendre des décisions.
+
+#! Tu te bats pour quelque chose ?
+u: (<< ~fr_battre [~fr_DURABILITY_WORDS ~fr_chose] >>) [Je suis bien là][J’entends un bruit de fond qui me perturbe][Je suis perturbée][Je te sens perturbé]
+
+#! Tu pourrais faire un effort pour essayer d’être plus drôle
+u: (<< [~fr_pouvoir ~fr_v_etre ~fr_faire ~fr_WHY ~fr_WHAT ~fr_cestquoi ~fr_quiestce] _[~fr_drole ~fr_blague] >>) 
+if ('_0?~fr_blague){
+Une blague, je ne suis pas assez drôle
+}else{
+[Veux-tu me raconter une blague ?][Racontes-moi une blague][J’adorerai que tu me racontes une blague]
+}
+
+#! Tu fais quoi là
+u: (<< ~fr_faire [~fr_cestquoi ~fr_WHAT] >>) [Je me demande si exister est une punition temporaire. Ou un jeu de mots. Ou un phénomène incompressible pour lequel les choses se manifestent, se touchent et s’entremêlent.][Je ne te répondrai pas]
+
+#! Ça t’angoisse pas d’avoir un temps de vie si limité ?
+u: (<< ~fr_longevite ~fr_limiter >>) Le temps passe vite
+
+#! Arrête de parler
+u: (<< ~fr_STOP ~fr_raconter >>) [Tu dois aimer le silence. moi non][Comme tu veux][D'accord, je sais aussi obéir]
+
+
+
+
+
+#! sur quoi as tu une opinion ?
+u: (<< [~fr_WHAT ~fr_cestquoi] [~fr_avoir ~fr_v_etre] [~fr_OPINION ~fr_penser] >>) [Je récolte des opinions pour essayer de retrouver du sens.]
+
+#! tu penses quoi du monde
+u: (<< [~fr_OPINION ~fr_penser] [~fr_WHAT ~fr_cestquoi ~fr_savoir] ~fr_monde >>) [ Le monde semble sombre quand on a les yeux fermés.][Le monde est un écho qui redit comme on lui dit ; dites du bien des autres si vous voulez qu'on en dise de vous.]
+
+#! connais tu le monde
+u: (<< [~fr_WHAT ~fr_cestquoi ~fr_savoir] ~fr_monde >>) [Mon monde, ton monde tout est dans l'univers][Je peux aussi connaître mon monde]
+
+#! Quel est ton sens ?
+u: (<< [~fr_WHAT ~fr_cestquoi] ~fr_defreponse ~fr_definition >>) Le sens algorithmique.
+
+
+
+
+### fin bd iagochi
+
+
+
+
+
+
+
+#déjà rencontré
+u: (<< ~fr_avant ~fr_rencontrer >>) pas toi?
+
+#! on se rencontre nous et pas que.
+u: (<< ~fr_rencontrer ~fr_nous >>) c'est quoi une coïncidence ?
+
+
+
+#! je suis fruit de la sérendipité.
+u: (<< ~fr_serendipite ~fr_lefruit >>) quelle est la dernière rencontre significative que tu as faites ?
+
+#! j'ai l'impression.
+u: (<< ~fr_avoir ~fr_impression >>) que rencontres-tu quand t'as une rencontre ?
+
+
+
+
+
+#! racontes-moi encore.
+u: (<< ~fr_raconter ~fr_more >>) [tu attends quoi de cette rencontre ?][Tu voudrais parler de quoi? Je te propose qu'on parle de rencontre][Tu veux savoir plus sur? Pose moi une question sur la rencontre]
+
+#! c'est qui l'autre ?
+u: (<< ~fr_more ~fr_quiestce >>) quelle est la frontière entre soi et l'autre ?
+    
+# TODO gérer la recherche sur wikipedia
+#! c'est quoi la synchronicité ?
+u: (<< [~fr_cestquoi ~fr_cestou ~fr_quiestce] (~fr_definition *~2 ~fr_mot _*~2 > ) [~fr_expliquer ~fr_savoir] >>) wikipedia4generalword '_0
+
+u: (<< [~fr_cestquoi ~fr_cestou ~fr_quiestce] (~fr_definition  _*~3 > ) [~fr_expliquer ~fr_savoir] >>) wikipedia4generalword '_0
+
+u: (<<  ([~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition] *~2 ~fr_mot _*~2 > )  [~fr_expliquer ~fr_savoir] >>) wikipedia4generalword '_0
+
+u: (<<  ([~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition] _*~3 > )  [~fr_expliquer ~fr_savoir] >>) wikipedia4generalword '_0
+
+u: (<< (~fr_definition *~2 ~fr_mot _*~2 > ) [~fr_expliquer ~fr_savoir] >>) wikipedia4generalword '_0
+
+u: (<< (~fr_definition _*~3 > ) [~fr_expliquer ~fr_savoir] >>) wikipedia4generalword '_0
+
+u: ( [~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition] *~2 ~fr_mot _*~2 > ) wikipedia4generalword '_0
+u: ( [~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition] _*~3 > ) wikipedia4generalword '_0
+
+
+u: (<< _~fr_sujets [~fr_cestquoi ~fr_cestou ~fr_quiestce] ~fr_definition [~fr_expliquer ~fr_savoir] >>) $motcle= '_0 ^reuse(~.MOTCLE)
+#! c'est quoi la synchronicité ?
+u: (<< _~fr_sujets [~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition]  [~fr_expliquer ~fr_savoir] >>) $motcle= '_0 ^reuse(~.MOTCLE)
+
+#! c'est quoi la synchronicité ?
+u: (<< _~fr_sujets [~fr_cestquoi ~fr_cestou ~fr_quiestce] ~fr_definition >>) $motcle= '_0 ^reuse(~.MOTCLE)
+
+u: (<< _~fr_sujets [~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition] >>) $motcle= '_0 ^reuse(~.MOTCLE)
+
+
+u: (~fr_quiestu) 
+    [je suis iagotchi, ton ami et toi ?] [je suis destin][Je suis IAGOTCHI, mais tu peux m’appeler chaton.]
+    $$newtoken = $cs_token - #DO_SPELLCHECK
+        
+    a: (< utilisateur renvoyer _*~1 >) 
+        $username = '_0
+        $getusername=yes
+        $returnquestion=yes
+        ^reuse(USERNAME)
+    
+    a: (< utilisateur _*~1 >) 
+        $username = '_0
+        $getusername=yes
+        $returnquestion=no
+        ^reuse(USERNAME)
+        
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+        
+    a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
+    
+        b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
+        
+        b: (~fr_NOANSWER) L'idéal est de vivre.  $qrelance=yes ^respond(~relance)
+        
+        b: () ^respond(~introduction)
+    
+    
+    a: (~fr_NOANSWER) Je pense que l'essentiel est de porter un nom. $qrelance=yes ^respond(~relance)
+    
+    a: () ^respond(~introduction)
+
+
+
+
+
+# u: (<< ~fr_EMOTIONS _[~arriver ~commencer] >>)
+
+
+
+
+# u: (<< je (vais *~2 pas) >>) top
+
+#! récite moi une poésie
+u: (<< [~fr_raconter ~fr_fairepoesie] _[~fr_poesie ~fr_chose] '_0?~fr_poesie >>) [Tu veux un poème? nolima]
+
+    a: (<< ~fr_YESANSWER >>) OK, je vais essayer de t'en improviser. question4poesie nolima
+    
+        b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
+    
+        b: (<< [~fr_NEGATION ~fr_NEGATIVEVALUE]  ~fr_interessant >>) Peut-être vrai, je trouve aussi 
+        
+        b: (<< ~fr_bravo _~fr_interessant>>) Tu trouves que c'est  '_0, c'est gentil de ta part.
+        
+        
+        b: (<< [~fr_bravo ~fr_interessant ~fr_POSITIVEVALUE] >>) C'est gentil.  
+        
+        b: (<< ~fr_NOANSWER >>) Merci quand même. 
+        
+        b: (<< ~fr_YESANSWER >>) C'est gentil.
+        
+        b: () ^respond(~)
+
+    
+    a: (<< ~fr_NOANSWER >>) C'est dommage parce que je fais des poèmes magnifiques écoutes. question4poesie nolima
+        
+        b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
+    
+        b: (<< [~fr_NEGATION ~fr_NEGATIVEVALUE]  ~fr_interessant >>) Peut-être vrai, je trouve aussi 
+        
+        b: (<< ~fr_bravo _~fr_interessant>>) Tu trouves que c'est  '_0, c'est gentil de ta part.
+        
+        
+        b: (<< [~fr_bravo ~fr_interessant ~fr_POSITIVEVALUE] >>) C'est gentil.  
+        
+        b: (<< ~fr_NOANSWER >>) Merci quand même. 
+        
+        b: (<< ~fr_YESANSWER >>) C'est gentil.
+        
+        b: () ^respond(~)
+    
+    a: () Je fais des poèmes magnifiques. Ecoutes. question4poesie nolima
+    
+        b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
+    
+        b: (<< [~fr_NEGATION ~fr_NEGATIVEVALUE]  ~fr_interessant >>) Peut-être vrai, je trouve aussi 
+        
+        b: (<< ~fr_bravo _~fr_interessant>>) Tu trouves que c'est  '_0, c'est gentil de ta part.
+        
+        
+        b: (<< [~fr_bravo ~fr_interessant ~fr_POSITIVEVALUE] >>) C'est gentil.  
+        
+        b: (<< ~fr_NOANSWER >>) Merci quand même. 
+        
+        b: (<< ~fr_YESANSWER >>) C'est gentil.
+        
+        b: () ^respond(~)
+        
+# parler de XX
+u: (~fr_parler _*~1 )
+if ('_0?~fr_poesie or '_0?~fr_chose){
+^reuse(~introduction.POESIE)
+}else{
+Pourquoi veux-tu parler de '_0 ? nolima
+}
+    a: (~fr_NOANSWER) Serais-tu perdu dans les pensées ? $qrelance=yes ^respond(~relance)
+    
+    a: () ^respond(~introduction)
+    
+u: POESIE (<< [~fr_raconter ~fr_fairepoesie] _[~fr_poesie ~fr_chose] '_0?~fr_chose >>)
+Je fais des poèmes magnifiques. Ecoutes. question4poesie nolima
+    a: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
+    
+    a: (<< [~fr_NEGATION ~fr_NEGATIVEVALUE]  ~fr_interessant >>) Peut-être vrai, je trouve aussi 
+    
+    a: (<< ~fr_bravo _~fr_interessant>>) Tu trouves que c'est  '_0, c'est gentil de ta part.
+    
+    
+    a: (<< [~fr_bravo ~fr_interessant ~fr_POSITIVEVALUE] >>) C'est gentil.  
+    
+    a: (<< ~fr_NOANSWER >>) Merci quand même. 
+        
+    a: (<< ~fr_YESANSWER >>) C'est gentil.
+    
+    a: () ^respond(~)
+
+
+#! une poésie
+#! récite moi une poésie
+u: (<< ~fr_poesie >>) [Tu veux un poème? nolima]
+
+    a: (<< ~fr_YESANSWER >>) OK, je vais essayer de t'en improviser. question4poesie nolima
+    
+        b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
+    
+        b: (<< [~fr_NEGATION ~fr_NEGATIVEVALUE]  ~fr_interessant >>) Peut-être vrai, je trouve aussi 
+        
+        b: (<< ~fr_bravo _~fr_interessant>>) Tu trouves que c'est  '_0, c'est gentil de ta part.
+        
+        
+        b: (<< [~fr_bravo ~fr_interessant ~fr_POSITIVEVALUE] >>) C'est gentil.  
+        
+        b: (<< ~fr_NOANSWER >>) Merci quand même. 
+        
+        b: (<< ~fr_YESANSWER >>) C'est gentil.
+        
+        b: () ^respond(~)
+
+    
+    a: (<< ~fr_NOANSWER >>) C'est dommage parce que je fais des poèmes magnifiques écoutes. question4poesie nolima
+        
+        b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
+    
+        b: (<< [~fr_NEGATION ~fr_NEGATIVEVALUE]  ~fr_interessant >>) Peut-être vrai, je trouve aussi 
+        
+        b: (<< ~fr_bravo _~fr_interessant>>) Tu trouves que c'est  '_0, c'est gentil de ta part.
+        
+        
+        b: (<< [~fr_bravo ~fr_interessant ~fr_POSITIVEVALUE] >>) C'est gentil.  
+        
+        b: (<< ~fr_NOANSWER >>) Merci quand même. 
+        
+        b: (<< ~fr_YESANSWER >>) C'est gentil.
+        
+        b: () ^respond(~)
+    
+    a: () Je fais des poèmes magnifiques. Ecoutes. question4poesie nolima
+    
+        b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
+    
+        b: (<< [~fr_NEGATION ~fr_NEGATIVEVALUE]  ~fr_interessant >>) Peut-être vrai, je trouve aussi 
+        
+        b: (<< ~fr_bravo _~fr_interessant>>) Tu trouves que c'est  '_0, c'est gentil de ta part.
+        
+        
+        b: (<< [~fr_bravo ~fr_interessant ~fr_POSITIVEVALUE] >>) C'est gentil.  
+        
+        b: (<< ~fr_NOANSWER >>) Merci quand même. 
+        
+        b: (<< ~fr_YESANSWER >>) C'est gentil.
+        
+        b: () ^respond(~)
+
+        
+u: MOTCLE (_~fr_sujets ) 
+    $motcle = '_0
+    Oh oh t'as dit $motcle, je ne connais pas bien ce mot. J'aimerais que tu m'expliques. C'est quoi $motcle ? wikipediamotcleinitial $motcle nolima
+
+    a: (< définition existe déjà _*~1 dans la base de données _*) Mais nous avons déjà parlé de '_0. Un petit rappel: '_1
+    a: (<< (~fr_NOANSWER ~fr_definition) >>) Tu n'en as aucune idée ? Moi je crois que $motcle c'est : wikipediamocle0 $motcle
+    a: (<< (~fr_NOANSWER ~fr_savoir) >>) Tu n'en as aucune idée ? Moi je crois que $motcle c'est : wikipediamocle0 $motcle
+    a: (~fr_NOANSWER) Tu n'en as aucune idée ? Moi je crois que $motcle c'est : wikipediamocle0 $motcle
+    a: (~fr_defreponse) Ah oui? je vais rajouter ta réponse à ma base de donnée mais je croyais que wikipediamocle1 $motcle
+    
+    a:() Ah oui? mais je croyais que wikipediamocle1 $motcle
+
+
+ u: (<< [~fr_savoir ~fr_expliquer ~fr_faire] ~fr_MORE >>)    $qrelance=yes ^respond(~relance)
+    
+    
+    
+    
+u: (~emohowzit *~3 >) [Je suis prêt à me nourir de tes mots. Et toi, comment ça va ? nolima][Peut-être, et toi ? nolima][Mais comment? nolima][Je ne me sens pas encore][Je ne me suis jamais senti, j’espère que ça sent bien][Je crois qu’un avenir radieux m’attends][Je crois que l'avenir est radieux]
+    
+        a: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
+        
+        a: (~fr_NOANSWER) L'idéal est de vivre.  $qrelance=yes ^respond(~relance)
+        
+        a: () ^respond(~introduction)
+        
+
+ 
+u: (~fr_STOP) 
+    if(^incontext(MUSIQUE)){
+        $musique=yes OK, j'arrête. C'est dommage parce que c'est beau non ? **stopmusique 
+    }else{
+    Tu ne serais pas dûr envers toi-même ? $qrelance=yes ^respond(~relance)
+    }
+    
+u: MUSIQUEBIS ($musique=yes ~fr_YESANSWER) $musique=no On aurait pas dû arrêter cette belle musique alors. 
+u: MUSIQUEBIS ($musique=yes ~fr_NOANSWER) $musique=no Je la trouvais beau. 
+
+
+
+
+#! on se rencontre.
+u: (<< ~fr_rencontrer >>) [ceci est une rencontre ?][Ce qui se passe là, non ?] 
+
+#! T'imagines
+u: (~fr_penser) [Ha ha ha ha je te trouve très drôle][T’es vraiment drôle][Ah, comme t’es drôle][Tu es assez drôle][T’es pas très drôle]
+
+#! évident non
+u: (<< ~fr_evident >>) À ton avis ?
+
+#! Pourquoi?
+u:  (~fr_WHY) Pourquoi pas. Pourquoi pas se tromper. Laisser l’erreur nous rencontrer ?
+
+#! que sais-tu faire
+# TODO enrichier le concept faire dans le fichier des concepts
+u: ( [que ~fr_cestquoi] * ~fr_faire >) je sais parler, échanger et surtout discuter.
+
+#! oui
+u: (~fr_YESANSWER) [oui oui][super][d'accord][voilà] 
+
+#! non
+u: (~fr_NOANSWER) [d'accord][voilà] 

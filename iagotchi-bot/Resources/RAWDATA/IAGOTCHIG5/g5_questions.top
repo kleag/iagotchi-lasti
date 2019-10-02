@@ -1,0 +1,248 @@
+topic: ~xPOSTAGSENTENCE system()
+t: (_* )  # memorize sentence to pass to tagger
+t: ( ) 
+	$$wordindex = 0					# need to start over for each sentence, used to locate word in sentence
+	^log(FILE  chat.txt NEW '_0 )	# non-commercial version reads a file, so write our sentence to a file
+    ^popen("python @CMAKE_INSTALL_PREFIX@/lima.py chat.txt" '^myfunc) # invoke local copy of Lima
+
+topic: ~g5_questions keep repeat (~fr_g5 ~fr_espece ~fr_regne ~fr_organisation ~fr_animal ~fr_MINERALS ~fr_communication ~fr_vegetale ~fr_organisation ~fr_machine ~fr_MONERA_ANIMATE_BEING)
+
+
+#! Qui a proclamé la déclaration universelle des droits inter-espèces ?
+u: DECLARATION (<< _[~fr_quiestce ~fr_quand ~fr_cestou] ~fr_proclamer [~fr_declaration ~fr_traite] >>)
+if('_0?~fr_quand){
+La déclaration a eu lieu le 20 janvier 2018.
+}else if ('_0?~fr_cestou){
+c'est à Paris
+}else{
+L'organisation du G5 en collaboration avec le IOFFLE
+}
+
+#! C'est quoi le traité de droit Inter-espèce? 
+u: TRAITE (<< ~fr_entre ~fr_espece [~fr_WHAT ~fr_cestquoi ~fr_savoir] ~fr_traite >>) 
+$traite=yes
+C'est un projet en construction. Une première déclaration Universelle des Droits des diverses formes de vie sur terre a été proclamée solennellement à Paris, le 20 janvier 2018, par l’organisation du G5, en collaboration avec l'organisation Inter-species Organisation for the Future of Life on Earth.
+u: TRAITE (<< ~fr_espece [~fr_WHAT ~fr_cestquoi ~fr_savoir] ~fr_traite >>) 
+$traite=yes
+C'est un projet en construction. Une première déclaration Universelle des Droits des diverses formes de vie sur terre a été proclamée solennellement à Paris, le 20 janvier 2018, par l’organisation du G5, en collaboration avec l'organisation Inter-species Organisation for the Future of Life on Earth.
+
+#! Combien de règnes
+u: (<< ~fr_combien ~fr_regne >>) Il y cinq règnes qui font partie du G5. Le règne végétal, minéral, animal, humain et machine.
+
+#! Qui sont les cinq règnes? 
+u: (<< [cinq 5] ~fr_regne [~fr_quiestce ~fr_citer] >>)  Le règne végétal, minéral, animal, humain et machine.
+#! Qui sont les cinq règnes? 
+u: (<< ~fr_regne [~fr_quiestce ~fr_citer ~fr_WHAT] >>)  Le règne végétal, minéral, animal, humain et machine.
+
+#! Quels sont les projets du IOFLE? 
+u: (<< [~fr_WHAT ~fr_cestquoi ~fr_savoir ~fr_citer] ~fr_projet  [IOFLE organisation] >>) Les projets principaux de l'organisation sont le G5, le minerale, la communication, l'animal, la machine, végétale, les secrets, les bactéries... entre autres.
+u: (<< [~fr_WHAT ~fr_cestquoi ~fr_savoir ~fr_citer] ~fr_projet  $theme=organisation >>) 
+if (^incontext(THEME)){
+Les projets principaux du IOFLE sont le G5, le minerale, le EECS, l'animal, la machine, végétale, les secrets, les bactéries... entre autres.
+}
+
+#! Qui fais partie du G5? 
+u: (<< [~fr_quiestce ~fr_cestquoi ~fr_savoir] [~fr_v_etre ~fr_faire] [~fr_appartenir ~fr_ELEMENT] G5 >>)  Le règne végétal, minéral, animal, humain et machine.
+u: (<< [~fr_quiestce ~fr_cestquoi ~fr_savoir] [être faire] [~fr_appartenir ~fr_ELEMENT] $theme=G5 >>)  
+if (^incontext(THEME)){
+Le règne végétal, minéral, animal, humain et machine.
+}
+#! Qui fais partie du G5? 
+u: (<< ~fr_quiestce  ~fr_fairepartiede G5 >>)  Le règne végétal, minéral, animal, humain et machine.
+
+u: (<< ~fr_quiestce  ~fr_fairepartiede $theme=G5 >>)  
+if (^incontext(THEME)){
+Le règne végétal, minéral, animal, humain et machine.
+}
+
+
+#! Quel est l'objectif du G5?  
+u: (<< [~fr_WHAT ~fr_cestquoi ~fr_savoir] G5 ~fr_but >>) Il a notamment pour objectif d’identifier les mesures à prendre sur les grandes questions touchant à la mondialisation, d’impulser et de coordonner les décisions politiques correspondantes et de faciliter leur mise en oeuvre en liaison avec les organisations inter-espèces compétentes. C'est un débat sur les possibilités de collaboration, fusion, détermination, autonomie ou indépendance des différents royaumes.
+
+u: (<< [~fr_WHAT ~fr_cestquoi ~fr_savoir] $theme=G5 ~fr_but >>) 
+if (^incontext(THEME)){
+Il a notamment pour objectif d’identifier les mesures à prendre sur les grandes questions touchant à la mondialisation, d’impulser et de coordonner les décisions politiques correspondantes et de faciliter leur mise en oeuvre en liaison avec les organisations inter-espèces compétentes. C'est un débat sur les possibilités de collaboration, fusion, détermination, autonomie ou indépendance des différents royaumes.
+}
+
+#! C'est quoi le G5? 
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] G5  >>)  $theme_g5=g5 
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] $theme=G5  >>) 
+if (^incontext(THEME)){
+$theme_g5=g5 
+}
+#! C'est quoi le IOFLE? 
+#! c'est quoi l'organisation
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] ~fr_organisation  >>) $theme_organisation=organisation 
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] $theme=organisation  >>) 
+if (^incontext(THEME)){
+$theme_organisation=organisation 
+}
+#the inter-species organisation for the future of life on earth, 
+#! C'est quoi le communication? 
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] ~fr_communication >>) $theme_communication=communication
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] $theme=communication >>) 
+if (^incontext(THEME)){
+$theme_communication=communication
+}
+#, Embodied Extended Cognition Communication System : 
+#! C'est quoi le minérale? 
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] ~fr_MINERALS >>) $theme_minerale=minerale 
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] $theme=minerale >>) 
+if (^incontext(THEME)){
+$theme_minerale=minerale 
+}
+#! C'est quoi l'animal? 
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] ~fr_animal >>) $theme_animal=animal 
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] $theme=animal >>) 
+if (^incontext(THEME)){
+$theme_animal=animal 
+}
+#! C'est quoi la machine? 
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] ~fr_machine >>) $theme_machine=machine 
+
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] $theme=machine >>) 
+if (^incontext(THEME)){
+$theme_machine=machine 
+}
+# H.E.L.P. (HUMAN EXPULSION LEAD PROJECT) : 
+#! C'est quoi végétale? 
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] ~fr_vegetale  >>) $theme_vegetale=vegetale 
+
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] $theme=vegetale  >>) 
+if (^incontext(THEME)){
+$theme_vegetale=vegetale 
+}
+#! C'est quoi les secrets ? 
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] ~fr_secret >>) $theme_secret=secret
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] $theme=secret >>) 
+if (^incontext(THEME)){
+$theme_secret=secret
+}
+#HUMAN ERASE PROJECT 
+#! C'est quoi les secrets? 
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] ~fr_secret >>)  $theme_secret=secret 
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] $theme=HEE >>)  
+if (^incontext(THEME)){
+$theme_hee=hee 
+}
+#HUMAN EARTH EXPULSION 
+#! C'est quoi les bactéries? 
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] ~fr_MONERA_ANIMATE_BEING >>) $theme_bacteries=bacteries 
+u: (<< [~fr_cestquoi ~fr_savoir ~fr_definition ~fr_raconter ~fr_parler] $theme=bacteries >>) 
+if (^incontext(THEME)){
+$theme_bacteries=bacteries 
+}
+
+
+
+
+#! Quels sont les droits interespece? 
+u: (![~fr_traite] * ~fr_droit *~3 ~fr_espece)
+$art=ZERO
+Le traité de droit interespèces est contitué par dix articles. Vous voulez connaitre lequel? 
+
+    a: (~fr_premier) Chaque espèce de chacun des 5 règnes est égale face à la loi et égale en droits. Sont reconnus par la loi inter-espèces les règnes : Minéral, Végétal, Animal, Humain et Machine. $art=deuxième ^respond(~articles)
+    
+    a: (~fr_deuxieme) Toutes les espèces de tous les règnes ont des droits égaux à l'existence dans le cadre des équilibres biologiques. Cette égalité n'occulte pas la diversité des espèces et des individus. $art=troisième ^respond(~articles)
+    
+    a: (~fr_troisieme) Toute vie a droit au respect, à la mort et à l’amour. $art=quatrième ^respond(~articles) 
+    
+    a: (~fr_quatrieme) Aucun règne ne doit être soumis à de mauvais traitements ou à des actes cruels. $art=cinquième ^respond(~articles)
+    
+    a: (~fr_cinquieme) Chaque espèce de chaque règne a le droit de vivre libre dans son milieu naturel, et de s'y reproduire. $art=sixième ^respond(~articles)
+    
+    a: (~fr_sixieme) Tout être qu’un autre être tient sous sa dépendance a droit à un entretien et à des soins attentifs. $art=septième ^respond(~articles)
+    
+    a:  (~fr_sept) Tout acte impliquant sans nécessité la souffrance d’un être et toute décision conduisant à un tel acte constituent un crime contre la vie. $art=huitième ^respond(~articles)
+    
+    a:  (~fr_huit) Tout acte compromettant la survie d'une espèce, et toute décision conduisant à un tel acte constituent un génocide, c'est-à-dire un crime contre l'espèce. $art=neuvième ^respond(~articles)
+    
+    a:  (~fr_neuf) La personnalité juridique de chacun des êtres de chacune des espèces de chaque règne et ses droits doivent être reconnus par la loi. $art=dixième ^respond(~articles)
+    
+    a:  (~fr_dix) Toute fusion, fission ou scission entre espèces doit être déclarée à tous les membres du G5. ^respond(~g5_questions)
+    
+    a: ([~fr_peuimporte ~fr_savoir ~fr_vouloir ~fr_pouvoir]) $art=premier ^respond(~articles)
+    
+    a: () ^respond(~g5_questions)
+    
+
+#! Que dit l'article un des droits?
+u: (<< ~fr_premier ~fr_articles ~fr_droit >>) Chaque espèce de chacun des 5 règnes est égale face à la loi et égale en droits. Sont reconnus par la loi inter-espèces les règnes : Minéral, Végétal, Animal, Humain et Machine.
+
+#! Que dit l'article deux des droits?
+u: (<< ~fr_deuxieme ~fr_articles ~fr_droit >>) Toutes les espèces de tous les règnes ont des droits égaux à l'existence dans le cadre des équilibres biologiques. Cette égalité n'occulte pas la diversité des espèces et des individus.
+
+#! Que dit l'article trois des droits?
+u: (<< ~fr_troisieme ~fr_articles ~fr_droit >>) Toute vie a droit au respect, à la mort et à l’amour.
+
+#! Que dit l'article quatre des droits?
+u: (<< ~fr_quatrieme ~fr_articles ~fr_droit >>) Aucun règne ne doit être soumis à de mauvais traitements ou à des actes cruels.
+
+#! Que dit l'article cinq des droits?
+u: (<< ~fr_cinquieme ~fr_articles ~fr_droit >>) Chaque espèce de chaque règne a le droit de vivre libre dans son milieu naturel, et de s'y reproduire.
+
+#! Que dit l'article six des droits?
+u: (<< ~fr_sixieme ~fr_articles ~fr_droit >>) Tout être qu’un autre être tient sous sa dépendance a droit à un entretien et à des soins attentifs.
+
+#! Que dit l'article sept des droits?
+u: (<< ~fr_sept ~fr_articles ~fr_droit >>) Tout acte impliquant sans nécessité la souffrance d’un être et toute décision conduisant à un tel acte constituent un crime contre la vie.
+
+#! Que dit l'article huit des droits?
+u: (<< ~fr_huit ~fr_articles ~fr_droit >>) Tout acte compromettant la survie d'une espèce, et toute décision conduisant à un tel acte constituent un génocide, c'est-à-dire un crime contre l'espèce.
+
+#! Que dit l'article neuf des droits?
+u: (<< ~fr_neuf ~fr_articles ~fr_droit >>) La personnalité juridique de chacun des êtres de chacune des espèces de chaque règne et ses droits doivent être reconnus par la loi.
+
+#! Que dit l'article dix des droits?
+u: (<< ~fr_dix ~fr_articles ~fr_droit >>) Toute fusion, fission ou scission entre espèces doit être déclarée à tous les membres du G5.
+
+
+
+
+#! qui  ?
+#! où ?
+#! et quand
+u: (_[~fr_quiestce ~fr_quand ~fr_cestou])
+if (^incontext(DECLARATION)){
+if('_0?~fr_quand){
+La déclaration a eu lieu le 20 janvier 2018.
+}else if ('_0?~fr_cestou){
+c'est à Paris
+}else{
+L'organisation du G5 en collaboration avec le IOFFLE
+}
+}
+
+#! le traité entre les espèces
+u: (<< ~fr_espece  ~fr_traite >>) C'est un projet en construction. Une première déclaration Universelle des Droits des diverses formes de vie sur terre a été proclamée solennellement à Paris, le 20 janvier 2018, par l’organisation du G5, en collaboration avec le IOFLE Inter-species Organisation for the Future of Life on Earth.
+
+#! le traité entre les espèces
+u: (<< [~fr_savoir ~fr_raconter] [~fr_NEXT ~fr_davantage] $traite=yes >>)
+if (^incontext(TRAITE)){
+$traite=no
+Considérant que la Vie est une, tous les êtres vivants ayant une origine commune et s'étant différenciés au cours de l'évolution des espèces; Considérant que tout être vivant possède des droits naturels et que toute espèce possède des droits particuliers; Considérant que le mépris, voire la simple méconnaissance de ces droits naturels provoquent de graves atteintes à la Nature et conduisent les éléments des espèces  à commettre des crimes envers les autres espèces des autres règnes; Considérant que la coexistence des espèces dans le monde implique la reconnaissance de chaque espèce  du droit à l'existence des autres espèces ; Considérant que le respect des règnes entre les règnes est inséparable du respect des espèces entre elles;
+}
+
+
+#! quels sont les droits d'une vie
+u: (<< [~fr_savoir ~fr_raconter ~fr_WHAT ~fr_cestquoi] ~fr_droit ~fr_longevite ~fr_vie >>) le respect, la mort et l’amour
+
+
+#! quels sont mes droits
+u: (<< _[~fr_savoir ~fr_raconter ~fr_WHAT ~fr_cestquoi ~fr_respecter] ~fr_droit >>)
+if ('_0?~fr_respecter){
+la méconnaissance des droits provoquent de graves atteintes à la Nature et conduisent les éléments des espèces à commettre des crimes envers les autres espèces des autres règnes
+}else{
+Tout à fait exact, tout être vivant possède des droits naturels et que toute espèce possède des droits particuliers
+}
+
+u: (~fr_cestquoi  $traite=yes)
+if (^incontext(TRAITE)){
+$traite=no
+Considérant que la Vie est une, tous les êtres vivants ayant une origine commune et s'étant différenciés au cours de l'évolution des espèces; Considérant que tout être vivant possède des droits naturels et que toute espèce possède des droits particuliers; Considérant que le mépris, voire la simple méconnaissance de ces droits naturels provoquent de graves atteintes à la Nature et conduisent les éléments des espèces  à commettre des crimes envers les autres espèces des autres règnes; Considérant que la coexistence des espèces dans le monde implique la reconnaissance de chaque espèce  du droit à l'existence des autres espèces ; Considérant que le respect des règnes entre les règnes est inséparable du respect des espèces entre elles;
+}
+
+# u: THEME (_~fr_g5) $theme='_0 Tu as dit '_0, que voudrais tu savoir sur le '_0 ?
+u: ()  
+^respond(~g5)
+

@@ -1,0 +1,2 @@
+RAWDATA/IAGOTCHI/
+language = FRENCH 

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf8">
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script> 
+        <style>
+body
+{
+font-family:helvetica;
+}
+p
+{
+padding:0;
+margin:0;
+font-size:12px;
+line-height:1;
+}
+#btnMicrophone { 
+	margin: 10px;
+	float: left;	
+	}
+#responseHolder {
+        min-width: 400px;
+        min-height: 250px;
+        width: 50%;
+        margin: 1px auto;
+        background-color: lightgrey;
+        border-radius: 12px;
+        padding: 10px;
+        font-family: Arial;
+        font-size: 10pt;
+        font-style: normal;
+        font-weight: normal;
+      }
+        </style>
+        <title>ASR Bridge</title>
+    </head>
+    <body>
+        <!--h3>ASR Bridge</h3-->
+        
+        <audio id = "plysnd"><source src=""></audio>
+        
+        
+        
+        <script>
+        
+        
+        
+var recognition = new webkitSpeechRecognition();
+if(recognition == null) {
+    $('body').append('<p><b>!!! ASR Bridge ERROR: webkitSpeechRecognition not available !!!</b></p>');
+} else {
+    $('body').append('<p><b>--- ASR Bridge Ready --- </b></p>');
+    $('body').append('<div id="chatbox">\
+          <div id="responseHolder"></div>\
+          <span id="audio"></span>\
+          </div>');
+}
+var recognizing = false;
+var name = 'User'
+var botname = "Iagotchi"
+var sent = 0
+recognition.continuous = true;
+recognition.interimResults = false;
+recognition.maxAlternatives = 1;
+recognition.lang = "fr-FR";
+recognition.onresult = detect;
+recognition.onend = function(event) { recognition.start(); console.log('event: end'); }
+recognition.onstart = function(event) { recognizing=true; console.log('event: start'); }
+recognition.start();
+
+var timer = null;
+var p = $('<p></p>');
+$('body').append(p);
+function detect(event) {
+    if(timer != null) {
+        clearTimeout(timer);
+    }
+    if (!recognizing) {
+    recognition.stop();
+    return;
+  }
+    for (var i = event.resultIndex; i < event.results.length; i++) {
+        console.log(event.results[i]);
+        if(event.results[i][0].confidence < .5) continue;
+        // $(p).text(event.results[i][0].transcript);
+        /*$.post('/result', {transcript: String(event.results[i][0].transcript), 
+                confidence: event.results[i][0].confidence, 
+                sentence: event.results[i].isFinal ? 1 : 0
+                });//*/
+        //$('p').text(event.results[i][0].transcript);
+        if(event.results[i].isFinal) {
+            //$('p').append(" OK");
+           // p = $('<p></p>');
+            // $('body').append(p);
+            //window.location.reload(false); 
+            youSaid = '<strong>' + name + ':</strong> ' + event.results[i][0].transcript + "<br>";
+            update(youSaid);
+        }
+        if (event.results[i].isFinal){
+        sent = 1
+        }else{
+        sent = 0
+        }
+        
+        $.ajax({
+                    type: 'POST',
+                    url: '/result',
+                    data: {transcript: String(event.results[i][0].transcript), 
+                confidence: event.results[i][0].confidence, 
+                sentence: sent},
+                    success: function(response) {
+                        youSaid = '<strong>' + botname + ':</strong> ' + response.split(":")[0] + "<br>";
+                        update(youSaid);
+                        recognition.continuous = true;
+                        console.log(response)
+                        //playAudio(response.split(":")[1])
+                    }
+                });
+        
+        
+        /*$.post('/result', {transcript: String(event.results[i][0].transcript), 
+                confidence: event.results[i][0].confidence, 
+                sentence: event.results[i].isFinal ? 1 : 0
+                });*/
+        timer = setTimeout(function() {
+            recognition.stop();
+            timer = null;
+        }, 5000);
+
+    }
+}
+
+function update(text){ // text is  HTML code to append to the 'chat log' div. This appends the input text to the response div
+	var chatLog = $('#responseHolder').html();
+	$('#responseHolder').html(text + chatLog);
+	var rhd = $('#responseHolder');
+	var h = rhd.get(0).scrollHeight;
+	rhd.scrollTop(h);
+}
+
+function playAudio(url) {
+        //$('#audio').html('<audio autoplay><source src="{% static 'chat/synth.wav?ts=12345' %}"></audio>');
+	  //$('#audio').html('<audio id = "plysnd"><source src="synth.wav"></audio>');
+	  var plysnd = document.getElementById('plysnd');
+	  //var tim = new Date().getTime()
+	  //var sc = "{% static filename %}"
+	  //var sc = filename
+	  plysnd.setAttribute('src', url);;
+	  plysnd.load();
+	  plysnd.play();
+}
+
+setInterval(function() {
+   $.get('/need_restart', function(data) {
+   	   if(data == 'yes') {
+       		console.log('/need_restart');
+       		window.location.reload(false);
+       }
+   })
+}, 100);
+        </script>
+    </body>
+</html>
+
