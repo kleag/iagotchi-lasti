@@ -99,7 +99,7 @@ WORKDIR /Dist
 RUN chmod +x entrypoint-iagotchi.sh
 #RUN cd ../iagotchi-bot/pyliblo && python3 setup.py build && python3 setup.py install && cd ../../Dist
 # RUN apt install -y liblo7 liblo-dev liblocale-gettext-perl liblouis-data liblouis14 liblouisutdml-bin liblouisutdml-data liblouisutdml8
-RUN apt install -y pyliblo-utils alsa-utils nano net-tools inetutils-ping
+RUN apt install -y pyliblo-utils alsa-utils nano net-tools inetutils-ping jq
 RUN pip3 install pathlib
 RUN mv /nltk_data/ /usr/
 RUN mkdir -p static/assets
