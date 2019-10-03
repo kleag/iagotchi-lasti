@@ -2,12 +2,14 @@
 
 # Installation
 
-* [Building from source code](#building-from-source-code)
+* [Building from source code](#building-from-source-code) *(must to be updated)*
 * [Docker container ](#docker-container)
 
 
 
-# Building from source code
+# Building from source code 
+
+
 
 ## Build dependences
 
@@ -101,6 +103,7 @@ the installation folder containing iagotchi-bot. Then follow the following instr
 All the configurations needed to run Iagotchi-bot are in the config.json file located in */path/to/install_folder/Dist/data*.
 The configuration file is read by the system at each restart and the parameters are reset. The fields necessary to fill in the file are:
 
+
 * {`session`} : fill with the durations in second of session time, of the user relaunch, etc ...
 * {`lima`} : set the appropriate values for the Lima server address (127.0.0.1) and port (8090)
 * {`botresponse`} : specify the port on which the bot must return its response.
@@ -166,10 +169,13 @@ sudo docker-compose up
 All the configurations needed to run Iagotchi-bot are in the config.json file located in */path/to/install_folder/Dist/data*.
 The configuration file is read by the system at each restart and the parameters are reset. The fields necessary to fill in the file are:
 
-* {`session`} : fill with the durations in second of session time, of the user relaunch, etc ...
-* {`botresponse`} : specify host ip address and port on which the bot must return its response.
-* {`synthesize`} : set to False for using an external speech synthesis from the response.
-* {`musique`} : specify the port on which the bot must return the music request.
+
+* {`what_run`} -  using to specify what to run:  bot (set to **bot**) or embeddings calculation (set to **similarity**) 
+ * {`bot`} - using to specify what topic to use: for *rencontre* topic set the name to **iagotchi**  and **iagotchig5** for *G5* topic.
+* {`session`} - fill with the durations in second of session time, of the user relaunch, etc ...
+* {`botresponse`} - specify host ip address and port on which the bot must return its response.
+* {`synthesize`} - set to False for using an external speech synthesis.
+* {`musique`} - specify the port on which the bot must return the music request.
 
 Modify the line 14 in docker-compose.yml  with the full path to the shared folder.
 
@@ -178,7 +184,7 @@ Modify the line 14 in docker-compose.yml  with the full path to the shared folde
    * For running the dialogue system.
 
     ```
-    $ sudo docker-compose up   
+    $ sudo docker-compose up  -d 
     ```
     
     
