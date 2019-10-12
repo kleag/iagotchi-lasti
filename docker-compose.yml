@@ -11,7 +11,7 @@ services:
         networks:
             - demo
         volumes:
-            - ~/Projects/IAGOTCHI/Dist/data:/Dist/data
+            - ~/Projects/Iagotchi/Dist/data:/Dist/data
         #devices:
             #- "/dev/snd:/dev/snd"
         environment:
@@ -23,6 +23,7 @@ services:
             - limaserver
         environment:
             NAME: iagotchi
+        tty: true 
         #depends_on:
             #- limaserver
         
