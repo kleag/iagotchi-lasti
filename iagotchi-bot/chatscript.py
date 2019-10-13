@@ -73,24 +73,37 @@ class ChatscriptInstance(object):
     
         
     def start_chatscript_processes(self):
+        """
+        Function to start the chatscript server in background.
+        It checks first if the name of the bot is correct otherwise it starts on 'iagotchi' by default.
+        """
+        check_botname = False
+        _port = None
         for bot, port in chatscript_settings.ports.items():
             if bot == self.botname:
-                print('start_chatscript_processes {}: {}>{} port={}'.format(bot,
-                            chatscript_settings.chatscript_path,
-                            chatscript_settings.chatscript_binary,
-                            port))
-                if os.name == 'nt':
-                    subprocess.Popen([chatscript_settings.chatscript_binary, 
-                                    'port={}'.format(port), 'buffer=15*50'],
-                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                    cwd=chatscript_settings.chatscript_path,
-                                    shell=True)
-                else:
-                    print("start_chatscript_processes run chatscript server on Linux")
-                    subprocess.Popen([chatscript_settings.chatscript_binary, 
-                                    'port={}'.format(port)],
-                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                    cwd=chatscript_settings.chatscript_path)
+                check_botname = True
+                _port = port
+                break
+        if not check_botname:
+            self.botname = "iagotchi"
+            _port = chatscript_settings.ports[self.botname]
+        
+        print('start_chatscript_processes {}: {}>{} port={}'.format(self.botname,
+                    chatscript_settings.chatscript_path,
+                    chatscript_settings.chatscript_binary,
+                    port))
+        if os.name == 'nt':
+            subprocess.Popen([chatscript_settings.chatscript_binary, 
+                            'port={}'.format(_port), 'buffer=15*50'],
+                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                            cwd=chatscript_settings.chatscript_path,
+                            shell=True)
+        else:
+            print("start_chatscript_processes run chatscript server on Linux")
+            subprocess.Popen([chatscript_settings.chatscript_binary, 
+                            'port={}'.format(_port)],
+                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                            cwd=chatscript_settings.chatscript_path)
 
     #TODO désactiver lima_processing
     def sendAndReceiveChatScript(self, text, user, bot, lima_processing=False, timeout=10):

@@ -44,11 +44,11 @@ u: ($qrelance=yes) $qrelance=no De quoi veux-tu qu'on parle maintenant ? nolima
     
     a: (_*) '_0 qrelanceget
     
-u: ($qrelance=yes) $qrelance=no Pose moi une question sur les projets du G5 par exemple. ? nolima
-
-    a: (~fr_NOANSWWER) qrelanceno
-    
-    a: (_*) '_0 qrelanceget
+# u: ($qrelance=yes) $qrelance=no Pose moi une question sur les projets du G5 par exemple. ? nolima
+# 
+#     a: (~fr_NOANSWWER) qrelanceno
+#     
+#     a: (_*) '_0 qrelanceget
     
 u: ($qrelance=yes) $qrelance=no Excuse moi je déconne un peu, je teste ta capacité à accepter l'incohérence, ça va? nolima
 

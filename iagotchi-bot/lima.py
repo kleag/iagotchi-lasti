@@ -1,5 +1,8 @@
-import requests, json
-import argparse
+try:
+    import requests
+except:
+    pass
+import argparse, json
 
 with open(r'@CMAKE_INSTALL_PREFIX@/data/config.json', 'r') as sv:
     configfile = json.load(sv)
@@ -100,10 +103,14 @@ class Lima(object):
     
     def sendAndReceiveLima(self, text, mode="word_pos"):
         """
+        Send text to Lima sercer and Receive text processed. 
         mode: word_pos, word_pos_lemma, speelcheck, lemma, text2lemma
         """
-        print('lima.sendAndReceiveLima: {}'.format(text))
-        text = u"%s" % (text)
+        #print('lima.sendAndReceiveLima: {}'.format(text))
+        try:
+            text = u"%s" % (text)
+        except:
+            pass
         text = str.encode(text)
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded',

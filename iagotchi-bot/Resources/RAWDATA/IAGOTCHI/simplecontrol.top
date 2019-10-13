@@ -46,16 +46,7 @@ topic: ~control system ()
 
 # on startup, do introduction.  It takes the user input which starts a new conversation and looks for a response in  ~introductions
 u: ( %input<%userfirstline) 
-	@8 = ^keywordtopics()
-	loop()
-		{
-			$$topic = first(@8subject)
-			nofail(TOPIC ^respond($$topic))
-			if (%response != $_responseCount) # stop when we find something to say
-			{
-				^end(RULE)	# we are done, this terminates the loop (not the rule)
-			}
-		}
+	gambit(~introductions)
 
 # if the user says shut up anywhere in the response, set the variable $shutup to 1, which is used later to stop using the talk output in windows
 u: (< shut up >) $shutup = 1

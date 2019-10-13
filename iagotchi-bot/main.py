@@ -11,6 +11,7 @@ from similarity import sent2vecProcess
 import os
 #from iagotchiGUI import iagotchiGui
 import threading
+#import easygui
 
 
 
@@ -63,6 +64,11 @@ class ASR(object):
         print()
         print('*** Please open chrome at http://127.0.0.1:%d' % self.http_server_port)
         print()
+        print("*********************************************************************")
+        print('******       Please open chrome at http://127.0.0.1:%d       ******' % self.http_server_port)
+        print("*********************************************************************")
+
+
         
         self._route()
 

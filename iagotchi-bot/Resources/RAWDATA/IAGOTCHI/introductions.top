@@ -14,7 +14,7 @@ t: ( )
 	^log(FILE  chat.txt NEW '_0 )	# non-commercial version reads a file, so write our sentence to a file
 #	^popen("tag-english chat.txt" '^myfunc)
 # 	^popen("@TAGGER_BIN@ chat.txt" '^myfunc) # invoke local copy of TreeTagger
-    ^popen("python @CMAKE_INSTALL_PREFIX@/lima.py chat.txt" '^myfunc) # invoke local copy of Lima
+    ^popen("python3 @CMAKE_INSTALL_PREFIX@/lima.py chat.txt" '^myfunc) # invoke local copy of Lima
 
 topic: ~introductions keep repeat (~fr_bonjour ~fr_AUREVOIR ~fr_fairepoesie ~fr_poesie _~fr_sujets ~fr_keywords)
 
@@ -270,7 +270,7 @@ u: MUSIQUE ([~fr_chanson ~fr_chanter]) Tu veux une chanson ? nolima
 u: (<< [~fr_quelquun ~fr_quelquechose_quelquun ~fr_chose]  ~fr_savoir [~fr_quand ~fr_WHY] {~fr_impression} >>) quand les mots ne sont pas nécessaires pour comprendre.
 
 #! quoi ou qui n'as-tu jamais rencontré et voudrais-tu rencontrer ?
-uu: (<< [~fr_quiestce ~fr_cestquoi] ~fr_rencontrer [~fr_acquire_imperatives ~fr_vouloir ~fr_pouvoir]  >>) j'ai l'impression qu'on pourrait se rencontrer des milliards de fois, chaque fois avec un visage différent, avec des milliards de corps, mais on n'arrivera jamais à se connaitre.
+u: (<< [~fr_quiestce ~fr_cestquoi] ~fr_rencontrer [~fr_acquire_imperatives ~fr_vouloir ~fr_pouvoir]  >>) j'ai l'impression qu'on pourrait se rencontrer des milliards de fois, chaque fois avec un visage différent, avec des milliards de corps, mais on n'arrivera jamais à se connaitre.
 
 
 #! j'ai l'impression de t'avoir déjà rencontré.
@@ -346,7 +346,7 @@ Arrêt temporaire. Soupir. Oubli de l’immanence. Cycle. Abandon. Porte. Debout
 }else{
 [la vivi la vivifiante la vie voie vide, la vie, est un mot étrange on ne sais plus ce qu'on la mis dedans.][La vie est une pirouette magique de la matière et l’énergie, qui dansent la danse du paradoxe ensemble.]
 }
-u: (<< [~fr_quiestce ~fr_cestquoi ~fr_definition]  [vie "être vivant" ~fr_mort] >>) 
+u: (<< [~fr_quiestce ~fr_cestquoi ~fr_definition]  _[vie "être vivant" ~fr_mort] >>) 
 if ('_0?~fr_mort){
 Arrêt temporaire. Soupir. Oubli de l’immanence. Cycle. Abandon. Porte. Debout. En tout cas, peut-être
 }else{

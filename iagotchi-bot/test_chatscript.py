@@ -7,7 +7,7 @@ with open(r'@CMAKE_INSTALL_PREFIX@/data/config.json', 'r') as sv:
     configfile = json.load(sv)
 
 def main(botname):
-    chatscript = ChatscriptInstance(botname)
+    chatscript = ChatscriptInstance(botname=botname)
     chatscript.start_iagotchi_bot()
     
 

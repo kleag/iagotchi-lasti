@@ -14,7 +14,7 @@ t: ( )
 	^log(FILE  chat.txt NEW '_0 )	# non-commercial version reads a file, so write our sentence to a file
 #	^popen("tag-english chat.txt" '^myfunc)
 # 	^popen("@TAGGER_BIN@ chat.txt" '^myfunc) # invoke local copy of TreeTagger
-    ^popen("python @CMAKE_INSTALL_PREFIX@/lima.py chat.txt" '^myfunc) # invoke local copy of Lima
+    ^popen("python3 @CMAKE_INSTALL_PREFIX@/lima.py chat.txt" '^myfunc) # invoke local copy of Lima
 
 topic: ~introductions keep repeat (~fr_bonjour ~fr_AUREVOIR ~fr_fairepoesie ~fr_poesie _~fr_sujets ~fr_keywords)
 

@@ -3,7 +3,7 @@
 # For example, this line is a comment.
 
 # this function is executed once for every new user chatting with harry
-outputmacro: iagotchi()  # you get harry by default
+outputmacro: iagotchig5()  # you get harry by default
 # The $cs_token is set to a variety of features I want for tokenizing input.
 $cs_token = #DO_INTERJECTION_SPLITTING  |  #DO_NUMBER_MERGE | #DO_DATE_MERGE  | #DO_PROPERNAME_MERGE  | #DO_SPELLCHECK  | #DO_PARSE | #DO_SUBSTITUTE_SYSTEM
 # $cs_token += #SPLIT_QUOTE | #NO_WITHIN | #STRICT_CASING
@@ -37,7 +37,7 @@ $SHUTUP = 1
 table: defaultbot (^name)
 ^createfact(^name defaultbot defaultbot)
 DATA:
-iagotchi
+iagotchig5
 
 # This topic is what gets executed for every sentence of user input because
 # it is set in the bot macro as the control script. It is declared "system" because

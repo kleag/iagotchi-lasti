@@ -51,6 +51,9 @@ for wd in stpwds:
     except:
         continue
 #ext_similarity = Similarity(using=configfile['similarity']['ToUse'])
+
+chrono = ChronoThread(log=None)
+chrono.start()
 class Externals(object):
     
     def __init__(self, botname='iagotchi'):
@@ -78,7 +81,7 @@ class Externals(object):
         print("##Run iagotchi bot")
         self.chatscript.runBot()
         self.log = None
-        self.chrono = None
+        self.chrono = chrono
         self.session_status = None
         self.startup()
         self.definition = dict()
@@ -104,8 +107,10 @@ class Externals(object):
         
     def startup(self):
         self.log = self.chatscript.start_iagotchi_bot()
-        self.chrono = ChronoThread(self.log)
+        self.chrono.log = self.log
+          
         try:
+            print('ici ici')
             self.chrono.session_restart_duration = int(configfile['session']['restart'])
             self.chrono.session_stop_duration = int(configfile['session']['stop'])
             self.chrono.session_duration = int(configfile['session']['duration'])
@@ -118,7 +123,8 @@ class Externals(object):
         self.chrono.externals = self
         
         self.session_status = 'start'
-        self.chrono.start()
+        #self.chrono.start()
+        self.chrono.status = True
         self.need_stop = False
     
     def postprocessing(self, response):
@@ -537,6 +543,9 @@ class Externals(object):
         return 'stop'
     
     def process(self, transcript):
+        """
+        To process 
+        """
         self._transcript = transcript
         print('no.use_lima {}'.format(self.no_use_lima))
         if self.no_use_lima:
