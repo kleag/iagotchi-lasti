@@ -1,4 +1,4 @@
-
+import pathlib
 import datetime
 from db.user import User
 from db.themes import Themes
@@ -12,6 +12,7 @@ class Log(object):
     
     
     def __init__(self, date, botname='iagotchi'):
+        pathlib.Path('data/logs').mkdir(parents=True, exist_ok=True) 
         self.logfile = 'data/logfile_{}_{}.txt'.format(botname, date)
         fplog = open(self.logfile, 'w')
         fplog.close()
