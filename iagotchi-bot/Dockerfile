@@ -70,14 +70,23 @@ RUN wget http://downloads.sourceforge.net/liblo/liblo-0.29.tar.gz && \
     cd .. && rm -R liblo* && \
 	pip3 install pyliblo 
 	
+
+RUN apt install -y pyliblo-utils alsa-utils nano net-tools inetutils-ping jq python3-requests
+
+
+
+# RUN 
+
+RUN dpkg -i google-chrome-stable_current_amd64.deb; apt-get install -yf
+RUN rm google-chrome-stable_current_amd64.deb
+
+
+
 COPY requirements.txt ./
 RUN pip3 install -r ./requirements.txt
 
 COPY . /iagotchi-bot/
 
-# RUN python3 setup.py build && python setup.py install
-
-# WORKDIR /
 
 
 
@@ -97,18 +106,16 @@ EXPOSE 5005
 EXPOSE 5009
 WORKDIR /Dist
 RUN chmod +x entrypoint-iagotchi.sh
-#RUN cd ../iagotchi-bot/pyliblo && python3 setup.py build && python3 setup.py install && cd ../../Dist
-# RUN apt install -y liblo7 liblo-dev liblocale-gettext-perl liblouis-data liblouis14 liblouisutdml-bin liblouisutdml-data liblouisutdml8
-RUN apt install -y pyliblo-utils alsa-utils nano net-tools inetutils-ping jq
 RUN pip3 install pathlib
+
+
 RUN mv /nltk_data/ /usr/
 RUN mkdir -p static/assets
 
-RUN apt install -y python3-requests
 
 
-#ENTRYPOINT ["./entrypoint-iagotchi.sh", "-g", "daemon off;"]
+
+
 CMD ["./entrypoint-iagotchi.sh", "-g", "daemon off;"]
-#CMD ["python3", "asr.py"]
 
 
