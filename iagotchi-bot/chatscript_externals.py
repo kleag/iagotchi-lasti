@@ -1,5 +1,10 @@
-#from spacy.lang.fr.examples import sentences 
-#import spacy
+"""
+This script is the core of the system. It contains the functions 
+to retrieve the transcription, perform a pretreatment, 
+send to the ChatScript engine, postprocess the response obtained 
+and some other operations required by the dialogue system.
+"""
+
 import re, json, datetime
 from chatscript import ChatscriptInstance
 import threading

@@ -1,3 +1,7 @@
+"""
+This script simulates the reception of bot responses.
+"""
+
 from __future__ import print_function, division
 import sys, osc, os
 

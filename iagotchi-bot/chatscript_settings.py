@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Jun 13 2018
-
-@author: Gael de Chalendar
+This script allows to specify the botnames and the ports 
+to which the requests are sent.
 """
 
 import os, json

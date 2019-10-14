@@ -4,6 +4,9 @@
 Created on Mon May  7 13:12:42 2018
 
 @author: frejus
+
+This script is used to interact with the ChatScript server.
+It allows you to run the server, start the dialog system of a bot, send requests and receive responses.
 """
 
 import socket

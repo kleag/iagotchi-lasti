@@ -1,3 +1,7 @@
+"""
+This script is used to send queries to the LIMA linguistic analyzer
+"""
+
 try:
     import requests
 except:

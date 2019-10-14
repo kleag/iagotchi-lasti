@@ -1,7 +1,11 @@
+"""
+This script implements a timer that controls a session. 
+It allows to stop a session or restart a conversation.
+"""
+
 import threading, socket, datetime, json, sys
 from synthese import Synthese
 import osc
-#syn = Synthese()
 
 with open(r'@CMAKE_INSTALL_PREFIX@/data/config.json', 'r') as sv:
     configfile = json.load(sv)
