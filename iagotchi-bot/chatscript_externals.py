@@ -83,7 +83,7 @@ class Externals(object):
         self.log = None
         self.chrono = chrono
         self.session_status = None
-        self.startup()
+        #self.startup()
         self.definition = dict()
         self.themes = configfile['themes']
         self.themes_used = list()
@@ -98,11 +98,7 @@ class Externals(object):
             self.music_port = 5007
         self.start_music = None
         self.definitions_from_db = dict()
-        if len(self.themes) > 0:
-            for th in self.themes:
-                res = self.log.getDefinition(th)
-                if not res is None:
-                    self.definitions_from_db[th] = res
+        self.stop_message = None
         self.no_use_lima = False
         
     def startup(self):
@@ -125,6 +121,13 @@ class Externals(object):
         self.chrono.status = True
         self.need_stop = False
         self.stop_message = None
+        
+        if len(self.themes) > 0:
+            for th in self.themes:
+                res = self.log.getDefinition(th)
+                if not res is None:
+                    self.definitions_from_db[th] = res
+        self.user_name = None
     
     def postprocessing(self, response):
         response = response.lower()
@@ -530,16 +533,12 @@ class Externals(object):
         if self.chrono.botresponse_object is None:
             self.chrono.botresponse_object = osc_client
             
-            
-        if not self.session_status == 'stop':
+        if any(bn in transcript.lower() for bn in lstbonjour) and (self.session_status == 'stop' or self.session_status is None):
+            self.startup()
             return self.process(transcript)
-        elif any(bn in transcript.lower() for bn in lstbonjour):
-            if self.session_status == 'stop':
-                print('session_status in any {}'.format(self.session_status))
-                self.startup()
-                print('session_status in any {}'.format(self.session_status))
-                return self.process(transcript)
-            
+        elif self.session_status == 'start':
+            return self.process(transcript)
+
         return 'stop'
     
     def process(self, transcript):

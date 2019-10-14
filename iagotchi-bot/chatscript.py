@@ -16,6 +16,9 @@ from log import Log
 
 
 class ChatscriptInstance(object):
+    """
+    Implements functions to manage connection instances to the ChatScript server.
+    """
     
     def __init__(self, lima=None, server="127.0.0.1", botname='iagotchi'):
         self.server = server
@@ -37,6 +40,9 @@ class ChatscriptInstance(object):
         
         
     def runChatscript(self):
+        """
+        Allows to launch in background the server
+        """
         self.start_chatscript_processes()
         #cs = ChatscriptInstance()
         for bot, port in self.ports.items():
@@ -51,8 +57,10 @@ class ChatscriptInstance(object):
             
 
     def runBot(self):
+        """
+        Allows to run the dialog system of a bot whose name is stored in self.botname.
+        """
         self.status = None
-        #print(self.botname)
         for bot, port in self.ports.items():
             #print(self.ports.items())
             if bot == self.botname:
@@ -107,6 +115,9 @@ class ChatscriptInstance(object):
 
     #TODO désactiver lima_processing
     def sendAndReceiveChatScript(self, text, user, bot, lima_processing=False, timeout=10):
+        """
+        Send and receive requests to the chatscript server.
+        """
         print('ChatscriptInstance.sendAndReceiveChatScript "{}", "{}", "{}" ; {}'
               .format(user, bot, text, self.ports[bot]))
         check_est_tu = False
@@ -150,8 +161,6 @@ class ChatscriptInstance(object):
         self.sendAndReceiveChatScript(text=":reset {}".format(self.botname), 
                                           user="User", 
                                           bot=self.botname)
-        #self.start_time = datetime.datetime.now()
-        #self.log = Log(self.start_time)
         return self.startup()
     
     def startup(self):

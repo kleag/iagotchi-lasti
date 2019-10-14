@@ -80,6 +80,7 @@ class ChronoThread (threading.Thread):
         """
         response = self.sendAndReceiveChatScript(text, "User", self.externals.botname, "127.0.0.1", int(configfile['chatscript']['port']))
         response = self.externals.check_no_lima_option(response)
+        #response = self.externals.postprocessing(response)
         print("thread run {}".format(response))
         rep = syn.synthese(response)
         self.log.save_in_file("-", response)

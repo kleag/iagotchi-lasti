@@ -47,9 +47,20 @@ u: USERNAME ($getusername=yes)
             Tu es $username ? Tu veux parler avec moi ?
             }
             
+            
+            a: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+            a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+            
             a: (< ~yes >) super. $qrelance=yes ^respond(~relance)
             
             a: () [super, sinon comment tu vas ? nolima][super, sinon ça va? Comment se passe ta journée ? nolima]
+            
+                b: (< code relance >)
+                $relance=yes
+                ^reuse(RELANCE)
+                b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
             
                 b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
         
@@ -84,6 +95,9 @@ u: (<< _~fr_bonjour [~fr_WHY ~fr_WHAT] [~fr_appelercomment ~fr_NAME] >>)
     '_0 je suis IAGOTCHI en version EXPERT G5 et toi, Comment tu t'appelles? nolima
     $$newtoken = $cs_token - #DO_SPELLCHECK
         
+ 
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.    
+        
     a: (< utilisateur renvoyer _*~1 >) 
         $username = '_0
         $getusername=yes
@@ -101,6 +115,11 @@ u: (<< _~fr_bonjour [~fr_WHY ~fr_WHAT] [~fr_appelercomment ~fr_NAME] >>)
         ^reuse(RELANCE)
         
     a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
+    
+        b: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+        b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     
         b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
         
@@ -132,8 +151,15 @@ u: (<< [~fr_WHY ~fr_WHAT] [~fr_appelercomment ~fr_NAME] >>)
     a: (< code relance >)
         $relance=yes
         ^reuse(RELANCE)
+
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     
     a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
+    
+        b: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+        b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     
         b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
         
@@ -168,8 +194,15 @@ u: (<< _~fr_bonjour ~emohowzit >>)
         a: (< code relance >)
             $relance=yes
             ^reuse(RELANCE)
+  
+        a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
             
         a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
+        
+            b: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+            b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     
             b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
             
@@ -221,9 +254,17 @@ u: (<< _~fr_bonjour >>)
     a: (< code relance >)
         $relance=yes
         ^reuse(RELANCE)
+        
+
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     
     
     a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
+    
+        b: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+        b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     
         b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
         
@@ -257,6 +298,11 @@ u: (<< ~fr_STOP [~fr_chanson ~fr_chanter] >>)
 
 # chanter une musique
 u: MUSIQUE ([~fr_chanson ~fr_chanter]) Tu veux une chanson ? nolima
+
+    a: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     
     a: (~fr_YESANSWER) Je te dédie celle la. Ecoutes **lancermusique
     
@@ -290,7 +336,15 @@ u: (< qui ~fr_v_etre [tu vous toi]>) [Moi je suis IAGOTCHI en version EXPERT G5 
         $relance=yes
         ^reuse(RELANCE)
         
+ 
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+        
     a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
+    
+        b: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+        b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     
         b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
         
@@ -656,8 +710,15 @@ u: (~fr_quiestu)
     a: (< code relance >)
         $relance=yes
         ^reuse(RELANCE)
+
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
         
     a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
+    
+        b: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+        b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     
         b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
         
@@ -684,7 +745,17 @@ u: (~fr_quiestu)
 #! récite moi une poésie
 u: (<< [~fr_raconter ~fr_fairepoesie] _[~fr_poesie ~fr_chose] '_0?~fr_poesie >>) [Tu veux un poème? nolima]
 
+    a: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+
     a: (<< ~fr_YESANSWER >>) OK, je vais essayer de t'en improviser. question4poesie nolima
+    
+        b: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+        b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     
         b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
     
@@ -703,6 +774,11 @@ u: (<< [~fr_raconter ~fr_fairepoesie] _[~fr_poesie ~fr_chose] '_0?~fr_poesie >>)
 
     
     a: (<< ~fr_NOANSWER >>) C'est dommage parce que je fais des poèmes magnifiques écoutes. question4poesie nolima
+    
+        b: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+        b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
         
         b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
     
@@ -720,6 +796,11 @@ u: (<< [~fr_raconter ~fr_fairepoesie] _[~fr_poesie ~fr_chose] '_0?~fr_poesie >>)
         b: () ^respond(~)
     
     a: () Je fais des poèmes magnifiques. Ecoutes. question4poesie nolima
+    
+        b: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+        b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     
         b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
     
@@ -743,12 +824,24 @@ if ('_0?~fr_poesie or '_0?~fr_chose){
 }else{
 Pourquoi veux-tu parler de '_0 ? nolima
 }
+
+    a: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+            
     a: (~fr_NOANSWER) Serais-tu perdu dans les pensées ? $qrelance=yes ^respond(~relance)
     
     a: () ^respond(~introduction)
     
 u: POESIE (<< [~fr_raconter ~fr_fairepoesie] _[~fr_poesie ~fr_chose] '_0?~fr_chose >>)
 Je fais des poèmes magnifiques. Ecoutes. question4poesie nolima
+
+    a: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+            
     a: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
     
     a: (<< [~fr_NEGATION ~fr_NEGATIVEVALUE]  ~fr_interessant >>) Peut-être vrai, je trouve aussi 
@@ -769,7 +862,19 @@ Je fais des poèmes magnifiques. Ecoutes. question4poesie nolima
 #! récite moi une poésie
 u: (<< ~fr_poesie >>) [Tu veux un poème? nolima]
 
+    a: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+
     a: (<< ~fr_YESANSWER >>) OK, je vais essayer de t'en improviser. question4poesie nolima
+    
+        b: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+        b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+            
+            
     
         b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
     
@@ -788,6 +893,11 @@ u: (<< ~fr_poesie >>) [Tu veux un poème? nolima]
 
     
     a: (<< ~fr_NOANSWER >>) C'est dommage parce que je fais des poèmes magnifiques écoutes. question4poesie nolima
+    
+        b: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+        b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
         
         b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
     
@@ -805,6 +915,11 @@ u: (<< ~fr_poesie >>) [Tu veux un poème? nolima]
         b: () ^respond(~)
     
     a: () Je fais des poèmes magnifiques. Ecoutes. question4poesie nolima
+    
+        b: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+        b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     
         b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
     
@@ -828,6 +943,12 @@ u: MOTCLE (_~fr_sujets )
     $motcle = '_0
     Oh oh t'as dit $motcle, je ne connais pas bien ce mot. J'aimerais que tu m'expliques. C'est quoi $motcle ? wikipediamotcleinitial $motcle nolima
 
+    
+    a: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+            
     a: (< définition existe déjà _*~1 dans la base de données _*) Mais nous avons déjà parlé de '_0. Un petit rappel: '_1
     a: (<< (~fr_NOANSWER ~fr_definition) >>) Tu n'en as aucune idée ? Moi je crois que $motcle c'est : wikipediamocle0 $motcle
     a: (<< (~fr_NOANSWER ~fr_savoir) >>) Tu n'en as aucune idée ? Moi je crois que $motcle c'est : wikipediamocle0 $motcle
@@ -843,6 +964,11 @@ u: MOTCLE (_~fr_sujets )
     
     
 u: (~emohowzit *~3 >) [Je suis prêt à me nourir de tes mots. Et toi, comment ça va ? nolima][Peut-être, et toi ? nolima][Mais comment? nolima][Je ne me sens pas encore][Je ne me suis jamais senti, j’espère que ça sent bien][Je crois qu’un avenir radieux m’attends][Je crois que l'avenir est radieux]
+
+        a: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+        a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     
         a: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
         

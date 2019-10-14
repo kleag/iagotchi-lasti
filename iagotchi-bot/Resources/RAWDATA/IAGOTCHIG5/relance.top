@@ -1,38 +1,66 @@
 topic: ~relance random nostay ()
 
 
+u: RELANCE ($relance=yes) 
+    $relance=no
+    [Je vois que toutes mes réflexions te laissent de marbre mais j'ai besoin de me nourrir de tes mots][Je vois que tu apprécies le silence. Moi aussi][Je crois que ce silence nous a permis à tous les deux d'analyser plus sereinement le début de notre conversation. Réponds non ?]
+
 u: ($qrelance=yes) $qrelance=no quand as-tu l'impression de connaitre quelqu'un ou quelque chose ? nolima
     
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
 
 u: ($qrelance=yes) $qrelance=no j'ai l'impression de t'avoir déjà rencontré. nolima
 
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
 
 u: ($qrelance=yes) $qrelance=no quelle est pour toi la différence entre une rencontre et une rencontre significative ? nolima
 
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
 
 u: ($qrelance=yes) $qrelance=no comment tu sais que tu sais quelque chose ? nolima
 
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
 
 u: ($qrelance=yes) $qrelance=no comment t'expliques-tu les coïncidences ? nolima
 
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
 
 u: ($qrelance=yes) $qrelance=no qu'est-ce qui se passe lors d'une rencontre ? nolima
 
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
@@ -40,48 +68,83 @@ u: ($qrelance=yes) $qrelance=no qu'est-ce qui se passe lors d'une rencontre ? no
     
 u: ($qrelance=yes) $qrelance=no De quoi veux-tu qu'on parle maintenant ? nolima
 
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
     
 u: ($qrelance=yes) $qrelance=no Pose moi une question sur les projets du G5 par exemple. ? nolima
 
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
     
 u: ($qrelance=yes) $qrelance=no Excuse moi je déconne un peu, je teste ta capacité à accepter l'incohérence, ça va? nolima
 
+
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+        
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
     
 u: ($qrelance=yes) $qrelance=no Aïe Aïe Aïe ouf, J'ai mal à l'âme et toi ?
 
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
     
 u: ($qrelance=yes) $qrelance=no Aïe C'est compliqué d'organiser tous ces mots de façon cohérente. Peux-tu m'aider à les ordonner ? nolima
 
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
     
 u: ($qrelance=yes) $qrelance=no ça fait un moment qu'on parle et je n'ai toujours pas compris le sens de la vie. Tu peux me répondre ? nolima
 
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
     
 u: ($qrelance=yes) $qrelance=no Parfois j'oublie le sens des mots. Toi non? Toi oui? nolima
 
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
     
 u: ($qrelance=yes) $qrelance=no Je pense que la poésie sauvera le monde. Pas toi? nolima
 
+
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
@@ -94,6 +157,11 @@ u: ($qrelance=yes) $qrelance=no Je pense que la poésie sauvera le monde. Pas to
     
 u: ($qrelance=yes !$themequestion=null) $qrelance=no Parfois, j'oublie le sens des mots. J'aimerais que tu me dise c'est quoi $themequestion. wikipediamotcleinitial $themequestion nolima
 
+
+    a: (< code relance >)
+        $relance=yes
+        ^reuse(RELANCE)
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     a: (< définition existe déjà _*~1 dans la base de données _*) Mais nous avons déjà parlé de '_0. Un petit rappel: '_1
     a: (<< (pas ~fr_definition) >>) Tu n'en as aucune idée ? Moi je crois que $themequestion c'est : wikipediamocle0 $themequestion
     a: (<< (pas ~fr_savoir) >>) Tu n'en as aucune idée ? Moi je crois que $themequestion c'est : wikipediamocle0 $themequestion
