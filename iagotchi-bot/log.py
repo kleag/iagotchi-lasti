@@ -13,7 +13,7 @@ class Log(object):
     
     def __init__(self, date, botname='iagotchi'):
         pathlib.Path('data/logs').mkdir(parents=True, exist_ok=True) 
-        self.logfile = 'data/logfile_{}_{}.txt'.format(botname, date)
+        self.logfile = 'data/logs/logfile_{}_{}.txt'.format(botname, date)
         fplog = open(self.logfile, 'w')
         fplog.close()
         self.dbsession = Session()
