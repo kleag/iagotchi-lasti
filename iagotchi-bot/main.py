@@ -118,9 +118,10 @@ class ASR(object):
             self.sentence_num += 1
             self.osc_client.send('/result/botresponse {}'.format(self.transcript))
             reps = self.externals.run(self.transcript, self.osc_client, self.osc_self_client)
+            if reps == "stop":
+                return None
             if  "_stop_" in reps:
                 reps = reps.replace('_stop_', '')
-
                 self.osc_self_client.send('/exit')
             if reps and "synth-" in reps:
                 if self.osc_client:

@@ -100,6 +100,7 @@ class Externals(object):
         self.definitions_from_db = dict()
         self.stop_message = None
         self.no_use_lima = False
+        self.osc_client = None
         
     def startup(self):
         self.log = self.chatscript.start_iagotchi_bot()
@@ -128,6 +129,9 @@ class Externals(object):
                 if not res is None:
                     self.definitions_from_db[th] = res
         self.user_name = None
+        if self.osc_client is not None:
+            self.osc_client.send('/session/start {}'.format(self.chrono.start_time))
+        
     
     def postprocessing(self, response):
         response = response.lower()
@@ -490,6 +494,8 @@ class Externals(object):
                 if not pers is None:
                     self.need_user_name = False
                     self.user_name = pers
+                    if self.osc_client is not None:
+                        self.osc_client.send('/session/name {}'.format(self.user_name))
                     print(pers)
                     self.log.insert("User", "username", pers)
                     transcript = self._check_bonjour_et_toi_in(transcript)
@@ -501,6 +507,8 @@ class Externals(object):
                 if not pers is None:
                     self.need_user_name = False
                     self.user_name = pers
+                    if self.osc_client is not None:
+                        self.osc_client.send('/session/name {}'.format(self.user_name))
                     print(pers)
                     self.log.insert("User", "username", pers)
                     transcript = self._check_bonjour_et_toi_in(transcript)
@@ -530,6 +538,7 @@ class Externals(object):
         Output: "stop" if user says bye bye else None.
         """
         self.chrono.osc_self_client = osc_self_client
+        self.osc_client = osc_client
         if self.chrono.botresponse_object is None:
             self.chrono.botresponse_object = osc_client
             

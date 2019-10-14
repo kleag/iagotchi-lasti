@@ -88,6 +88,8 @@ class ChronoThread (threading.Thread):
             if 'synth-' in rep:
                 rep = rep.split(':')[0]
             self.botresponse_object.send('/result/botresponse {}'.format(rep))
+            if text == 'sessionstop':
+                self.botresponse_object.send('/session/stop {}'.format(datetime.datetime.now()))
         if self.osc_self_client  is not None:
             self.externals.stop_message = "sessionstop {}".format(rep)
             self.osc_self_client.send('/sessionstop')

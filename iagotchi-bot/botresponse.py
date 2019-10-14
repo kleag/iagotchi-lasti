@@ -1,11 +1,10 @@
 from __future__ import print_function, division
 import sys, osc, os
-import vlc, pafy
 
 
 class BotResponse(object):
     
-    def __init__(self, osc_server_port=5007, osc_client_host='127.0.0.1', osc_client_port=5009):
+    def __init__(self, osc_server_port=5005, osc_client_host='127.0.0.1', osc_client_port=5009):
         self.osc_server_port = osc_server_port
         self.osc_client_host = osc_client_host
         self.osc_client_port = osc_client_port
@@ -27,23 +26,21 @@ class BotResponse(object):
 
     def osc_server_message(self, message):
         print("message entrant {}".format(message))
-        #if '/music' in message:
-            #url = 'https://www.youtube.com/watch?v=g0eO74UmRBs'
-            #video = pafy.new(url)
-            #best = video.getbest()
-            #media = vlc.MediaPlayer(best.url)
-            #media.play()
             
-        if message == '/result/botresponse':
-            print('get: {}'.format(message))
-            #result = self.generate(200, prime='<eos>', temperature=0.9)
-            #thetext = ' '.join([x for x in result if x != '<eos>'])
-            #thetext = ("   " + thetext + "   ").strip('<eos>')
-            #thetext = thetext.replace("(", " ")
-            #thetext = thetext.replace(")", " ")
-            #thetext = thetext.strip(';')
-            #print(thetext)
-            #self.osc_client.send("/generator/result "+thetext);
+        if '/result/botresponse' in message:
+            message = message.replace('/result/botresponse', '')
+            print('botresponse: {}'.format(message))
+        elif '/session/start' in message:
+            message = message.replace('/session/start', '')
+            print('sesson start at: {}'.format(message))
+            
+        elif '/session/stop' in message:
+            message = message.replace('/session/stop', '')
+            print('session stop at: {}'.format(message))
+            
+        elif '/session/name' in message:
+            message = message.replace('/session/name', '')
+            print('user name is : {}'.format(message))
         elif message == '/exit':
             self.osc_server.shutdown()
             sys.exit(0)
