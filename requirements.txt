@@ -1,0 +1,16 @@
+cython
+gensim
+nltk
+numpy
+pyliblo
+scipy
+SQLAlchemy
+textacy
+wikipedia
+tqdm
+pandas
+cython
+pathlib
+torch
+torchvision
+requests
