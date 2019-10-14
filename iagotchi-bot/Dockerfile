@@ -77,11 +77,6 @@ RUN apt install -y pyliblo-utils alsa-utils nano net-tools inetutils-ping jq pyt
 
 # RUN 
 
-RUN dpkg -i google-chrome-stable_current_amd64.deb; apt-get install -yf
-RUN rm google-chrome-stable_current_amd64.deb
-
-
-
 COPY requirements.txt ./
 RUN pip3 install -r ./requirements.txt
 
