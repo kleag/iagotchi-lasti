@@ -44,7 +44,7 @@ try:
 except:
     syn = Synthese()
     
-lstbonjour = ["allo", "allô", "aloha", "bon après-midi", "bonjour", "bonjour et bienvenue", "bonsoir", "c'est bien de vous revoir", "content de te rencontrer", "enchanté", "hella", "hello", "hey", "hey toi", "hiya", "salutations", "salut", "sympa de te rencontrer", "sympa de te voir"]
+lstbonjour = ["allo", "allô", "aloha", "bon après-midi", "bonjour", "bonjour et bienvenue", "bonsoir", "c'est bien de vous revoir", "content de te rencontrer", "enchanté", "hella", "hello", "hey", "hey toi", "hiya", "salutations", "salut", "sympa de te rencontrer", "sympa de te voir", "coucou"]
 stpwds = ['qu', 'que', 'qui', 'ne', 'pas', "n'"]
 punctuations = '''!()[]{};:"\,<>./?@#$%^&*'''
 RE_STRIP_REFS = re.compile("\.?\[\d+\]?")
