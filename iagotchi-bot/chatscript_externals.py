@@ -110,22 +110,21 @@ class Externals(object):
         self.chrono.log = self.log
           
         try:
-            print('ici ici')
             self.chrono.session_restart_duration = int(configfile['session']['restart'])
             self.chrono.session_stop_duration = int(configfile['session']['stop'])
             self.chrono.session_duration = int(configfile['session']['duration'])
             if self.chrono.session_restart_duration > self.chrono.session_stop_duration:
                 sys.exit("[Iagotchi-Bot Error] Value of stop field in session must be less than restart value.")
         except:
-            sys.exit("[Iagotchi-Bot Error] Stop, Restart and Duration values must be an integer.")
+            sys.exit("[Iagotchi-Bot Error] Stop, Restart and Duration values must be integers.")
         self.chrono.start_time = self.chatscript.start_time
         self.chrono.current_response_time = None
         self.chrono.externals = self
         
         self.session_status = 'start'
-        #self.chrono.start()
         self.chrono.status = True
         self.need_stop = False
+        self.stop_message = None
     
     def postprocessing(self, response):
         response = response.lower()
@@ -521,16 +520,17 @@ class Externals(object):
         #text = [t for t in text if not t in raw_stopword_top_list]
         return " ".join(text)
             
-    def run(self, transcript, osc_client):
+    def run(self, transcript, osc_client, osc_self_client):
         """
         Take as input a transcript, perform a preprocessing of the text, send to the dialogue system, perform a postraitement of the response, make the voice synthesis of the response and save the data in the log file. Also update the chrono module.
         Input: transcript
         Output: "stop" if user says bye bye else None.
         """
+        self.chrono.osc_self_client = osc_self_client
         if self.chrono.botresponse_object is None:
             self.chrono.botresponse_object = osc_client
             
-        print('session_status {}'.format(self.session_status))
+            
         if not self.session_status == 'stop':
             return self.process(transcript)
         elif any(bn in transcript.lower() for bn in lstbonjour):
@@ -574,7 +574,6 @@ class Externals(object):
             return synth_response
             
     def stop(self):
-        #self.save_responses_pickle_obj(self.using_topic_responses)
         self.session_status = 'stop'
         self.chrono.stop()
         
@@ -600,7 +599,7 @@ class Externals(object):
             
     def _person_entity(self, text):
         """
-        Check the presence of a person entity
+        Check if person entity is in text.
         Input: Text
         Output: The entity if it exists otherwise None
         """
@@ -635,14 +634,6 @@ class Externals(object):
         except:
             return None
         
-        ## using spacy
-        #text = self._capitalize_text(text)
-        #doc = nlp(text)
-        #_person = [token.text for token in doc if token.pos_ == "PROPN"]
-        #if len(_person) > 0:
-            #return _person[0]
-        #else:
-            #return None
         
     def _et_toi_in(self, text):
         """

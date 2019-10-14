@@ -159,6 +159,16 @@ setInterval(function() {
        }
    })
 }, 100);
+
+setInterval(function() {
+   $.get('/sessionstop', function(data) {
+    if (data.length > 0){
+     youSaid = '<strong>' + botname + ':</strong> ' + data + "<br>";
+    update(youSaid);
+    }
+   })
+}, 100);
+
         </script>
     </body>
 </html>

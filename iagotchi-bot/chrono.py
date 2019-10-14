@@ -30,45 +30,54 @@ class ChronoThread (threading.Thread):
         self.start_time = None
         self.osc_client = osc.Client(host='0.0.0.0', port=9000)
         self.externals = None
+        self.osc_self_client = None
         
         
     def run(self):
         print ("ChronoThread Starting ")
-        while self.status:
-            while not self.externals.session_status == 'stop':
-                current_time = datetime.datetime.now()
-                if not self.current_response_time is None and not self.session_restart_duration is None :
-                    duration = (current_time -  self.current_response_time).total_seconds()
-                    if self.already_restarted > 0 and duration + self.already_restarted*self.session_restart_duration >= self.session_stop_duration:
-                        self.chrono_process("sessionstop")
-                        self.osc_client.send('/exit')
-                        self.externals.stop()
-                        self.stop()
-                        break
+        while True:
+            if self.status:
+                print()
+                while not self.externals.session_status == 'stop':
+                    current_time = datetime.datetime.now()
+                    if not self.current_response_time is None and not self.session_restart_duration is None :
+                        duration = (current_time -  self.current_response_time).total_seconds()
+                        if self.already_restarted > 0 and duration + self.already_restarted*self.session_restart_duration >= self.session_stop_duration:
+                            self.chrono_process("sessionstop")
+                            self.osc_client.send('/exit')
+                            self.externals.stop()
+                            self.stop()
+                            self.status = False
+                            break
+                        elif (current_time -  self.start_time).total_seconds() >= self.session_duration:
+                            self.chrono_process("sessionstop")
+                            
+                            self.osc_client.send('/exit')
+                            self.externals.stop()
+                            self.stop()
+                            self.status = False
+                            break
+                        elif  duration >= self.session_restart_duration:
+                            #print("stop stop stop stop")
+                            self.chrono_process("code relance")
+                            
+                            self.current_response_time = datetime.datetime.now()
+                            self.already_restarted += 1
+                            #self.botresponse = rep
                     elif (current_time -  self.start_time).total_seconds() >= self.session_duration:
-                        self.chrono_process("sessionstop")
-                        
-                        self.osc_client.send('/exit')
-                        self.externals.stop()
-                        self.stop()
-                        break
-                    elif  duration >= self.session_restart_duration:
-                        #print("stop stop stop stop")
-                        self.chrono_process("code relance")
-                        
-                        self.current_response_time = datetime.datetime.now()
-                        self.already_restarted += 1
-                        #self.botresponse = rep
-                elif (current_time -  self.start_time).total_seconds() >= self.session_duration:
-                        self.chrono_process("sessionstop")
-                        
-                        self.osc_client.send('/exit')
-                        self.externals.stop()
-                        self.stop()
-                        break
-                        
+                            self.chrono_process("sessionstop")
+                            self.osc_client.send('/exit')
+                            self.externals.stop()
+                            self.stop()
+                            self.status = False
+                            break
+                            
                     
     def chrono_process(self, text):
+        """
+        Processing including different actions according to the evolution of session duration.
+        Input: Text to send to Chatscript. 
+        """
         response = self.sendAndReceiveChatScript(text, "User", self.externals.botname, "127.0.0.1", int(configfile['chatscript']['port']))
         response = self.externals.check_no_lima_option(response)
         print("thread run {}".format(response))
@@ -78,6 +87,9 @@ class ChronoThread (threading.Thread):
             if 'synth-' in rep:
                 rep = rep.split(':')[0]
             self.botresponse_object.send('/result/botresponse {}'.format(rep))
+        if self.osc_self_client  is not None:
+            self.externals.stop_message = "sessionstop {}".format(rep)
+            self.osc_self_client.send('/sessionstop')
                     
     def sendAndReceiveChatScript(self, text, user, bot, server, port, timeout=10):
         print('ChronoThread.sendAndReceiveChatScript "{}", "{}", "{}" ; {}'

@@ -52,9 +52,7 @@ class ASR(object):
         #For CEA's modules
         self.transcript = None
         self.botresponse = None
-        #self.chatscript = ChatscriptInstance()
-        #self.chatscript.start_iagotchi_bot()
-        #self.chatscript.start_time
+
         #END
         
         self.silent = False
@@ -77,6 +75,7 @@ class ASR(object):
         self.http_server.route('/', method="GET", callback=self.index)
         self.http_server.route('/result', method="POST", callback=self.result)
         self.http_server.route('/need_restart', method="GET", callback=self.need_restart)
+        self.http_server.route('/sessionstop', method="GET", callback=self.sessionstop)
         self.http_server.route('/static/assets/<filename>', method="GET", callback=self.server_static)
         
         
@@ -116,19 +115,16 @@ class ASR(object):
         if result['sentence'] == 1:
             print("phraseee  _" + mess.decode('utf8'))
             self.transcript = mess.decode('utf8')
-#            osc.client.send_sentence(self.sentence_num, mess)
             self.sentence_num += 1
             self.osc_client.send('/result/botresponse {}'.format(self.transcript))
-            reps = self.externals.run(self.transcript, self.osc_client)
+            reps = self.externals.run(self.transcript, self.osc_client, self.osc_self_client)
             if  "_stop_" in reps:
                 reps = reps.replace('_stop_', '')
-                #externals.stop()
-                #reps = None
+
                 self.osc_self_client.send('/exit')
             if reps and "synth-" in reps:
                 if self.osc_client:
                     self.osc_client.send('/result/botresponse {}'.format(reps.split(':')[0]))
-                #reps = static_file(reps, root='/static/')
             #TODO implémebnter musique
             if reps and "start_music" in reps:
                 reps = reps.replace('start_music', '')
@@ -173,6 +169,11 @@ class ASR(object):
             self.is_restart_needed = False
             return 'yes'
         return 'no'
+    def sessionstop(self):
+        if self.externals.stop_message is not None:
+            stpmsg = self.externals.stop_message.replace('sessionstop', '')
+            self.externals.stop_message = None
+            return stpmsg
     
     def start(self):
         self.http_server.run(host='0.0.0.0', port=self.http_server_port, quiet=True, debug=True)
