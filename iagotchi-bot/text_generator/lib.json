@@ -1,5 +1,0 @@
-{
-    "name": "My lib",
-    "description": "several texts",
-    "lib": ["data/iagotchi.txt"]
-}
