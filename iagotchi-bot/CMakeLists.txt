@@ -32,7 +32,6 @@ install(DIRECTORY text_generator DESTINATION ${CMAKE_INSTALL_PREFIX})
 configure_file(chatscript_settings.py chatscript_settings.py @ONLY)
 configure_file(lima.py lima.py @ONLY)
 configure_file(chatscript_externals.py chatscript_externals.py @ONLY)
-configure_file(rule_generator.py rule_generator.py @ONLY)
 configure_file(synthese.py synthese.py @ONLY)
 configure_file(chrono.py chrono.py @ONLY)
 configure_file(main.py main.py @ONLY)
@@ -46,7 +45,6 @@ install(
       chatscript.py
       ${CMAKE_CURRENT_BINARY_DIR}/chatscript_externals.py
       ${CMAKE_CURRENT_BINARY_DIR}/chatscript_settings.py
-      ${CMAKE_CURRENT_BINARY_DIR}/rule_generator.py
       ${CMAKE_CURRENT_BINARY_DIR}/synthese.py
       ${CMAKE_CURRENT_BINARY_DIR}/test_chatscript.py
       bottle.py
@@ -54,21 +52,13 @@ install(
       ${CMAKE_CURRENT_BINARY_DIR}/chrono.py
       ${CMAKE_CURRENT_BINARY_DIR}/lima.py
       log.py
-      wiki_text_nlp.py
       index.html
-      preprocessing.py
       similarity.py
-      similarity_test.txt
       test_generator.py
       model.py
-      data.py
-      test_lima.py
       entrypoint-iagotchi.sh
       botresponse.py
-      test_database.py
-      test_dumpjson.py
       iagotchiGUI.py
-      get_sentences_from_rules.py
   DESTINATION ${CMAKE_INSTALL_PREFIX}
   
 )
