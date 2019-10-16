@@ -24,6 +24,7 @@ services:
             - limaserver
         environment:
             NAME: iagotchi
+        shm_size: '4G'
         tty: true 
         #depends_on:
             #- limaserver
