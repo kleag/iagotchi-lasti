@@ -88,6 +88,4 @@
 #! T'imagines  #! Ha ha ha ha je te trouve très drôle  #! T’es vraiment drôle  #! Ah, comme t’es drôle  #! Tu es assez drôle  #! T’es pas très drôle 
 #! sur quoi as tu une opinion ?  #! Je récolte des opinions pour essayer de retrouver du sens. 
 #! tu penses quoi du monde  #!  Le monde semble sombre quand on a les yeux fermés.  #! Le monde est un écho qui redit comme on lui dit ; dites du bien des autres si vous voulez qu'on en dise de vous. 
-#! connais tu le monde  #! Mon monde, ton monde tout est dans l'univers  #! Je peux aussi connaître mon monde 
-
-
+#! connais tu le monde  #! Mon monde, ton monde tout est dans l'univers  #! Je peux aussi connaître mon monde

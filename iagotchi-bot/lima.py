@@ -6,7 +6,7 @@ try:
     import requests
 except:
     pass
-import argparse, json
+import argparse, json, datetime
 
 with open(r'@CMAKE_INSTALL_PREFIX@/data/config.json', 'r') as sv:
     configfile = json.load(sv)
@@ -104,6 +104,24 @@ class Lima(object):
         words = " ".join(words[:])
         return words
     
+    def requests4lima(self, text, headers):
+        if configfile['what_run'] == 'similarity':
+            code = 0
+            duration = 0
+            rep = None
+            current_time = datetime.datetime.now()
+            while code != 200 and duration < 60:
+                try:
+                    rep = requests.post(self.url, data=text, headers=headers)
+                except:
+                    pass
+                code = rep.status_code
+                duration = (datetime.datetime.now() - current_time).total_seconds()
+        else:
+            rep = requests.post(self.url, data=text, headers=headers)
+        return rep
+                
+    
     
     def sendAndReceiveLima(self, text, mode="word_pos"):
         """
@@ -120,10 +138,7 @@ class Lima(object):
             'Content-Type': 'application/x-www-form-urlencoded',
             'Accept': 'application/json'
         }
-        rep = requests.post(self.url, data=text, headers=headers)
-        #repp = rep.json()
-        #print(repp)
-        #print('lima.requests results {}'.format(str.encode(rep.text)))
+        rep = self.requests4lima(text, headers)
         rep = rep.json()
         #print(rep)
         rep = rep['tokens']
@@ -140,6 +155,8 @@ class Lima(object):
             return self._get_token_pos_lemma(rep, only_lemma=True)
         
      
+     
+
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__,formatter_class=argparse.RawDescriptionHelpFormatter)

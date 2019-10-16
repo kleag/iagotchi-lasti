@@ -190,7 +190,10 @@ class sent2vecProcess():
             #self.configurations = self.configurations['sent2vec']
         except Exception as e:
             sys.exit("[Iagotchi Error] config.json file is not found {}".format(e))
-        parameters = {"data":"Data/all_text.txt", "epoch":15, "lr":0.1, "wordNgrams":2, "minCount":1, "bucket":4000, "dim":300, "loss":"ns", "output":"allsent2vec", "embeddings": "data/wiki.fr.vec"}
+        try:
+            parameters = self.configurations['sent2vec']
+        except:
+            parameters = {"data":"Data/all_text.txt", "epoch":15, "lr":0.1, "wordNgrams":2, "minCount":1, "bucket":4000, "dim":300, "loss":"ns", "output":"allsent2vec", "embeddings": "data/fr_model.bin"}
         for param, value in parameters.items():
             if param !="data":
                 try:
@@ -227,7 +230,7 @@ class sent2vecProcess():
             ids = list()
             with open(file_, 'r') as in_stream:
                 for idline, line in enumerate(in_stream):
-                    if line.strip():
+                    if line.strip() and line.startswith('#!'):
                         line = self.getQuestion(line.strip())
                         line = self.clean_text(line)
                         line = self.lima_process(line)
@@ -375,9 +378,6 @@ class EmbeddingsSimilarity(object):
         return not bool(s.strip())
     
     def getSimilar(self, texte, topic):
-        #if use_classif == True:
-        #texte = [w for w in texte.split()]
-        #texte = " ".join(texte[:])
         texte = self.clean_text(texte)
         texte = self.lima_process(texte)
 
@@ -416,14 +416,6 @@ class EmbeddingsSimilarity(object):
             q_similar = similar['sent'][0]
             r_similar = self.g5_responses[similar['ids'][0]]
             dist = similar['dist'][0]
-        #if not self.using_topic_responses is None and similar['ids'][0] in self.using_topic_responses.keys():
-            #"""
-            #Combine the response in topic file with those of response file for generating randomly a response for the user.
-            #"""
-            #print(similar['ids'][0])
-            #if self.using_topic_responses[similar['ids'][0]] and len(self.using_topic_responses[similar['ids'][0]]) > 0:
-                #self.using_topic_responses[similar['ids'][0]].append(r_similar)
-                #r_similar = random.choice(self.using_topic_responses[similar['ids'][0]])
               
         if r_similar and isinstance(r_similar, list) and len(r_similar) > 0:
             i = randint(0, len(r_similar) - 1)
