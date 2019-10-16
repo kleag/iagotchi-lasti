@@ -2,55 +2,62 @@
 <html lang="fr">
     <head>
         <meta charset="utf8">
-        <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script> 
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> 
         <style>
-body
-{
-font-family:helvetica;
-}
-p
-{
-padding:0;
-margin:0;
-font-size:12px;
-line-height:1;
-}
-#btnMicrophone { 
-	margin: 10px;
-	float: left;	
-	}
-#responseHolder {
-        min-width: 400px;
-        min-height: 250px;
-        width: 50%;
-        margin: 1px auto;
-        background-color: lightgrey;
-        border-radius: 12px;
-        padding: 10px;
-        font-family: Arial;
-        font-size: 10pt;
-        font-style: normal;
-        font-weight: normal;
-      }
+            body {
+                font-family:helvetica;
+                background-color: black;
+            }
+            p {
+                padding:0;
+                margin:0;
+                font-size:12px;
+                line-height:1;
+                color: white;
+            }
+            #btnMicrophone { 
+                margin: 10px;
+                float: left;    
+            }
+            #responseHolder {
+                min-width: 400px;
+                min-height: 250px;
+                width: 80%;
+                margin: 1px auto;
+                background-color: black;
+                border-radius: 0px;
+                padding: 10px;
+                font-family: Arial;
+                font-size: 10pt;
+                font-style: normal;
+                font-weight: normal;
+                }
+            .iago, .user {
+                color: white;
+            }
+            .name_user {
+                font-weight: bold;
+                color: turquoise;
+            }
+            .name_iago {
+                font-weight: bold;
+                color: pink;
+            }
+            .user_tmp {
+                font-style: italic;
+                color: lightgray;
+            }
         </style>
-        <title>ASR Bridge</title>
+        <title>Iagotchi</title>
     </head>
     <body>
-        <!--h3>ASR Bridge</h3-->
-        
         <audio id = "plysnd"><source src=""></audio>
-        
-        
-        
         <script>
-        
-        
-        
 var recognition = new webkitSpeechRecognition();
 if(recognition == null) {
     $('body').append('<p><b>!!! ASR Bridge ERROR: webkitSpeechRecognition not available !!!</b></p>');
 } else {
-    $('body').append('<p><b>--- ASR Bridge Ready --- </b></p>');
+    $('body').append('<p><b>--- Iagotchi Ready --- </b></p>');
     $('body').append('<div id="chatbox">\
           <div id="responseHolder"></div>\
           <span id="audio"></span>\
@@ -61,7 +68,7 @@ var name = 'User'
 var botname = "Iagotchi"
 var sent = 0
 recognition.continuous = true;
-recognition.interimResults = false;
+recognition.interimResults = true;
 recognition.maxAlternatives = 1;
 recognition.lang = "fr-FR";
 recognition.onresult = detect;
@@ -94,8 +101,13 @@ function detect(event) {
            // p = $('<p></p>');
             // $('body').append(p);
             //window.location.reload(false); 
-            youSaid = '<strong>' + name + ':</strong> ' + event.results[i][0].transcript + "<br>";
-            update(youSaid);
+            //youSaid = '<strong>' + name + ':</strong> ' + event.results[i][0].transcript + "<br>";
+            addUser(event.results[i][0].transcript);
+            //update(youSaid);
+        } else {
+            //youSaid = '<strong>' + name + ':</strong> ' + event.results[i][0].transcript + "<br>";
+            modifyUser(event.results[i][0].transcript);
+            //update(youSaid);
         }
         if (event.results[i].isFinal){
         sent = 1
@@ -110,10 +122,15 @@ function detect(event) {
                 confidence: event.results[i][0].confidence, 
                 sentence: sent},
                     success: function(response) {
-                        youSaid = '<strong>' + botname + ':</strong> ' + response.split(":")[0] + "<br>";
-                        update(youSaid);
-                        recognition.continuous = true;
-                        console.log(response)
+                        if(response != 'ok')
+                        {
+                            //youSaid = '<strong>' + botname + ':</strong> ' + response.split(":")[0] + "<br>";
+                            //update(youSaid);
+                            addIago(response.split(":")[0]);
+                            recognition.continuous = true;
+                            console.log(response);  
+                        }
+                        
                         //playAudio(response.split(":")[1])
                     }
                 });
@@ -132,44 +149,52 @@ function detect(event) {
 }
 
 function update(text){ // text is  HTML code to append to the 'chat log' div. This appends the input text to the response div
-	var chatLog = $('#responseHolder').html();
-	$('#responseHolder').html(text + chatLog);
-	var rhd = $('#responseHolder');
-	var h = rhd.get(0).scrollHeight;
-	rhd.scrollTop(h);
+    var chatLog = $('#responseHolder').html();
+    $('#responseHolder').html(text + chatLog);
+    var rhd = $('#responseHolder');
+    var h = rhd.get(0).scrollHeight;
+    rhd.scrollTop(h);
+}
+
+function addUser(text) {
+    $("#responseHolder p:last-child").remove();
+    $('#responseHolder').append("<p><span class='name_user'>User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;</span><span class='user'>"+text+"</span></p>");
+    window.scrollBy({ top: 100, left: 0, behavior: 'smooth' });
+//    $('#responseHolder').children().last().text(text);
+}
+
+function addIago(text) {
+    $('#responseHolder').append("<p><span class='name_iago'>Iagotchi&nbsp;:&nbsp;</span><span class='iago'>"+text+"</span></p>");
+    $('#responseHolder').append("<p></p>");
+    window.scrollBy({ top: 100, left: 0, behavior: 'smooth' });
+}
+
+function modifyUser(text) {
+    $("#responseHolder p:last-child").remove();
+    $('#responseHolder').append("<p><span class='name_user'>User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;</span><span class='user_tmp'>"+text+"</span></p>");
+    window.scrollBy({ top: 100, left: 0, behavior: 'smooth' });
 }
 
 function playAudio(url) {
         //$('#audio').html('<audio autoplay><source src="{% static 'chat/synth.wav?ts=12345' %}"></audio>');
-	  //$('#audio').html('<audio id = "plysnd"><source src="synth.wav"></audio>');
-	  var plysnd = document.getElementById('plysnd');
-	  //var tim = new Date().getTime()
-	  //var sc = "{% static filename %}"
-	  //var sc = filename
-	  plysnd.setAttribute('src', url);;
-	  plysnd.load();
-	  plysnd.play();
+      //$('#audio').html('<audio id = "plysnd"><source src="synth.wav"></audio>');
+      var plysnd = document.getElementById('plysnd');
+      //var tim = new Date().getTime()
+      //var sc = "{% static filename %}"
+      //var sc = filename
+      plysnd.setAttribute('src', url);;
+      plysnd.load();
+      plysnd.play();
 }
 
 setInterval(function() {
    $.get('/need_restart', function(data) {
-   	   if(data == 'yes') {
-       		console.log('/need_restart');
-       		window.location.reload(false);
+       if(data == 'yes') {
+            console.log('/need_restart');
+            window.location.reload(false);
        }
    })
 }, 100);
-
-setInterval(function() {
-   $.get('/sessionstop', function(data) {
-    if (data.length > 0){
-     youSaid = '<strong>' + botname + ':</strong> ' + data + "<br>";
-    update(youSaid);
-    }
-   })
-}, 100);
-
         </script>
     </body>
 </html>
-

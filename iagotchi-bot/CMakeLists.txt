@@ -26,7 +26,6 @@ install(DIRECTORY libs DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(DIRECTORY db DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(DIRECTORY data DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(DIRECTORY generator DESTINATION ${CMAKE_INSTALL_PREFIX})
-install(DIRECTORY text_generator DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 
 configure_file(chatscript_settings.py chatscript_settings.py @ONLY)
@@ -41,7 +40,6 @@ configure_file(test_chatscript.py test_chatscript.py @ONLY)
 install(
   FILES
       ${CMAKE_CURRENT_BINARY_DIR}/main.py
-      test_synthese.py
       chatscript.py
       ${CMAKE_CURRENT_BINARY_DIR}/chatscript_externals.py
       ${CMAKE_CURRENT_BINARY_DIR}/chatscript_settings.py
@@ -54,7 +52,6 @@ install(
       log.py
       index.html
       similarity.py
-      test_generator.py
       model.py
       entrypoint-iagotchi.sh
       botresponse.py

@@ -1,0 +1,7 @@
+
+*bak*
+data/logs/*
+*.sublime*
+data/wiki.fr.vec
+data/fr_model.bin
+data/iagotchi.sqlite

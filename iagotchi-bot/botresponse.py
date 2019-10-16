@@ -31,19 +31,28 @@ class BotResponse(object):
     def osc_server_message(self, message):
         print("message entrant {}".format(message))
             
-        if '/result/botresponse' in message:
-            message = message.replace('/result/botresponse', '')
-            print('botresponse: {}'.format(message))
-        elif '/session/start' in message:
-            message = message.replace('/session/start', '')
+        if '/iagotchi/botresponse' in message:
+            message = message.replace('/iagotchi/botresponse', '')
+            print('botresponse : {}'.format(message))
+        
+        elif '/iagotchi/user_tmp' in message:
+            message = message.replace('/iagotchi/user', '')
+            print('user_tmp : {}'.format(message))
+           
+        elif '/iagotchi/user' in message:
+            message = message.replace('/iagotchi/user', '')
+            print('user : {}'.format(message))
+           
+        elif '/iagotchi/session/start' in message:
+            message = message.replace('/iagotchi/session/start', '')
             print('sesson start at: {}'.format(message))
-            
-        elif '/session/stop' in message:
-            message = message.replace('/session/stop', '')
+           
+        elif '/iagotchi/session/stop' in message:
+            message = message.replace('/iagotchi/session/stop', '')
             print('session stop at: {}'.format(message))
             
-        elif '/session/name' in message:
-            message = message.replace('/session/name', '')
+        elif '/iagotchi/session/name' in message:
+            message = message.replace('/iagotchi/session/name', '')
             print('user name is : {}'.format(message))
         elif message == '/exit':
             self.osc_server.shutdown()

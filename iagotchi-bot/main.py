@@ -38,7 +38,7 @@ class ASR(object):
         self.externals = Externals(botname=self.botname)
         try:
             self.osc_client = osc.Client(self.externals.botresponse_host, self.externals.botresponse_port)
-            self.osc_client_music = osc.Client(self.externals.music_host, self.externals.music_port)
+            #self.osc_client_music = osc.Client(self.externals.music_host, self.externals.music_port)
         except:
             self.osc_client = None
 
@@ -116,30 +116,37 @@ class ASR(object):
             print("phraseee  _" + mess.decode('utf8'))
             self.transcript = mess.decode('utf8')
             self.sentence_num += 1
-            self.osc_client.send('/result/botresponse {}'.format(self.transcript))
+            self.osc_client.sendOsc('/iagotchi/user','{}'.format(self.transcript))
             reps = self.externals.run(self.transcript, self.osc_client, self.osc_self_client)
             if reps == "stop":
                 return None
             if  "_stop_" in reps:
                 reps = reps.replace('_stop_', '')
-                self.osc_self_client.send('/exit')
+                self.osc_self_client.sendOscAction('/iagotchi/session/stop')
             if reps and "synth-" in reps:
                 if self.osc_client:
-                    self.osc_client.send('/result/botresponse {}'.format(reps.split(':')[0]))
+                    self.osc_client.sendOsc('/result/botresponse','{}'.format(reps.split(':')[0]))
             #TODO implémebnter musique
             if reps and "start_music" in reps:
                 reps = reps.replace('start_music', '')
-                self.osc_client_music.send('/music')
+                self.osc_client.sendOscAction('/iagotchi/music/start')
             elif reps and "stop_music" in reps:
                 reps = reps.replace('stop_music', '')
-                self.osc_client_music.send('/stop')
+                self.osc_client.sendOscAction('/iagotchi/music/stop')
             
             if self.osc_client and reps and "synth-" in reps:
-                self.osc_client.send('/result/botresponse {}'.format(reps.split(':')[0]))
+                self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(reps.split(':')[0]))
             else:
-                self.osc_client.send('/result/botresponse {}'.format(reps))
+                self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(reps))
             return reps
-        
+        # ici pour renvoyer en osc la reconnaissance temporaire (sentence = 0)
+        else:
+            tmp = mess.decode('utf8')
+            print("words     _" + tmp)
+            self.osc_client.sendOsc('/iagotchi/user_tmp','{}'.format(tmp))
+            return 'ok'
+
+  
     def result_testfile(self, in_filename):
         with open(in_filename, 'r', encoding='utf8') as f:
             for line in f:

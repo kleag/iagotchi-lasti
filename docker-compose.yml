@@ -12,7 +12,8 @@ services:
         networks:
             - demo
         volumes:
-            - ~/Projects/Iagotchi/Dist/data:/Dist/data
+            #- ~/Projects/Iagotchi/Dist/data:/Dist/data
+            - /Volumes/backMeUp/Docker/iagotchi-lasti/data:/Dist/data
         #devices:
             #- "/dev/snd:/dev/snd"
         environment:

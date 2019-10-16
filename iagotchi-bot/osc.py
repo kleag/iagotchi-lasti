@@ -20,6 +20,24 @@ class Client:
             print(e)
             print('OSC: failed to send message [%s]' % str(message))
 
+    def sendOsc(self, address, message):
+        try:
+            msg = liblo.Message(str(address))
+            msg.add(str(message))
+            liblo.send(self.target, msg)
+        except Exception as e:
+            print(e)
+            print('OSC: failed to send message [%s] [%s]' % (str(address),str(message)))
+
+    def sendOscAction(self, address):
+        try:
+            msg = liblo.Message(str(address))
+            #msg.add(str(message))
+            liblo.send(self.target, msg)
+        except Exception as e:
+            print(e)
+            print('OSC: failed to send message [%s] [%s]' % (str(address),str(message)))
+
     def send_action(self, action):
         # self.send('/action/%s' % (action.text))
         self.send('ACTION: %s' % (action.name))

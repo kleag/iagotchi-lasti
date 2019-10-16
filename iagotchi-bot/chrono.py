@@ -48,7 +48,7 @@ class ChronoThread (threading.Thread):
                         duration = (current_time -  self.current_response_time).total_seconds()
                         if self.already_restarted > 0 and duration + self.already_restarted*self.session_restart_duration >= self.session_stop_duration:
                             self.chrono_process("sessionstop")
-                            self.osc_client.send('/exit')
+                            self.osc_client.sendOscAction('/iagotchi/session/stop')
                             self.externals.stop()
                             self.stop()
                             self.status = False
@@ -56,7 +56,7 @@ class ChronoThread (threading.Thread):
                         elif (current_time -  self.start_time).total_seconds() >= self.session_duration:
                             self.chrono_process("sessionstop")
                             
-                            self.osc_client.send('/exit')
+                            self.osc_client.sendOscAction('/iagotchi/session/stop')
                             self.externals.stop()
                             self.stop()
                             self.status = False
@@ -70,7 +70,7 @@ class ChronoThread (threading.Thread):
                             #self.botresponse = rep
                     elif (current_time -  self.start_time).total_seconds() >= self.session_duration:
                             self.chrono_process("sessionstop")
-                            self.osc_client.send('/exit')
+                            self.osc_client.sendOscAction('/iagotchi/session/stop')
                             self.externals.stop()
                             self.stop()
                             self.status = False
@@ -88,14 +88,17 @@ class ChronoThread (threading.Thread):
         print("thread run {}".format(response))
         rep = syn.synthese(response)
         self.log.save_in_file("-", response)
+
         if not self.botresponse_object is None:
             if 'synth-' in rep:
                 rep = rep.split(':')[0]
-            self.botresponse_object.send('/result/botresponse {}'.format(rep))
+            self.botresponse_object.sendOsc('/iagotchi/botresponse','{}'.format(rep))
             if text == 'sessionstop':
-                self.botresponse_object.send('/session/stop {}'.format(datetime.datetime.now()))
+                self.botresponse_object.sendOsc('/iagotchi/session/stop','{}'.format(datetime.datetime.now()))
         if self.osc_self_client  is not None:
             self.externals.stop_message = "sessionstop {}".format(rep)
+            # ???? aucun script ne répond au message osc /sessionsstop
+            # seul le serveur du script main.py repond à /sessionstop mais pas en osc en http ????
             self.osc_self_client.send('/sessionstop')
                     
     def sendAndReceiveChatScript(self, text, user, bot, server, port, timeout=10):

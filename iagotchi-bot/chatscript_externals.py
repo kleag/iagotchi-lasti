@@ -78,8 +78,8 @@ class Externals(object):
         #####
         print('Externals.init: similarity module loading ...')
         self.similarity = Similarity(using=configfile['similarity']['ToUse'], lima=self.lima)
-        print('Externals.init: generator module loading ...')
-        self.generator = Generator('generator/iagotchi.model')
+        #print('Externals.init: generator module loading ...')
+        #self.generator = Generator('generator/iagotchi.model')
         print('Externals.init: ChatscriptInstance loading ...')
         self.chatscript = ChatscriptInstance(lima=self.lima, botname=self.botname)
         
@@ -135,7 +135,7 @@ class Externals(object):
                     self.definitions_from_db[th] = res
         self.user_name = None
         if self.osc_client is not None:
-            self.osc_client.send('/session/start {}'.format(self.chrono.start_time))
+            self.osc_client.sendOsc('/iagotchi/session/start','{}'.format(self.chrono.start_time))
         
     
     def postprocessing(self, response):
@@ -500,7 +500,7 @@ class Externals(object):
                     self.need_user_name = False
                     self.user_name = pers
                     if self.osc_client is not None:
-                        self.osc_client.send('/session/name {}'.format(self.user_name))
+                        self.osc_client.sendOsc('/iagotchi/session/name','{}'.format(self.user_name))
                     print(pers)
                     self.log.insert("User", "username", pers)
                     transcript = self._check_bonjour_et_toi_in(transcript)
@@ -513,7 +513,7 @@ class Externals(object):
                     self.need_user_name = False
                     self.user_name = pers
                     if self.osc_client is not None:
-                        self.osc_client.send('/session/name {}'.format(self.user_name))
+                        self.osc_client.sendOsc('/iagotchi/session/name', '{}'.format(self.user_name))
                     print(pers)
                     self.log.insert("User", "username", pers)
                     transcript = self._check_bonjour_et_toi_in(transcript)
