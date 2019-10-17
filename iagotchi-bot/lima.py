@@ -74,9 +74,7 @@ class Lima(object):
                     words += "{}\t".format(line[2])
                 else:
                     words += "{}\t{}\t{}\n".format(line[1], line[3], line[2])
-                #words.append((line[1], line[3]))
-        #print(words)
-        #words = u'{}'.format(words) # words.encode('utf8') #u'{}'.format(words) #   unicode(words, 'utf8')
+
         return words
     
     def _lima_tagger(self, chatfile):
@@ -153,6 +151,8 @@ class Lima(object):
             return self._process_text(rep)
         elif mode == "text2lemma":
             return self._get_token_pos_lemma(rep, only_lemma=True)
+        elif mode is None:
+            return rep
         
      
      

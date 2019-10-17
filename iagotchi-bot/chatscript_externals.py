@@ -13,11 +13,14 @@ import socket
 from chrono import ChronoThread
 from lima import Lima
 from similarity import Similarity
-import wikipedia
+#import wikipedia
 from generator.generator import Generator
 import random, os
 from nltk.corpus import stopwords
 import pickle
+from wiki import Wiki
+
+wikip = Wiki(language='fr')
 
  
 
@@ -26,7 +29,7 @@ raw_stopword_top_list = stopwords.words('french')[0:64]
     
 
 print('chatscript_externals load wikipedia module')
-wikipedia.set_lang("fr")
+#wikipedia.set_lang("fr")
 #sim = Similarity(using='embeddings')
 #generator = Generator('generator/iagotchi.model')
 
@@ -97,10 +100,11 @@ class Externals(object):
         try:
             self.botresponse_host = configfile['botresponse']['ip']
             self.botresponse_port = int(configfile['botresponse']['port'])
-            self.music_host = configfile['musique']['ip']
-            self.music_port = int(configfile['musique']['port'])
+            #self.music_host = configfile['musique']['ip']
+            #self.music_port = int(configfile['musique']['port'])
         except:
-            self.music_port = 5007
+            pass
+            #self.music_port = 5007
         self.start_music = None
         self.definitions_from_db = dict()
         self.stop_message = None
@@ -203,22 +207,42 @@ class Externals(object):
                         
                      # si le mot pas abordé, mot n'est pas un thème
                     elif not elt.lower() in self.definitions_from_db.keys() and not elt.lower() in self.definition.keys():
-                        try:
-                            definition = wikipedia.summary(elt.lower(), sentences=1)
-                            response = definition
-                            self.definition[elt.lower()] = definition
-                            if elt.lower() in self.themes:
-                                self.log.theme_insertion(elt.lower(), definition)
-                                self.themes_used.append(elt.lower())
-                            break
-                        except:
-                            definition = None
-                            if i < len(response_) - 1:
-                                continue
-                            else:
-                                response = self.chatscript.sendAndReceiveChatScript("def {}".format(elt.lower()), "User", self.botname)
-                                self.need_restart_postprocessing = True
+                        wiki_options = None
+                        defintion = None
+                        definition, wiki_word, elt = wikip.run(elt.lower())
+
+                        #try:
+                            #definition = wikipedia.summary(elt.lower(), sentences=1)
+                        #except wikipedia.exceptions.DisambiguationError as e:
+                            #wiki_options = e.options
+                        
+                        if wiki_word is None and definition is not None: # si la def du mot est trouvée
+                            try:
+                                response = definition
+                                self.definition[elt.lower()] = definition
+                                if elt.lower() in self.themes:
+                                    self.log.theme_insertion(elt.lower(), definition)
+                                    self.themes_used.append(elt.lower())
                                 break
+                            except:
+                                pass
+                        elif wiki_word is not None and definition is not None:
+                            try:
+                                response = definition
+                                self.definition[wiki_word.lower()] = definition
+                                if wiki_word.lower() in self.themes:
+                                    self.log.theme_insertion(wiki_word.lower(), definition)
+                                    self.themes_used.append(wiki_word.lower())
+                                break
+                            except:
+                                pass
+                        elif defintion is None and i < len(response_) - 1:
+                            continue
+                        elif defintion is None:
+                            response = self.chatscript.sendAndReceiveChatScript("def {}".format(elt.lower()), "User", self.botname)
+                            self.need_restart_postprocessing = True
+                            break
+
             else:
                 response = self.chatscript.sendAndReceiveChatScript("relance question", "User", self.botname)
                 response = "Pourquoi veux-tu parler de ça. {}".format(response)
@@ -245,14 +269,21 @@ class Externals(object):
                 response = self.chatscript.sendAndReceiveChatScript("relance question", "User", self.botname)
             # si le thème pas abordé, définition pas connue et nombre de thèmes abordés < 3
             elif not mot.lower() in self.definitions_from_db.keys() and not mot.lower() in self.definition.keys() and len(self.themes_used) < 3:
-                try:
-                    definition = wikipedia.summary(mot.lower(), sentences=1)
+                defintion = None
+                definition, wiki_word, mot = wikip.run(mot.lower())
+                if wiki_word is None and definition is not None: # si la def du mot est trouvée                    
                     response = definition
                     self.definition[mot.lower()] = definition
                     if mot.lower() in self.themes:
                         self.log.theme_insertion(mot.lower(), definition)
                         self.themes_used.append(mot.lower())
-                except:
+                elif wiki_word is not None and definition is not None:
+                    response = definition
+                    self.definition[wiki_word.lower()] = definition
+                    if wiki_word.lower() in self.themes:
+                        self.log.theme_insertion(wiki_word.lower(), definition)
+                        self.themes_used.append(wiki_word.lower())
+                elif definition is None:
                     theme_temporary = [t for t in self.themes if t not in self.definition.keys()]
                     theme_ = random.choice(theme_temporary)
                     self.themes.remove(theme_)
@@ -266,15 +297,21 @@ class Externals(object):
                         response = ' '.join(response)
             # si le thème pas abordé, définition pas connue et nombre de thèmes abordés >= 3
             elif not mot.lower() in self.definitions_from_db.keys() and not mot.lower() in self.definition.keys() and len(self.themes_used) >= 3:
-                try:
-                    definition = wikipedia.summary(mot.lower(), sentences=1)
+                defintion = None
+                definition, wiki_word, mot = wikip.run(mot.lower())
+                if wiki_word is None and definition is not None: # si la def du mot est trouvée  
                     response = definition
                     self.definition[mot.lower()] = definition
                     if mot.lower() in self.themes:
                         self.log.theme_insertion(mot.lower(), definition)
-                        #self.themes_used.append(mot.lower())
-                except:
+                elif wiki_word is not None and definition is not None:
+                    response = definition
+                    self.definition[wiki_word.lower()] = definition
+                    if wiki_word.lower() in self.themes:
+                        self.log.theme_insertion(wiki_word.lower(), definition)
+                elif definition is None:
                     response = self.chatscript.sendAndReceiveChatScript("relance question", "User", self.botname)
+
 
         elif "wikipediamocle1" in response.lower():
             """
@@ -309,14 +346,19 @@ class Externals(object):
                 response = "Ah oui? je vais rajouter ta réponse à ma base de donnée. {}".format(response)
             # si le thème pas abordé, définition pas connue et nombre de thèmes abordés >= 3
             elif not mot.lower() in self.definitions_from_db.keys() and not mot.lower() in self.definition.keys() and len(self.themes_used) >= 3:
-                try:
-                    definition = wikipedia.summary(mot.lower(), sentences=1)
+                defintion = None
+                definition, wiki_word, mot = wikip.run(mot.lower())
+                if wiki_word is None and definition is not None: # si la def du mot est trouvée  
                     response = definition
                     self.definition[mot.lower()] = definition
                     if mot.lower() in self.themes:
                         self.log.theme_insertion(mot.lower(), definition)
-                        #self.themes_used.append(mot.lower())
-                except:
+                elif wiki_word is not None and definition is not None:
+                    response = definition
+                    self.definition[wiki_word.lower()] = definition
+                    if wiki_word.lower() in self.themes:
+                        self.log.theme_insertion(wiki_word.lower(), definition)
+                elif definition is None:
                     response = self.chatscript.sendAndReceiveChatScript("relance question", "User", self.botname)
                 #response = self.chatscript.sendAndReceiveChatScript("relance question", "User", "iagotchi")
                 
@@ -337,14 +379,19 @@ class Externals(object):
             elif len(self.themes_used) >= 3:
                 response = self.chatscript.sendAndReceiveChatScript("relance question", "User", self.botname)
             elif not mot in self.definitions_from_db.keys():
-                try:
-                    definition = wikipedia.summary(mot, sentences=1)
+                defintion = None
+                definition, wiki_word, mot = wikip.run(mot.lower())
+                if wiki_word is None and definition is not None: # si la def du mot est trouvée  
                     print('wikipedia definition of {} is {}'.format(mot, definition))
                     self.definitions_from_db[mot] = [definition]
-                except:
-                    pass
+                elif wiki_word is not None and definition is not None:
+                    print('wikipedia definition of {} is {}'.format(wiki_word, definition))
+                    self.definitions_from_db[wiki_word] = [definition]
+                    
                 response = response_.split()[0:-1]
                 response = " ".join(response)
+
+                
                 
         elif "question4poesie" in response.lower():
             response_ = re.sub('question4poesie', 'Un instant', response)
@@ -609,6 +656,7 @@ class Externals(object):
         text = [w.capitalize() for w in text]
         return " ".join(text[:])
             
+                
             
     def _person_entity(self, text):
         """
@@ -616,16 +664,34 @@ class Externals(object):
         Input: Text
         Output: The entity if it exists otherwise None
         """
+        _person_lima = None
         try:
-            
-            doc2lima = self.lima.sendAndReceiveLima(text)
-            _person_lima = [w for w, p in doc2lima if p == "NPP" and w.lower() not in lstbonjour]
-            if len(_person_lima) > 0:
-                return _person_lima[0]
-            else:
-                return None
+            doc2lima = self.lima.sendAndReceiveLima(text, mode=None)
+            npp_words = list()
+            for word in doc2lima[3:]:
+                if word.split('\t')[9].startswith('NE=Person'):
+                    _person_lima = word.split('\t')[1]
+                if  word.split('\t')[3].strip() == 'NPP':
+                    ner = word.split('\t')[9].strip().split('|')
+                    if len(ner) > 2:
+                        pos = ner[1].split('=')[1]
+                        length = ner[2].split('=')[1]
+                    else:
+                        pos = ner[0].split('=')[1]
+                        length = ner[1].split('=')[1]
+                    npp_words.append((word.split('\t')[1].strip(), pos, length))
+            if _person_lima is None and len(npp_words) > 0:
+                texte = doc2lima[2].split('=')[1].strip()
+                for w, p, l in npp_words:
+                    w = w.capitalize()
+                    texte = texte[0:p-1]+w+texte[p-1+l:]
+                doc2lima = self.lima.sendAndReceiveLima(texte, mode=None)
+                for word in doc2lima[3:]:
+                    if word.split('\t')[9].startswith('NE=Person'):
+                        _person_lima = word.split('\t')[1]
         except:
-            None
+            pass
+        return _person_lima
         
     def _NC_entity(self, text):
         """
