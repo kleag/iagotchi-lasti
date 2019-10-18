@@ -19,6 +19,7 @@ import random, os
 from nltk.corpus import stopwords
 import pickle
 from wiki import Wiki
+from time import sleep
 
 wikip = Wiki(language='fr')
 
@@ -110,6 +111,10 @@ class Externals(object):
         self.stop_message = None
         self.no_use_lima = False
         self.osc_client = None
+        self.osc_self_client = None
+        self.tmp_message = None
+        self.tmp_message_sent = False
+        self.poesie = False
         
     def startup(self):
         self.log = self.chatscript.start_iagotchi_bot()
@@ -131,6 +136,7 @@ class Externals(object):
         self.chrono.status = True
         self.need_stop = False
         self.stop_message = None
+        self.tmp_message = None
         
         if len(self.themes) > 0:
             for th in self.themes:
@@ -138,6 +144,9 @@ class Externals(object):
                 if not res is None:
                     self.definitions_from_db[th] = res
         self.user_name = None
+        self.osc_self_client = None
+        self.tmp_message_sent = False
+        self.poesie = False
         if self.osc_client is not None:
             self.osc_client.sendOsc('/iagotchi/session/start','{}'.format(self.chrono.start_time))
         
@@ -208,7 +217,7 @@ class Externals(object):
                      # si le mot pas abordé, mot n'est pas un thème
                     elif not elt.lower() in self.definitions_from_db.keys() and not elt.lower() in self.definition.keys():
                         wiki_options = None
-                        defintion = None
+                        definition = None
                         definition, wiki_word, elt = wikip.run(elt.lower())
 
                         #try:
@@ -236,9 +245,9 @@ class Externals(object):
                                 break
                             except:
                                 pass
-                        elif defintion is None and i < len(response_) - 1:
+                        elif definition is None and i < len(response_) - 1:
                             continue
-                        elif defintion is None:
+                        elif definition is None:
                             response = self.chatscript.sendAndReceiveChatScript("def {}".format(elt.lower()), "User", self.botname)
                             self.need_restart_postprocessing = True
                             break
@@ -269,7 +278,7 @@ class Externals(object):
                 response = self.chatscript.sendAndReceiveChatScript("relance question", "User", self.botname)
             # si le thème pas abordé, définition pas connue et nombre de thèmes abordés < 3
             elif not mot.lower() in self.definitions_from_db.keys() and not mot.lower() in self.definition.keys() and len(self.themes_used) < 3:
-                defintion = None
+                definition = None
                 definition, wiki_word, mot = wikip.run(mot.lower())
                 if wiki_word is None and definition is not None: # si la def du mot est trouvée                    
                     response = definition
@@ -297,7 +306,7 @@ class Externals(object):
                         response = ' '.join(response)
             # si le thème pas abordé, définition pas connue et nombre de thèmes abordés >= 3
             elif not mot.lower() in self.definitions_from_db.keys() and not mot.lower() in self.definition.keys() and len(self.themes_used) >= 3:
-                defintion = None
+                definition = None
                 definition, wiki_word, mot = wikip.run(mot.lower())
                 if wiki_word is None and definition is not None: # si la def du mot est trouvée  
                     response = definition
@@ -346,7 +355,7 @@ class Externals(object):
                 response = "Ah oui? je vais rajouter ta réponse à ma base de donnée. {}".format(response)
             # si le thème pas abordé, définition pas connue et nombre de thèmes abordés >= 3
             elif not mot.lower() in self.definitions_from_db.keys() and not mot.lower() in self.definition.keys() and len(self.themes_used) >= 3:
-                defintion = None
+                definition = None
                 definition, wiki_word, mot = wikip.run(mot.lower())
                 if wiki_word is None and definition is not None: # si la def du mot est trouvée  
                     response = definition
@@ -379,7 +388,7 @@ class Externals(object):
             elif len(self.themes_used) >= 3:
                 response = self.chatscript.sendAndReceiveChatScript("relance question", "User", self.botname)
             elif not mot in self.definitions_from_db.keys():
-                defintion = None
+                definition = None
                 definition, wiki_word, mot = wikip.run(mot.lower())
                 if wiki_word is None and definition is not None: # si la def du mot est trouvée  
                     print('wikipedia definition of {} is {}'.format(mot, definition))
@@ -395,23 +404,14 @@ class Externals(object):
                 
         elif "question4poesie" in response.lower():
             response_ = re.sub('question4poesie', 'Un instant', response)
-            response_ = self.check_no_lima_option(response_)
-            synthfile = syn.synthese(response_)
-            result = " "
+            response = self.check_no_lima_option(response_)
             try:
-                result = self.generator.generate(200)
-                result = re.sub('<eos>', '.', ' '.join(result))
-                r = True
-                while r:
-                    if '. .' in result:
-                        result = result.replace('. .', '.')
-                    else:
-                        r = False
-                result = "{}. C'est beau non ?".format(result)
-                
+                self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(response))   
             except:
-                result = "Oups, mon cerveau ne fonctionne plus"
-            response = "{}.".format(result)               
+                pass
+            self.poesie = True
+            
+            
                 
         elif "qrelanceno" in response.lower():
             """
@@ -454,6 +454,28 @@ class Externals(object):
         print("externals.postprocessing after response {} need_user_name: {} user_name: {}".format(response, self.need_user_name, self.user_name))
         self.last_response = response
         return response
+    
+    def poesie_generation(self):
+        result = " "
+        try:
+            result = self.generator.generate(200)
+            result = re.sub('<eos>', '.', ' '.join(result))
+            r = True
+            while r:
+                if '. .' in result:
+                    result = result.replace('. .', '.')
+                else:
+                    r = False
+            result = "{}. C'est beau non ?".format(result)
+            
+        except:
+            result = "Oups, mon cerveau ne fonctionne plus"
+        result = "{}.".format(result) 
+        try:
+            self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(response))   
+        except:
+            pass
+        return result
     
     def check_no_lima_option(self, response):
         """
@@ -591,10 +613,13 @@ class Externals(object):
         """
         self.chrono.osc_self_client = osc_self_client
         self.osc_client = osc_client
+        self.osc_self_client = osc_self_client
         if self.chrono.botresponse_object is None:
             self.chrono.botresponse_object = osc_client
             
-        if any(bn in transcript.lower() for bn in lstbonjour) and (self.session_status == 'stop' or self.session_status is None):
+        if self.poesie:
+            return None            
+        elif any(bn in transcript.lower() for bn in lstbonjour) and (self.session_status == 'stop' or self.session_status is None):
             self.startup()
             return self.process(transcript)
         elif self.session_status == 'start':
@@ -608,6 +633,7 @@ class Externals(object):
         """
         self._transcript = transcript
         print('no.use_lima {}'.format(self.no_use_lima))
+
         if self.no_use_lima:
             response = self.postprocessing(self.chatscript.sendAndReceiveChatScript(transcript, "User", self.botname, lima_processing=False))
             self.no_use_lima = False
@@ -621,7 +647,7 @@ class Externals(object):
         synth_response = syn.synthese(response)
         self.log.save_in_file(transcript, response)
         if self.need_stop:
-            self.chrono.stop()
+            self.stop()
             return "{} _stop_".format(synth_response)
         elif self.start_music:
             self.start_music = None

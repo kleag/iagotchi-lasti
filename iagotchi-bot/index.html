@@ -204,6 +204,14 @@ setInterval(function() {
    })
 }, 100);
 
+setInterval(function() {
+   $.get('/tmpResponse', function(data) {
+    if (data.length > 0){
+     addIago(data)
+    }
+   })
+}, 100);
+
         </script>
     </body>
 </html>

@@ -76,6 +76,7 @@ class ASR(object):
         self.http_server.route('/result', method="POST", callback=self.result)
         self.http_server.route('/need_restart', method="GET", callback=self.need_restart)
         self.http_server.route('/sessionstop', method="GET", callback=self.sessionstop)
+        self.http_server.route('/tmpResponse', method="GET", callback=self.tmpResponse)
         self.http_server.route('/static/assets/<filename>', method="GET", callback=self.server_static)
         
         
@@ -138,6 +139,8 @@ class ASR(object):
                 self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(reps.split(':')[0]))
             else:
                 self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(reps))
+            if self.externals.poesie:
+                self.osc_self_client.send('/tmpResponse')
             return reps
         # ici pour renvoyer en osc la reconnaissance temporaire (sentence = 0)
         else:
@@ -182,6 +185,15 @@ class ASR(object):
             stpmsg = self.externals.stop_message.replace('sessionstop', '')
             self.externals.stop_message = None
             return stpmsg
+    def tmpResponse(self):
+        if self.externals.poesie:
+            tmpmsg = self.externals.poesie_generation()
+            self.externals.poesie = False
+            #tmpmsg = self.externals.tmp_message
+            #self.externals.tmp_message = None
+            #self.externals.tmp_message_sent = True
+            return tmpmsg
+        
     
     def start(self):
         self.http_server.run(host='0.0.0.0', port=self.http_server_port, quiet=True, debug=True)
