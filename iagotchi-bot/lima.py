@@ -71,9 +71,9 @@ class Lima(object):
             if '\t' in line and not "ID\tFORM\tLEMMA\tUPOS" in line:
                 line = line.split('\t')
                 if only_lemma:
-                    words += "{}\t".format(line[2])
+                    words += "\t{}".format(line[2])
                 else:
-                    words += "{}\t{}\t{}\n".format(line[1], line[3], line[2])
+                    words += "\t{}\t{}\t{}\n".format(line[1], line[3], line[2])
 
         return words
     
@@ -88,10 +88,7 @@ class Lima(object):
         text = " ".join(self.sendAndReceiveLima(text, mode='text2lemma').split('\t'))
         #text = u'%s' % (text)
         return text
-        
-        #for line in t.strip():
-            #print(line)
-            
+
     
     def _process_text(self, tokens):
         words = []

@@ -152,13 +152,13 @@ class Externals(object):
         
     
     def postprocessing(self, response):
-        response = response.lower()
+        #response = response.lower()
         print("externals.postprocessing response {} need_user_name: {} user_name: {}".format(response, self.need_user_name, self.user_name))
         print("externals.postprocessing: theme already discussed {}".format(len(self.themes_used)))
-        if "sessionstart" in response and not self.need_user_name:
+        if "sessionstart" in response.lower() and not self.need_user_name:
             self.need_user_name = True
             response = re.sub('sessionstart', ' ', response)
-        elif "sessionstart" in response and self.need_user_name:
+        elif "sessionstart" in response.lower() and self.need_user_name:
             response = re.sub('sessionstart', ' ', response)
             self.need_user_name = False
         elif "lastoutput" in response.lower():
@@ -725,12 +725,15 @@ class Externals(object):
         Input: Text
         Output: The entity if it exists otherwise None
         """
+        _NC_lima = list()
         try:
-            doc2lima = self.lima.sendAndReceiveLima(text)
-            _NC_lima = [w for w, p in doc2lima if p == "NC" or w in self.themes]
-            #_NC_lima = []
+            doc2lima = self.lima.sendAndReceiveLima(text, mode=None)
+            for word in doc2lima[3:]:
+                if len(word.split('\t')) > 3 and ('NC' in word.split('\t')[3] or 'NPP' in word.split('\t')[3]) :
+                    _NC_lima.append(word.split('\t')[1])
+
             if len(_NC_lima) > 0:
-                if 'mot' in _NC_lima[0] and len(_NC_lima) > 1:
+                if 'mot' in _NC_lima and len(_NC_lima) > 1:
                     return _NC_lima.remove('mot')
                 else:
                     return _NC_lima

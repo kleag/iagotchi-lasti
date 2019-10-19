@@ -56,6 +56,7 @@ install(
       entrypoint-iagotchi.sh
       botresponse.py
       iagotchiGUI.py
+      wiki.py
   DESTINATION ${CMAKE_INSTALL_PREFIX}
   
 )
