@@ -1073,7 +1073,7 @@ concept: ~fr_rencontrer (rencontrer rencontre aborde affronte aborder aborde aff
 
 concept: ~fr_impression (~fr_OPINION impression "l'impression" "l'étonnement" étonnement étonner supris surprendre image opinion pressentiment sensibilité sentiment ressentiment ressentir émotion sensibilité appréciation effet notion perception sentir)
 concept: ~fr_quiestce ("c'est qui" "être qui" "ce être qui" "qui être ce" qui "qui est-ce" "qui est ce")
-concept: ~fr_cestquoi ("c'est quoi" "être quoi" "ce être quoi" "être ce que ce être" "connaître tu" "savoir tu" quoi "qu'est-ce que c'est" "qu'est-ce que"  "que être ce que" "connais-tu" "sais-tu" "que ce que" )
+concept: ~fr_cestquoi ("c'est quoi" "être quoi" "ce être quoi" "être ce que ce être" quoi "qu'est-ce que c'est" "qu'est-ce que"  "que être ce que" "sais-tu" "que ce que")
 
 concept: ~fr_raconter (raconter "racontes-moi" "énonces-moi" énoncer conter "contes-moi" détailler "détailles-moi" informer "informes-moi" rapporter "rapportes-moi" étaler débiter "débites-moi" développer "développes-moi" révéler "révèles-moi" bavarder décrire "décris-moi" "décrit-moi" exposer narrer répéter relater chanter exprimer "exprimes-moi" parler "parles-moi" "rendre compte" "rends-moi compte" "rends moi compte" parles parses parser)
 
@@ -1083,6 +1083,8 @@ concept: ~fr_chose ("quelque chose" "quelques choses" "quelque-chose" "quelques-
 
 concept: ~fr_coincidence (coïncidence coïncidences concordance hasard circonstance occasion destin)
 
+
+concept: ~fr_connaitre (connaître "connais-tu" "connais tu" connaissez savoir savez sais sait "sais-tu" "sais tu" savez connais)
 concept: ~fr_expliquer (expliquer "expliques-tu" "expliquez-vous" "t'expliques-tu" éclaicir énoncer développer justifier "mettre au clair" éclairer expliciter préciser renseigner précision rensiegnement élucider déchiffrer démontrer illustrer prouver analyser exprimer communiquer décrire enseigner instruire "mettre au point" "mettre au net" définir dire  renseigner traduire préciser énoncerapprendre communiquer dire décrire "faire comprendre" connaître )
 
 concept: ~fr_quelquun ("quelqu'un" "quelques uns" personne homme personnalité)
@@ -1216,7 +1218,7 @@ concept: ~fr_generateur (générateur générateurs auteur créateur engendreur 
 
 concept: ~fr_v_etre (être es "ce être" "c'était" sommes est êtes sont étiez étaient était étais étions)
 
-concept: ~fr_deviner (deviner éventer comprendre connaître déceler déchiffrer découvrir démêler démasquer détecter dévoiler discerner douter entrevoir imaginer intention interpréter lire pénétrer percevoir prédire repérer saisir  sentir soupçonner prophétiser résoudre traduire)
+concept: ~fr_deviner (deviner éventer comprendre déceler déchiffrer découvrir démêler démasquer détecter dévoiler discerner douter entrevoir imaginer intention interpréter lire pénétrer percevoir prédire repérer saisir  sentir soupçonner prophétiser résoudre traduire)
 
 concept: ~fr_reve (rêve évasion ambition aspiration cauchemar espoir imagination mirage songerie souhait songe chimère illusion onirisme)
 

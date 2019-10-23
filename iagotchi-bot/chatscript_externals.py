@@ -732,6 +732,7 @@ class Externals(object):
                 if len(word.split('\t')) > 3 and ('NC' in word.split('\t')[3] or 'NPP' in word.split('\t')[3]) :
                     _NC_lima.append(word.split('\t')[1])
 
+            _NC_lima = [w for w in _NC_lima if w not in stopwords.words('french')]
             if len(_NC_lima) > 0:
                 if 'mot' in _NC_lima and len(_NC_lima) > 1:
                     return _NC_lima.remove('mot')

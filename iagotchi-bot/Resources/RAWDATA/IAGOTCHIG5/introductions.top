@@ -665,30 +665,68 @@ u: (<< ~fr_more ~fr_quiestce >>) quelle est la frontière entre soi et l'autre ?
     
 # TODO gérer la recherche sur wikipedia
 #! c'est quoi la synchronicité ?
-u: (<< [~fr_cestquoi ~fr_cestou ~fr_quiestce] (~fr_definition *~2 ~fr_mot _*~2 > ) [~fr_expliquer ~fr_savoir] >>) wikipedia4generalword '_0
+u: (<< [~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_connaitre] (~fr_definition *~2 ~fr_mot *~2 > ) _~fr_pays [~fr_expliquer ~fr_savoir] >>) 
+'_0 est un pays.
 
-u: (<< [~fr_cestquoi ~fr_cestou ~fr_quiestce] (~fr_definition  _*~3 > ) [~fr_expliquer ~fr_savoir] >>) wikipedia4generalword '_0
+u: (<< [~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_connaitre] (~fr_definition *~2 ~fr_mot _*~2 > ) [~fr_expliquer ~fr_savoir] >>) 
+wikipedia4generalword  '_0
 
-u: (<<  ([~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition] *~2 ~fr_mot _*~2 > )  [~fr_expliquer ~fr_savoir] >>) wikipedia4generalword '_0
 
-u: (<<  ([~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition] _*~3 > )  [~fr_expliquer ~fr_savoir] >>) wikipedia4generalword '_0
+u: (<< [~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_connaitre] (~fr_definition  *~3 > ) _~fr_pays [~fr_expliquer ~fr_savoir] >>) 
+'_0 est un pays.
 
-u: (<< (~fr_definition *~2 ~fr_mot _*~2 > ) [~fr_expliquer ~fr_savoir] >>) wikipedia4generalword '_0
+u: (<< [~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_connaitre] (~fr_definition  _*~3 > )  [~fr_expliquer ~fr_savoir] >>) 
+wikipedia4generalword  '_0
 
-u: (<< (~fr_definition _*~3 > ) [~fr_expliquer ~fr_savoir] >>) wikipedia4generalword '_0
+u: (<<  ([~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition] *~2 ~fr_mot *~2 > ) _~fr_pays  [~fr_expliquer ~fr_savoir] >>) 
+'_0 est un pays.
 
-u: ( [~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition] *~2 ~fr_mot _*~2 > ) wikipedia4generalword '_0
-u: ( [~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition] _*~3 > ) wikipedia4generalword '_0
 
+u: (<<  ([~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition] *~2 ~fr_mot _*~2 > )  [~fr_expliquer ~fr_savoir] >>) 
+wikipedia4generalword  '_0
+
+
+u: (<<  ([~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition] *~3 > ) _~fr_pays [~fr_expliquer ~fr_savoir] >>) 
+'_0 est un pays
+
+u: (<<  ([~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition] _*~3 > )  [~fr_expliquer ~fr_savoir] >>) 
+wikipedia4generalword  '_0
+
+u: (<< (~fr_definition *~2 ~fr_mot *~2 > ) _~fr_pays [~fr_expliquer ~fr_savoir] >>) 
+Je pense que '_0 est un pays.
+
+
+u: (<< (~fr_definition *~2 ~fr_mot _*~2 > ) [~fr_expliquer ~fr_savoir] >>) 
+wikipedia4generalword '_0
+
+u: (<< (~fr_definition *~3 > )_~fr_pays [~fr_expliquer ~fr_savoir] >>)
+Je pense que '_0 est un pays.
+
+
+u: (<< (~fr_definition _*~3 > ) [~fr_expliquer ~fr_savoir] >>) 
+wikipedia4generalword '_0
+
+
+u: ([~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition ~fr_connaitre] *~2 ~fr_mot _~fr_pays  *~2 > ) 
+Je pense que '_0 est un pays.
+
+u: ([~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition ~fr_connaitre] *~2 ~fr_mot _*~2 > ) 
+wikipedia4generalword '_0
+
+u: ([~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition ~fr_connaitre]  _~fr_pays *~3 > ) 
+Je pense que '_0 est un pays.
+
+u: ([~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition ~fr_connaitre] _*~3 > ) 
+wikipedia4generalword  '_0
 
 u: (<< _~fr_sujets [~fr_cestquoi ~fr_cestou ~fr_quiestce] ~fr_definition [~fr_expliquer ~fr_savoir] >>) $motcle= '_0 ^reuse(~.MOTCLE)
 #! c'est quoi la synchronicité ?
 u: (<< _~fr_sujets [~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition]  [~fr_expliquer ~fr_savoir] >>) $motcle= '_0 ^reuse(~.MOTCLE)
 
 #! c'est quoi la synchronicité ?
-u: (<< _~fr_sujets [~fr_cestquoi ~fr_cestou ~fr_quiestce] ~fr_definition >>) $motcle= '_0 ^reuse(~.MOTCLE)
+u: (<< _~fr_sujets [~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_connaitre] ~fr_definition >>) $motcle= '_0 ^reuse(~.MOTCLE)
 
-u: (<< _~fr_sujets [~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition] >>) $motcle= '_0 ^reuse(~.MOTCLE)
+u: (<< _~fr_sujets [~fr_cestquoi ~fr_cestou ~fr_quiestce ~fr_definition ~fr_connaitre] >>) $motcle= '_0 ^reuse(~.MOTCLE)
 
 
 u: (~fr_quiestu) 
