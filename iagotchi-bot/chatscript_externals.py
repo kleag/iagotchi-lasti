@@ -24,8 +24,9 @@ from time import sleep
 wikip = Wiki(language='fr')
 
  
+all_raw_stopword = stopwords.words('french')
+raw_stopword_top_list = all_raw_stopword[0:64]
 
-raw_stopword_top_list = stopwords.words('french')[0:64]
 
     
 
@@ -82,8 +83,8 @@ class Externals(object):
         #####
         print('Externals.init: similarity module loading ...')
         self.similarity = Similarity(using=configfile['similarity']['ToUse'], lima=self.lima)
-        #print('Externals.init: generator module loading ...')
-        #self.generator = Generator('generator/iagotchi.model')
+        print('Externals.init: generator module loading ...')
+        self.generator = Generator('generator/iagotchi.model')
         print('Externals.init: ChatscriptInstance loading ...')
         self.chatscript = ChatscriptInstance(lima=self.lima, botname=self.botname)
         
@@ -93,6 +94,17 @@ class Externals(object):
         self.chrono = chrono
         self.session_status = None
         #self.startup()
+        # Get the parameters related to the duration of a session
+        try:
+            self.chrono.session_restart_duration = int(configfile['session']['restart'])
+            self.chrono.session_stop_duration = int(configfile['session']['stop'])
+            self.chrono.session_duration = int(configfile['session']['duration'])
+            if self.chrono.session_restart_duration > self.chrono.session_stop_duration:
+                sys.exit("[Iagotchi-Bot Error] Value of stop field in session must be less than restart value.")
+        except:
+            sys.exit("[Iagotchi-Bot Error] Stop, Restart and Duration values must be integers.")
+        # End duration parameters getting
+        
         self.definition = dict()
         self.themes = configfile['themes']
         self.themes_used = list()
@@ -120,14 +132,7 @@ class Externals(object):
         self.log = self.chatscript.start_iagotchi_bot()
         self.chrono.log = self.log
           
-        try:
-            self.chrono.session_restart_duration = int(configfile['session']['restart'])
-            self.chrono.session_stop_duration = int(configfile['session']['stop'])
-            self.chrono.session_duration = int(configfile['session']['duration'])
-            if self.chrono.session_restart_duration > self.chrono.session_stop_duration:
-                sys.exit("[Iagotchi-Bot Error] Value of stop field in session must be less than restart value.")
-        except:
-            sys.exit("[Iagotchi-Bot Error] Stop, Restart and Duration values must be integers.")
+        
         self.chrono.start_time = self.chatscript.start_time
         self.chrono.current_response_time = None
         self.chrono.externals = self
@@ -605,7 +610,7 @@ class Externals(object):
         #text = [t for t in text if not t in raw_stopword_top_list]
         return " ".join(text)
             
-    def run(self, transcript, osc_client, osc_self_client):
+    def run(self, transcript, osc_client=None, osc_self_client=None):
         """
         Take as input a transcript, perform a preprocessing of the text, send to the dialogue system, perform a postraitement of the response, make the voice synthesis of the response and save the data in the log file. Also update the chrono module.
         Input: transcript
@@ -732,7 +737,7 @@ class Externals(object):
                 if len(word.split('\t')) > 3 and ('NC' in word.split('\t')[3] or 'NPP' in word.split('\t')[3]) :
                     _NC_lima.append(word.split('\t')[1])
 
-            _NC_lima = [w for w in _NC_lima if w not in stopwords.words('french')]
+            _NC_lima = [w for w in _NC_lima if w not in all_raw_stopword]
             if len(_NC_lima) > 0:
                 if 'mot' in _NC_lima and len(_NC_lima) > 1:
                     return _NC_lima.remove('mot')
