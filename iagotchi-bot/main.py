@@ -23,6 +23,30 @@ import threading
 
 with open(r'@CMAKE_INSTALL_PREFIX@/data/config.json', 'r') as sv:
     configfile = json.load(sv)
+    
+    
+class CHAT(object):
+    """
+    To chat with text
+    """
+    def __init__(self, botname='iagotchi'):
+        self.botname=botname
+        self.externals = Externals(botname=self.botname)
+        self.transcript = None
+        self.botresponse = None
+        
+    def run(self):
+        while True:
+            if self.externals.poesie:
+                reps = self.externals.poesie_generation()
+                self.externals.poesie = False
+            else:
+                self.transcript = input("User :")
+                reps = self.externals.run(self.transcript)
+            print("Iagotchi : {}".format(reps))
+        
+        
+    
 
 class ASR(object):
     global is_restart_needed
@@ -99,6 +123,8 @@ class ASR(object):
         #elif message == '/botresponse':
             
         #elif message == '/synthese':
+            
+             
             
 
     def result(self):
@@ -202,9 +228,7 @@ class ASR(object):
     
     #@route('/static/assets/<filename>')
     def server_static(self, filename):
-        #log.debug("serving %s" % filename)
-        #pathname = os.path.join(os.getcwd(), 'static')
-        #print(pathname)
+
         return static_file(filename, root='./static/assets')
     
     #@route('/')
@@ -283,7 +307,7 @@ def run_cpu_tasks_in_parallel(tasks):
 def main_run():
     externals = Externals()
     syn = Synthese()
-    asr = ASR();
+    asr = ASR()
         
     asr.start()
 
@@ -292,12 +316,12 @@ if __name__ == '__main__':
     parser.add_argument('--build', help='build option: similarity or responses')
     parser.add_argument('--runbot', help='iagotchi or iagotchig5')
     parser.add_argument('--testfile', help='test questions in file')
+    parser.add_argument('--chat', help='using text to chat')
     
     bots = ["iagotchi", "iagotchig5"]
     
     args= parser.parse_args()
-    #chatbot_thread = ChatbotThread()
-    #chatbot_thread.setDaemon(True)
+
     if args.build and args.build.lower() == 'similarity':
         bsr = BuildSimilarityResponses()
         bsr.build_data()
@@ -308,24 +332,28 @@ if __name__ == '__main__':
     elif args.runbot:
         print(configfile['bot']['name'])
         if args.runbot and  args.runbot.lower() in bots:
-            asr = ASR(botname=args.runbot.lower());
+            asr = ASR(botname=args.runbot.lower())
             asr.start()
         elif configfile['bot']['name'] in bots:
-            asr = ASR(botname=configfile['bot']['name']);
+            asr = ASR(botname=configfile['bot']['name'])
             asr.start()
 
 
     elif args.testfile and os.path.isfile(args.testfile):
-        asr = ASR();
+        asr = ASR()
         asr.result_testfile(args.testfile)
+        
+    elif args.chat and args.chat.lower() in bots:
+        cht = CHAT(botname=args.chat.lower())
+        cht.run()
         
     elif configfile['bot']['name'].lower() in bots:
         print(configfile['bot']['name'])
         if args.runbot and  args.runbot.lower() in bots:
-            asr = ASR(botname=args.runbot.lower());
+            asr = ASR(botname=args.runbot.lower())
             asr.start()
         elif configfile['bot']['name'] in bots:
-            asr = ASR(botname=configfile['bot']['name']);
+            asr = ASR(botname=configfile['bot']['name'])
             asr.start()
         
         
