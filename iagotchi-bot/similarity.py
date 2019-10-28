@@ -202,8 +202,11 @@ class sent2vecProcess():
                     self.sent2vecValues[param] = value
         self.model_name = self.sent2vecValues['embeddings']
         self.model = sent2vec.Sent2vecModel()
-        #print('load model  {}'.format(modelfile))
-        self.model.load_model(self.model_name, inference_mode=True)
+        print('load model  {}'.format(self.model_name))
+        try:
+            self.model.load_model(self.model_name, inference_mode=True)
+        except:
+            sys.exit("[Iagotchi Error] Impossible to load model from {}. {}".format(self.model_name, e))
         
     def clean_text(self, text):
         text = text.lower()
@@ -261,8 +264,11 @@ class sent2vecProcess():
         filename = filename
         
         vector_name = "{}.{}".format(topic.lower(),"bin")
-        classe_model = self.encode(self.model_name, filename, topic.lower())
-        self.store_vector(classe_model, vector_name)
+        try:
+            classe_model = self.encode(self.model_name, filename, topic.lower())
+            self.store_vector(classe_model, vector_name)
+        except Exception as e:
+            print(e)
         
     def store_vector(self, vectors, vector_name):
         if os.path.exists("{}/{}".format(self.modelDir, vector_name)):
@@ -294,6 +300,7 @@ class sent2vecProcess():
                 self.topic_sent2vec(topic, self.configurations['topic'][topic])
             else:
                 sys.exit("[Iagotchi Error] {} file doesn't not exist.".format(self.configurations['topic'][topic]))
+        print("Sent2Vec.run Finished !!!")
             
             
 class EmbeddingsSimilarity(object):
