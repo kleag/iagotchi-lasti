@@ -57,6 +57,7 @@ install(
       botresponse.py
       iagotchiGUI.py
       wiki.py
+      data.py
   DESTINATION ${CMAKE_INSTALL_PREFIX}
   
 )
