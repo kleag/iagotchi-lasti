@@ -199,4 +199,37 @@ Modify the line 14 in docker-compose.yml  with the full path to the shared folde
       ```
     $ sudo docker-compose start
     ```
-  
+    
+#### Troubleshoot
+Containers must be started separately to identify the cause of an error caused by the command *docker-compose up* 
+
+> I see `Problem with ChatScript`
+
+This error usually occurs when the chatscript server has not started properly perhaps due to a missing file in the sources of chatscript or an error in the name of the bot to launch. 
+The following commands can provide a trace of the error:
+
+* First, run limaserver container
+```
+$ sudo docker-compose run -d limaserver
+```
+
+* Then, run and access to iagotchi container
+```
+$ sudo docker-compose run --service-ports iagotchi bash
+```
+* In iagotchi container
+```
+root@211c9bbd9a0f:/Dist# cd ChatScript/BINARIES/
+root@211c9bbd9a0f:/Dist/ChatScript/BINARIES# ./LinuxChatScript64 local
+```
+after entering a username,
+```
+HARRY:  Welcome to ChatScript.
+fr: > :build iagotchi
+```
+  if you do not get the  following message, it is likely that the server encountered an error that will be displayed.
+```
+IAGOTCHI:  Je n'ai pas compris. Peux-tu reformuler, s'il te pla�t? notrule
+fr: > 
+
+```
