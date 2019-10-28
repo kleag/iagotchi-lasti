@@ -25,7 +25,7 @@ class Log(object):
         
     def save_in_file(self, q, a):
         with open(self.logfile, 'a', encoding='utf8') as f:
-            f.write("{}\t{}\t{}\n".format(datetime.datetime.now(), q, a))
+            f.write("{}\t User: {}\t Iagotchi: {}\n".format(datetime.datetime.now(), q, a))
             
             
     def init_database(self):
