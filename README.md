@@ -208,21 +208,21 @@ Containers must be started separately to identify the cause of an error caused b
 This error usually occurs when the chatscript server has not started properly perhaps due to a missing file in the sources of chatscript or an error in the name of the bot to launch. 
 The following commands can provide a trace of the error:
 
-* First, run limaserver container
+**1.**  First, run limaserver container
 ```
 $ sudo docker-compose run -d limaserver
 ```
 
-* Then, run and access to iagotchi container
+**2.** Then, run and access to iagotchi container
 ```
 $ sudo docker-compose run --service-ports iagotchi bash
 ```
-* In iagotchi container
+**3.** In iagotchi container
 ```
 root@211c9bbd9a0f:/Dist# cd ChatScript/BINARIES/
 root@211c9bbd9a0f:/Dist/ChatScript/BINARIES# ./LinuxChatScript64 local
 ```
-after entering a username,
+**4.** After entering a username,
 ```
 HARRY:  Welcome to ChatScript.
 fr: > :build iagotchi
@@ -231,5 +231,20 @@ fr: > :build iagotchi
 ```
 IAGOTCHI:  Je n'ai pas compris. Peux-tu reformuler, s'il te pla�t? notrule
 fr: > 
+```
+>  I see `iagotchi_1 exited with code 137 `
 
+This error is commonly associated with Docker for Mac not having enough RAM allocated to it. **Error 137** in Docker denotes that the container was ‘KILL’ed by ‘oom-killer’ (Out of Memory). This happens when there isn’t enough memory in the container for running the process.
+
+So it is an easy fix, go to the Docker Menu and select *Preferences*  then the *Advanced* tab and increase the Memory. You have to increase it to at least 
+**4.0GB**.
+
+> `To debug and trace the line that causes the container crash`
+
+You must perform the following steps after those previously described in 1 and 2.
+
+**3.** In iagotchi container
+```
+root@211c9bbd9a0f:/Dist# python3 test_chatscript.py
+root@211c9bbd9a0f:/Dist# python3 main.py --chat iagotchi
 ```
