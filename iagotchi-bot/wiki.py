@@ -18,6 +18,10 @@ class Wiki(object):
             definition = wikipedia.summary(word.lower(), sentences=1)
         except wikipedia.exceptions.DisambiguationError as e:
             wiki_options = e.options
+        # partiellement résolu
+        except wikipedia.exceptions.PageError as e:
+            pass
+            
             
         return definition, wiki_options, word
     
