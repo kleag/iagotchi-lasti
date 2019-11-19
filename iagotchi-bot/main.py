@@ -152,7 +152,7 @@ class ASR(object):
                 self.osc_self_client.sendOscAction('/iagotchi/session/stop')
             if reps and "synth-" in reps:
                 if self.osc_client:
-                    self.osc_client.sendOsc('/result/botresponse','{}'.format(reps.split(':')[0]))
+                    self.osc_client.sendOsc('/result/botresponse','{}'.format(reps.split(':::')[0]))
             #TODO implémebnter musique
             if reps and "start_music" in reps:
                 reps = reps.replace('start_music', '')
@@ -162,7 +162,7 @@ class ASR(object):
                 self.osc_client.sendOscAction('/iagotchi/music/stop')
             
             if self.osc_client and reps and "synth-" in reps:
-                self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(reps.split(':')[0]))
+                self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(reps.split(':::')[0]))
             else:
                 self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(reps))
             if self.externals.poesie:
