@@ -35,11 +35,12 @@ class iagotchiGui(object):
         self.btnStop = QPushButton("Stop Iagotchi")
         self.btnBuild = QPushButton("Build Iagotchi (password)")
         self.btnTrain = QPushButton("Train Iagotchi (similarity)")
-        self.btnDockerConfig = QPushButton("Open Docker Configuration")
-        self.btnIagoConfig = QPushButton("Open Iago Configuration")
+        self.btnDockerConfig = QPushButton("Open docker-compose.yml")
+        self.btnIagoConfig = QPushButton("Open config.json")
         self.btnGitPull = QPushButton("Update (git pull)")
         self.btnMax = QPushButton("Start Max patch")
         self.btnConsole = QPushButton("Start Processing Console")
+        self.btnKill = QPushButton("Stop everything")
         
         self.bot = QComboBox()
         self.bot.addItem("Rencontre")
@@ -61,10 +62,10 @@ class iagotchiGui(object):
         grid.addWidget(self.btnConsole,4,0)
         grid.addWidget(self.btnStop,5,0)
         grid.addWidget(QLabel("_ Options _"),6,0)
-        grid.addWidget(QLabel("IP :"),7,0)
-        grid.addWidget(self.ipTextEdit,8,0)
-        grid.addWidget(QLabel("Mode :"),9,0)
-        grid.addWidget(self.bot,10,0)
+        grid.addWidget(QLabel("Mode :"),7,0)
+        grid.addWidget(self.bot,8,0)
+        grid.addWidget(QLabel("IP :"),9,0)
+        grid.addWidget(self.ipTextEdit,10,0)
         grid.addWidget(self.btnSave,11,0)
         grid.addWidget(QLabel("_ Advanced _"),12,0)
         grid.addWidget(self.btnDockerConfig,13,0)
@@ -72,6 +73,7 @@ class iagotchiGui(object):
         grid.addWidget(self.btnGitPull,15,0)
         grid.addWidget(self.btnBuild,16,0)
         grid.addWidget(self.btnTrain,17,0)
+        grid.addWidget(self.btnKill,18,0)
         
         self.btnSave.clicked.connect(self.saveOptions)
         self.btnStart.clicked.connect(self.startIagotchi)
@@ -85,6 +87,7 @@ class iagotchiGui(object):
         self.btnGitPull.clicked.connect(self.gitPull)
         self.btnMax.clicked.connect(self.runMax)
         self.btnConsole.clicked.connect(self.runConsole)
+        self.btnKill.clicked.connect(self.killAll)
         
     def botChange(self,i):
         if self.bot.currentText() == "Rencontre" :
@@ -160,11 +163,23 @@ class iagotchiGui(object):
         
     def runMax(self):
         print("Running Max Patch")
-        subprocess.run("open -a Max ../patch/Iagotchi/Iagotchi.maxproj &", shell=True)
+        subprocess.run("open ../patch/Iagotchi.app &", shell=True)
 
     def runConsole(self):
         print("Running Processing Console")
-        subprocess.run("open ../patch/console/application.macosx/console.app &", shell=True)
+        subprocess.run("open ../patch/console.app &", shell=True)
+
+    def killAll(self):
+        print("Stopping Iagotchi")
+        subprocess.run("docker-compose stop", shell=True)
+        print("Killing Processing Console")
+        subprocess.run("killall console", shell=True)
+        print("Killing Max Patch")
+        subprocess.run("killall Iagotchi", shell=True)
+        print("Killing Chrome")
+        subprocess.run("killall \"Google Chrome\"", shell=True)
+        print("Killing Docker")
+        subprocess.run("killall Docker", shell=True)
 
 if __name__ == "__main__":
 
