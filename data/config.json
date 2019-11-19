@@ -1,7 +1,7 @@
 {
     "what_run": "bot",
     "bot": {
-        "name": "iagotchig5"
+        "name": "iagotchi"
     },
     "topic": {
         "list": [
@@ -12,10 +12,10 @@
         "g5": "data/g527092019.txt"
     },
     "session": {
-        "stop": 300,
-        "restart": 30,
-        "interactions": 50,
-        "duration": 300
+        "stop": 3500,
+        "restart": 1800,
+        "interactions": 5,
+        "duration": 3600
     },
     "lima": {
         "address": "limaserver",
