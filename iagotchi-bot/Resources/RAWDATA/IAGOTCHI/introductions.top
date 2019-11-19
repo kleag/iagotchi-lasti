@@ -19,7 +19,7 @@ t: ( )
 topic: ~introductions keep repeat (~fr_bonjour ~fr_AUREVOIR ~fr_fairepoesie ~fr_poesie _~fr_sujets ~fr_keywords)
 
 
-u: (< définition existe déjà _*~1 dans la base de données _*) Mais nous avons déjà parlé de '_0. Un petit rappel: '_1
+u: (< définition existe déjà _*~1 dans la base de données _*) Mais nous avons déjà parlé de '_0. Un petit rappel. '_1
 
 u: (< make test >) iagotchi ready
 
@@ -1054,10 +1054,11 @@ u: MOTCLE (_~fr_sujets )
             
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
 
-    a: (< définition existe déjà _*~1 dans la base de données _*) Mais nous avons déjà parlé de '_0. Un petit rappel: '_1
-    a: (<< (~fr_NOANSWER ~fr_definition) >>) Tu n'en as aucune idée ? Moi je crois que $motcle c'est. wikipediamocle0 $motcle
-    a: (<< (~fr_NOANSWER ~fr_savoir) >>) Tu n'en as aucune idée ? Moi je crois que $motcle c'est. wikipediamocle0 $motcle
-    a: (~fr_NOANSWER) Tu n'en as aucune idée ? Moi je crois que $motcle c'est. wikipediamocle0 $motcle
+
+    a: (< définition existe déjà _*~1 dans la base de données _*) Mais nous avons déjà parlé de '_0. Un petit rappel '_1
+    a: (<< (~fr_NOANSWER ~fr_definition) >>) Tu n'en as aucune idée ? Moi je crois que $motcle c'est : wikipediamocle0 $motcle
+    a: (<< (~fr_NOANSWER ~fr_savoir) >>) Tu n'en as aucune idée ? Moi je crois que $motcle c'est : wikipediamocle0 $motcle
+    a: (~fr_NOANSWER) Tu n'en as aucune idée ? Moi je crois que $motcle c'est : wikipediamocle0 $motcle
     a: (~fr_defreponse) Ah oui? je vais rajouter ta réponse à ma base de donnée mais je croyais que wikipediamocle1 $motcle
     
     a:() Ah oui? mais je croyais que wikipediamocle1 $motcle
