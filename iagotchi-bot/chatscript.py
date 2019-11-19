@@ -11,7 +11,7 @@ It allows you to run the server, start the dialog system of a bot, send requests
 
 import socket
 from pathlib import Path
-import pickle, os, subprocess, sys
+import pickle, os, subprocess, sys, time
 import chatscript_settings
 import datetime
 from log import Log
@@ -54,6 +54,7 @@ class ChatscriptInstance(object):
                 self.sendAndReceiveChatScript(text=":build {}".format(bot), 
                                             user="User", 
                                             bot="{}".format(bot))
+                time.sleep(10)
                 self.sendAndReceiveChatScript(text=":reset {}".format(bot),
 										  user = 'User',
 										  bot=bot)
@@ -117,7 +118,7 @@ class ChatscriptInstance(object):
                             cwd=chatscript_settings.chatscript_path)
 
     #TODO désactiver lima_processing
-    def sendAndReceiveChatScript(self, text, user, bot, lima_processing=False, timeout=0.5):
+    def sendAndReceiveChatScript(self, text, user, bot, lima_processing=False, timeout=10):
         """
         Send and receive requests to the chatscript server.
         """

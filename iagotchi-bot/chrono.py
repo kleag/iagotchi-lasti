@@ -101,7 +101,7 @@ class ChronoThread (threading.Thread):
             # seul le serveur du script main.py repond à /sessionstop mais pas en osc en http ????
             self.osc_self_client.send('/sessionstop')
                     
-    def sendAndReceiveChatScript(self, text, user, bot, server, port, timeout=0.5):
+    def sendAndReceiveChatScript(self, text, user, bot, server, port, timeout=10):
         print('ChronoThread.sendAndReceiveChatScript "{}", "{}", "{}" ; {}'
               .format(user, bot, text, int(port)))
         msg = u'%s\u0000%s\u0000%s\u0000' % (user+bot, bot, text)
