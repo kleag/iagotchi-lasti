@@ -40,7 +40,7 @@ class iagotchiGui(object):
         self.btnGitPull = QPushButton("Update (git pull)")
         self.btnMax = QPushButton("Start Max patch")
         self.btnConsole = QPushButton("Start Processing Console")
-        self.btnKill = QPushButton("Stop everything")
+        self.btnKill = QPushButton("Stop everything (killall)")
         
         self.bot = QComboBox()
         self.bot.addItem("Rencontre")
@@ -162,22 +162,22 @@ class iagotchiGui(object):
         subprocess.run("git pull &", shell=True)
         
     def runMax(self):
-        print("Running Max Patch")
+        print("Starting Max Patch")
         subprocess.run("open ../patch/Iagotchi.app &", shell=True)
 
     def runConsole(self):
-        print("Running Processing Console")
+        print("Starting Console")
         subprocess.run("open ../patch/console.app &", shell=True)
 
     def killAll(self):
-        print("Stopping Iagotchi")
-        subprocess.run("docker-compose stop", shell=True)
-        print("Killing Processing Console")
+        print("Killing Console")
         subprocess.run("killall console", shell=True)
         print("Killing Max Patch")
         subprocess.run("killall Iagotchi", shell=True)
         print("Killing Chrome")
         subprocess.run("killall \"Google Chrome\"", shell=True)
+        print("Stopping Iagotchi")
+        subprocess.run("docker-compose stop", shell=True)
         print("Killing Docker")
         subprocess.run("killall Docker", shell=True)
 
