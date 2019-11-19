@@ -49,7 +49,7 @@ class Synthese(object):
                         print('Unsupported os {}. No speech synthesis is available.'
                             .format(os.name))
                         
-                return "{}:/{}".format(resp, synthfile_)
+                return "{}:::/{}".format(resp, synthfile_)
             else:
                    
                 return resp

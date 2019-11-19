@@ -73,10 +73,11 @@ recognition.maxAlternatives = 1;
 recognition.lang = "fr-FR";
 recognition.onresult = detect;
 recognition.onend = function(event) { recognition.start(); console.log('event: end'); }
-recognition.onstart = function(event) { recognizing=true; console.log('event: start'); }
+recognition.onstart = function(event) { recognizing=true; intervalManager(true); console.log('event: start'); }
 recognition.start();
 
 var timer = null;
+var interval_timer = null;
 var p = $('<p></p>');
 $('body').append(p);
 function detect(event) {
@@ -111,6 +112,7 @@ function detect(event) {
         }
         if (event.results[i].isFinal){
         sent = 1
+        intervalManager(false)
         }else{
         sent = 0
         }
@@ -126,7 +128,7 @@ function detect(event) {
                         {
                             //youSaid = '<strong>' + botname + ':</strong> ' + response.split(":")[0] + "<br>";
                             //update(youSaid);
-                            addIago(response.split(":")[0]);
+                            addIago(response.split(":::")[0]);
                             recognition.continuous = true;
                             console.log(response);  
                         }
@@ -134,7 +136,8 @@ function detect(event) {
                         //playAudio(response.split(":")[1])
                     }
                 });
-        
+        intervalManager(true);
+
         
         /*$.post('/result', {transcript: String(event.results[i][0].transcript), 
                 confidence: event.results[i][0].confidence, 
@@ -187,30 +190,51 @@ function playAudio(url) {
       plysnd.play();
 }
 
-setInterval(function() {
+function intervalManager(flag){
+console.log(flag)
+if (flag){
+interval_timer = setTimeout(function() {
    $.get('/need_restart', function(data) {
        if(data == 'yes') {
             console.log('/need_restart');
             window.location.reload(false);
        }
    })
-}, 100);
-
-setInterval(function() {
    $.get('/sessionstop', function(data) {
     if (data.length > 0){
      addIago(data)
+     // return;
     }
    })
-}, 100);
-
-setInterval(function() {
    $.get('/tmpResponse', function(data) {
     if (data.length > 0){
      addIago(data)
+     // return;
     }
    })
 }, 100);
+// intervalManager(true);
+}else{
+clearTimeout(interval_timer)
+}
+}
+
+
+// setInterval(function() {
+//    $.get('/sessionstop', function(data) {
+//     if (data.length > 0){
+//      addIago(data)
+//     }
+//    })
+// }, 100);
+// 
+// setInterval(function() {
+//    $.get('/tmpResponse', function(data) {
+//     if (data.length > 0){
+//      addIago(data)
+//     }
+//    })
+// }, 100);
 
         </script>
     </body>

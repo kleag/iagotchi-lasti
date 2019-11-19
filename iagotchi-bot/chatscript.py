@@ -117,7 +117,7 @@ class ChatscriptInstance(object):
                             cwd=chatscript_settings.chatscript_path)
 
     #TODO désactiver lima_processing
-    def sendAndReceiveChatScript(self, text, user, bot, lima_processing=False, timeout=10):
+    def sendAndReceiveChatScript(self, text, user, bot, lima_processing=False, timeout=0.5):
         """
         Send and receive requests to the chatscript server.
         """

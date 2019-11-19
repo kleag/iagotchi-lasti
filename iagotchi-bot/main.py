@@ -145,9 +145,9 @@ class ASR(object):
             self.sentence_num += 1
             self.osc_client.sendOsc('/iagotchi/user','{}'.format(self.transcript))
             reps = self.externals.run(self.transcript, self.osc_client, self.osc_self_client)
-            if reps == "stop":
+            if reps and reps == "stop":
                 return None
-            if  "_stop_" in reps:
+            if  reps and "_stop_" in reps:
                 reps = reps.replace('_stop_', '')
                 self.osc_self_client.sendOscAction('/iagotchi/session/stop')
             if reps and "synth-" in reps:

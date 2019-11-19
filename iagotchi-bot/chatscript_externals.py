@@ -162,22 +162,22 @@ class Externals(object):
         print("externals.postprocessing: theme already discussed {}".format(len(self.themes_used)))
         if "sessionstart" in response.lower() and not self.need_user_name:
             self.need_user_name = True
-            response = re.sub('sessionstart', ' ', response)
+            response = re.sub('sessionstart', ' ', response.lower())
         elif "sessionstart" in response.lower() and self.need_user_name:
-            response = re.sub('sessionstart', ' ', response)
+            response = re.sub('sessionstart', ' ', response.lower())
             self.need_user_name = False
         elif "lastoutput" in response.lower():
             response = self.last_response
             
         elif "sessionstop" in response.lower():
-            response = re.sub('sessionstop', ' ', response)
+            response = re.sub('sessionstop', ' ', response.lower())
             self.need_stop = True
         elif "notrule" in response.lower():
             """
             Recherche de question similaire; Recherche de règles pour la question similaire; Si réponse, renvoie réponse
             Sinon renvoie réponse renvoyée pour module de recherche de questions similaires. 
             """
-            response_ = re.sub('notrule', ' ', response)
+            response_ = re.sub('notrule', ' ', response.lower())
             print('chatscript_externals.postprocessing: response--> {} need to search similar question'.format(response_))
             #distance, qid,  transcript_similar, repsimilar = self.similarity.tfidf_simlarity(self._transcript)
             distance, qid,  transcript_similar, repsimilar = self._get_similarity(self._transcript, 'rencontre')
@@ -185,15 +185,19 @@ class Externals(object):
             #response = repsimilar
             response = self.chatscript.sendAndReceiveChatScript(self.preprocessing(transcript_similar), "User", self.botname, lima_processing=True)
             if 'notrule' in response.lower() and repsimilar is None:
-                response = re.sub('notrule', ' ', response)
+                response = re.sub('notrule', ' ', response.lower())
             elif 'notrule' in response.lower() and not repsimilar is None:
                 response = repsimilar
             elif not 'notrule' in response.lower():
                 self.need_restart_postprocessing = True
                 
         elif "wikipedia4generalword" in response.lower():
-            response_ = re.sub('wikipedia4generalword', '', response)
-            response_ = self._NC_entity(response_)
+            response_ = re.sub('wikipedia4generalword', '', response.lower())
+            chk = [1 for item in self.themes if item == response_.strip().lower()]
+            if not len(chk) > 0:
+                response_ = self._NC_entity(response_)
+            elif len(chk) > 0 and chk[0] == 1:
+                response_ = [response_.strip()]
             print('postprocessing response_ {}'.format(response_))
             if not response_ is None:
                 for i, elt in enumerate(response_):
@@ -267,7 +271,7 @@ class Externals(object):
             L'utilisateur ne connait pas la définition du thème. Le bot doit lui donner une définition.
             """
             print('chatscript_externals.postprocessing.wikipediamocle0 {}'.format(response))
-            response_ = re.sub('wikipediamocle0', '', response)
+            response_ = re.sub('wikipediamocle0', '', response.lower())
             mot = response_.split()[-1] # récupérer le thème de la réponse du Bot.
             print('postprocessing response_ {}'.format(response_))
             # si le thème est déjà abordé avec sa définition connue. 
@@ -332,7 +336,7 @@ class Externals(object):
             L'utilisateur donne une définition. Le bot doit l'enregistrer.
             """
             print('chatscript_externals.postprocessing.wikipediamocle1 {}'.format(response))
-            response_ = re.sub('wikipediamocle1', '', response)
+            response_ = re.sub('wikipediamocle1', '', response.lower())
             mot = response_.split()[-1]
             print('postprocessing response_ {}'.format(response_))
             # si le thème est déjà abordé avec sa définition connue. 
@@ -378,7 +382,7 @@ class Externals(object):
                 
                     
         elif "wikipediamotcleinitial" in response.lower():
-            response_ = re.sub('wikipediamotcleinitial', '', response)
+            response_ = re.sub('wikipediamotcleinitial', '', response.lower())
             response_ = self.check_no_lima_option(response_)
             mot = response_.split()[-1].lower()
             print('postprocessing response_ {}'.format(response_))
@@ -408,7 +412,7 @@ class Externals(object):
                 
                 
         elif "question4poesie" in response.lower():
-            response_ = re.sub('question4poesie', 'Un instant', response)
+            response_ = re.sub('question4poesie', 'Un instant', response.lower())
             response = self.check_no_lima_option(response_)
             try:
                 self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(response))   
@@ -451,7 +455,7 @@ class Externals(object):
             Le bot a détecter stop pendant que la musique est en cours de lecture. Pour envoyer /stop au port configuré dans config.json, on passe 
             la variable self.start_music à False
             """
-            response = response.replace('**stopmusique', '')
+            response = response.lower().replace('**stopmusique', '')
             self.start_music = False
             
                    
@@ -538,9 +542,12 @@ class Externals(object):
         """
         Function for extracting similar question of text from topic data.
         """
-        distance, qid,  transcript_similar, repsimilar, topic_responses = self.similarity.similarity(text, topic, using_topic_responses=None)
-        #self.using_topic_responses[topic] = topic_responses
-        return distance, qid,  transcript_similar, repsimilar
+        try:
+            distance, qid,  transcript_similar, repsimilar, topic_responses = self.similarity.similarity(text, topic, using_topic_responses=None)
+            #self.using_topic_responses[topic] = topic_responses
+            return distance, qid,  transcript_similar, repsimilar
+        except:
+            return 0, 5, text, "parlons d'autres choses s'il te plaît"
     
     def _check_bonjour_et_toi_in(self, transcript):
         """
