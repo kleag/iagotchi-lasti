@@ -12,10 +12,10 @@
         "g5": "data/g527092019.txt"
     },
     "session": {
-        "stop": 3500,
-        "restart": 1800,
-        "interactions": 5,
-        "duration": 3600
+        "stop": 300,
+        "restart": 30,
+        "interactions": 50,
+        "duration": 300
     },
     "lima": {
         "address": "limaserver",
