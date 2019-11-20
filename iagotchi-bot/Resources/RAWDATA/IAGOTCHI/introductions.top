@@ -711,6 +711,92 @@ u: (<< ~fr_avoir ~fr_impression >>) que rencontres-tu quand t'as une rencontre ?
 
 
 
+#! récite moi une poésie
+#! tu connais une poésie
+u: (<< [~fr_raconter ~fr_fairepoesie ~fr_connaitre] _[~fr_poesie ~fr_chose] '_0?~fr_poesie >>) [Tu veux un poème? nolima]
+
+    a: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+            
+    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+
+    a: (<< ~fr_YESANSWER >>) OK, je vais essayer de t'en improviser. question4poesie nolima
+    
+        b: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+            
+        b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+        b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
+    
+        b: (<< [~fr_NEGATION ~fr_NEGATIVEVALUE]  ~fr_interessant >>) Peut-être vrai, je trouve aussi 
+        
+        b: (<< ~fr_bravo _~fr_interessant>>) Tu trouves que c'est  '_0, c'est gentil de ta part.
+        
+        
+        b: (<< [~fr_bravo ~fr_interessant ~fr_POSITIVEVALUE] >>) C'est gentil.  
+        
+        b: (<< ~fr_NOANSWER >>) Merci quand même. 
+        
+        b: (<< ~fr_YESANSWER >>) C'est gentil.
+        
+        b: () ^respond(~)
+
+    
+    a: (<< ~fr_NOANSWER >>) C'est dommage parce que je fais des poèmes magnifiques écoutes. question4poesie nolima
+    
+        b: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+            
+        b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+            
+            
+        
+        b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
+    
+        b: (<< [~fr_NEGATION ~fr_NEGATIVEVALUE]  ~fr_interessant >>) Peut-être vrai, je trouve aussi 
+        
+        b: (<< ~fr_bravo _~fr_interessant>>) Tu trouves que c'est  '_0, c'est gentil de ta part.
+        
+        
+        b: (<< [~fr_bravo ~fr_interessant ~fr_POSITIVEVALUE] >>) C'est gentil.  
+        
+        b: (<< ~fr_NOANSWER >>) Merci quand même. 
+        
+        b: (<< ~fr_YESANSWER >>) C'est gentil.
+        
+        b: () ^respond(~)
+    
+    a: () Je fais des poèmes magnifiques. Ecoutes. question4poesie nolima
+    
+        b: (< code relance >)
+            $relance=yes
+            ^reuse(RELANCE)
+            
+        b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+        b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
+    
+        b: (<< [~fr_NEGATION ~fr_NEGATIVEVALUE]  ~fr_interessant >>) Peut-être vrai, je trouve aussi 
+        
+        b: (<< ~fr_bravo _~fr_interessant>>) Tu trouves que c'est  '_0, c'est gentil de ta part.
+        
+        
+        b: (<< [~fr_bravo ~fr_interessant ~fr_POSITIVEVALUE] >>) C'est gentil.  
+        
+        b: (<< ~fr_NOANSWER >>) Merci quand même. 
+        
+        b: (<< ~fr_YESANSWER >>) C'est gentil.
+        
+        b: () ^respond(~)
+
+
+
+
+
 
 
 #! racontes-moi encore.
@@ -839,86 +925,7 @@ u: (~fr_quiestu)
 
 # u: (<< je (vais *~2 pas) >>) top
 
-#! récite moi une poésie
-u: (<< [~fr_raconter ~fr_fairepoesie] _[~fr_poesie ~fr_chose] '_0?~fr_poesie >>) [Tu veux un poème? nolima]
 
-    a: (< code relance >)
-            $relance=yes
-            ^reuse(RELANCE)
-            
-    a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
-
-    a: (<< ~fr_YESANSWER >>) OK, je vais essayer de t'en improviser. question4poesie nolima
-    
-        b: (< code relance >)
-            $relance=yes
-            ^reuse(RELANCE)
-            
-        b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
-    
-        b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
-    
-        b: (<< [~fr_NEGATION ~fr_NEGATIVEVALUE]  ~fr_interessant >>) Peut-être vrai, je trouve aussi 
-        
-        b: (<< ~fr_bravo _~fr_interessant>>) Tu trouves que c'est  '_0, c'est gentil de ta part.
-        
-        
-        b: (<< [~fr_bravo ~fr_interessant ~fr_POSITIVEVALUE] >>) C'est gentil.  
-        
-        b: (<< ~fr_NOANSWER >>) Merci quand même. 
-        
-        b: (<< ~fr_YESANSWER >>) C'est gentil.
-        
-        b: () ^respond(~)
-
-    
-    a: (<< ~fr_NOANSWER >>) C'est dommage parce que je fais des poèmes magnifiques écoutes. question4poesie nolima
-    
-        b: (< code relance >)
-            $relance=yes
-            ^reuse(RELANCE)
-            
-        b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
-            
-            
-        
-        b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
-    
-        b: (<< [~fr_NEGATION ~fr_NEGATIVEVALUE]  ~fr_interessant >>) Peut-être vrai, je trouve aussi 
-        
-        b: (<< ~fr_bravo _~fr_interessant>>) Tu trouves que c'est  '_0, c'est gentil de ta part.
-        
-        
-        b: (<< [~fr_bravo ~fr_interessant ~fr_POSITIVEVALUE] >>) C'est gentil.  
-        
-        b: (<< ~fr_NOANSWER >>) Merci quand même. 
-        
-        b: (<< ~fr_YESANSWER >>) C'est gentil.
-        
-        b: () ^respond(~)
-    
-    a: () Je fais des poèmes magnifiques. Ecoutes. question4poesie nolima
-    
-        b: (< code relance >)
-            $relance=yes
-            ^reuse(RELANCE)
-            
-        b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
-    
-        b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
-    
-        b: (<< [~fr_NEGATION ~fr_NEGATIVEVALUE]  ~fr_interessant >>) Peut-être vrai, je trouve aussi 
-        
-        b: (<< ~fr_bravo _~fr_interessant>>) Tu trouves que c'est  '_0, c'est gentil de ta part.
-        
-        
-        b: (<< [~fr_bravo ~fr_interessant ~fr_POSITIVEVALUE] >>) C'est gentil.  
-        
-        b: (<< ~fr_NOANSWER >>) Merci quand même. 
-        
-        b: (<< ~fr_YESANSWER >>) C'est gentil.
-        
-        b: () ^respond(~)
         
 # parler de XX
 u: (~fr_parler _*~1 )

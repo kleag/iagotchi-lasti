@@ -215,6 +215,7 @@ class ASR(object):
         if self.externals.poesie:
             tmpmsg = self.externals.poesie_generation()
             self.externals.poesie = False
+            self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(tmpmsg))
             #tmpmsg = self.externals.tmp_message
             #self.externals.tmp_message = None
             #self.externals.tmp_message_sent = True
