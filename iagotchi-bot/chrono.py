@@ -129,6 +129,7 @@ class ChronoThread (threading.Thread):
             
             
     def stop(self):
-        self._stop.set() 
+        #self._stop.set() 
+        self.status = False
     def stopped(self): 
         return self._stop.isSet() 

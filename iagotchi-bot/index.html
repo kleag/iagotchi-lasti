@@ -76,6 +76,10 @@ recognition.onend = function(event) { recognition.start(); console.log('event: e
 recognition.onstart = function(event) { recognizing=true; intervalManager(true); console.log('event: start'); }
 recognition.start();
 
+
+var displayUser = true;
+var trs = null;
+
 var timer = null;
 var interval_timer = null;
 var p = $('<p></p>');
@@ -97,17 +101,18 @@ function detect(event) {
                 sentence: event.results[i].isFinal ? 1 : 0
                 });//*/
         //$('p').text(event.results[i][0].transcript);
+        console.log('display '+displayUser)
         if(event.results[i].isFinal) {
-            //$('p').append(" OK");
-           // p = $('<p></p>');
-            // $('body').append(p);
-            //window.location.reload(false); 
-            //youSaid = '<strong>' + name + ':</strong> ' + event.results[i][0].transcript + "<br>";
+
+            if (displayUser){
             addUser(event.results[i][0].transcript);
+            }
             //update(youSaid);
         } else {
             //youSaid = '<strong>' + name + ':</strong> ' + event.results[i][0].transcript + "<br>";
+            if (displayUser){
             modifyUser(event.results[i][0].transcript);
+            }
             //update(youSaid);
         }
         if (event.results[i].isFinal){
@@ -116,19 +121,26 @@ function detect(event) {
         }else{
         sent = 0
         }
-        
+        trs = String(event.results[i][0].transcript)
         $.ajax({
                     type: 'POST',
                     url: '/result',
                     data: {transcript: String(event.results[i][0].transcript), 
                 confidence: event.results[i][0].confidence, 
                 sentence: sent},
+//                 beforeSend: function () {
+//                 if (displayUser){
+//                     addUser(event.results[i][0].transcript);
+//                     }
+//                 },
                     success: function(response) {
                         if(response != 'ok')
                         {
                             //youSaid = '<strong>' + botname + ':</strong> ' + response.split(":")[0] + "<br>";
                             //update(youSaid);
+                            if (displayUser || response.includes('__hello__')){
                             addIago(response.split(":::")[0]);
+                            }
                             recognition.continuous = true;
                             console.log(response);  
                         }
@@ -167,6 +179,15 @@ function addUser(text) {
 }
 
 function addIago(text) {
+    if (text.includes('_stop_')){
+    text = text.replace('_stop_', ' ')
+    displayUser = false
+    }
+    if (text.includes('__hello__')){
+    text = text.replace('__hello__', ' ')
+    addUser(trs)
+    displayUser = true
+    }
     $('#responseHolder').append("<p><span class='name_iago'>Iagotchi&nbsp;:&nbsp;</span><span class='iago'>"+text+"</span></p>");
     $('#responseHolder').append("<p></p>");
     window.scrollBy({ top: 100, left: 0, behavior: 'smooth' });
@@ -202,7 +223,10 @@ interval_timer = setTimeout(function() {
    })
    $.get('/sessionstop', function(data) {
     if (data.length > 0){
-     addIago(data)
+    displayUser = false
+    console.log('display sessionstop '+displayUser)
+    addIago(data)
+     
      // return;
     }
    })

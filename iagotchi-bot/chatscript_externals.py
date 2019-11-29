@@ -127,8 +127,16 @@ class Externals(object):
         self.tmp_message = None
         self.tmp_message_sent = False
         self.poesie = False
+        self.log = self.chatscript.start_iagotchi_bot()
+        self.chrono.log = self.log
+        if len(self.themes) > 0:
+            for th in self.themes:
+                res = self.log.getDefinition(th)
+                if not res is None:
+                    self.definitions_from_db[th] = res
         
     def startup(self):
+        print('startup at {}'.format(datetime.datetime.now()))
         self.log = self.chatscript.start_iagotchi_bot()
         self.chrono.log = self.log
           
@@ -143,17 +151,14 @@ class Externals(object):
         self.stop_message = None
         self.tmp_message = None
         
-        if len(self.themes) > 0:
-            for th in self.themes:
-                res = self.log.getDefinition(th)
-                if not res is None:
-                    self.definitions_from_db[th] = res
+        
         self.user_name = None
         self.osc_self_client = None
         self.tmp_message_sent = False
         self.poesie = False
         if self.osc_client is not None:
             self.osc_client.sendOsc('/iagotchi/session/start','{}'.format(self.chrono.start_time))
+        print('End startup at {}'.format(datetime.datetime.now()))
         
     
     def postprocessing(self, response):
@@ -633,7 +638,7 @@ class Externals(object):
             return None            
         elif any(bn in transcript.lower() for bn in lstbonjour) and (self.session_status == 'stop' or self.session_status is None):
             self.startup()
-            return self.process(transcript)
+            return '{} __hello__'.format(self.process(transcript))
         elif self.session_status == 'start':
             return self.process(transcript)
 

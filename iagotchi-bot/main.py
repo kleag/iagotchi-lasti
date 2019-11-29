@@ -148,7 +148,7 @@ class ASR(object):
             if reps and reps == "stop":
                 return None
             if  reps and "_stop_" in reps:
-                reps = reps.replace('_stop_', '')
+                #reps = reps.replace('_stop_', '')
                 self.osc_self_client.sendOscAction('/iagotchi/session/stop')
             if reps and "synth-" in reps:
                 if self.osc_client:
