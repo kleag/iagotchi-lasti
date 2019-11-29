@@ -58,6 +58,8 @@ install(
       iagotchiGUI.py
       wiki.py
       data.py
+      rules.py
+      process_log.py
   DESTINATION ${CMAKE_INSTALL_PREFIX}
   
 )

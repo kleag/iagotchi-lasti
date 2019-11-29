@@ -12,8 +12,8 @@ class Log(object):
     
     
     def __init__(self, date, botname='iagotchi'):
-        pathlib.Path('data/logs').mkdir(parents=True, exist_ok=True) 
-        self.logfile = 'data/logs/logfile_{}_{}.txt'.format(botname, date)
+        pathlib.Path('data/logs/{}/{}'.format(botname, str(date).split()[0])).mkdir(parents=True, exist_ok=True) 
+        self.logfile = 'data/logs/{}/{}/logfile_{}_{}.txt'.format(botname, str(date).split()[0], botname, date)
         fplog = open(self.logfile, 'w')
         fplog.close()
         self.dbsession = Session()
