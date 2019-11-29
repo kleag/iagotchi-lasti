@@ -162,7 +162,7 @@ u: ($qrelance=yes !$themequestion=null) $qrelance=no Parfois, j'oublie le sens d
         $relance=yes
         ^reuse(RELANCE)
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
-    a: (< définition existe déjà _*~1 dans la base de données _*) Mais nous avons déjà parlé de '_0. Un petit rappel: '_1
+    a: (< définition existe déjà _*~1 dans la base de données > ) Mais nous avons déjà parlé de '_0. Un petit rappel: 
     a: (<< (pas ~fr_definition) >>) Tu n'en as aucune idée ? Moi je crois que $themequestion c'est : wikipediamocle0 $themequestion
     a: (<< (pas ~fr_savoir) >>) Tu n'en as aucune idée ? Moi je crois que $themequestion c'est : wikipediamocle0 $themequestion
     a: (~fr_NOANSWER) Tu n'en as aucune idée ? Moi je crois que $themequestion c'est : wikipediamocle0 $themequestion

@@ -161,6 +161,7 @@ class Externals(object):
         print('End startup at {}'.format(datetime.datetime.now()))
         
     
+    
     def postprocessing(self, response):
         #response = response.lower()
         print("externals.postprocessing response {} need_user_name: {} user_name: {}".format(response, self.need_user_name, self.user_name))
@@ -207,7 +208,8 @@ class Externals(object):
             if not response_ is None:
                 for i, elt in enumerate(response_):
                     if elt.lower() in self.definition.keys():
-                        response = self.chatscript.sendAndReceiveChatScript("définition existe déjà  {} dans la base de données {}".format(elt.lower(), self.definition[elt.lower()]), "User", self.botname)
+                        response = self.chatscript.sendAndReceiveChatScript("définition existe déjà  {} dans la base de données".format(elt.lower()), "User", self.botname)
+                        response = '{} {}'.format(response, self.definition[elt.lower()])
                         response = response.split()
                         index_ = [response.index(keyword) for keyword in self.chatscriptkeywords if keyword in response]
                         if len(index_) > 0:
@@ -392,7 +394,8 @@ class Externals(object):
             mot = response_.split()[-1].lower()
             print('postprocessing response_ {}'.format(response_))
             if mot.lower() in self.definition.keys():
-                response = self.chatscript.sendAndReceiveChatScript("définition existe déjà  {} dans la base de données {}".format(mot, self.definition[mot]), "User", self.botname)
+                response = self.chatscript.sendAndReceiveChatScript("définition existe déjà  {} dans la base de données".format(mot), "User", self.botname)
+                response = '{} {}'.format(response, self.definition[mot])
                 response = response.split()
                 index_ = [response.index(keyword) for keyword in self.chatscriptkeywords if keyword in response]
                 if len(index_) > 0:
