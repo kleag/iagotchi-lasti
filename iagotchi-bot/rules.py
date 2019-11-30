@@ -22,9 +22,11 @@ class Rules(object):
         with open(self.output_iagotchi, 'w', encoding='utf8') as fp:
             fp.write(json.dumps(self.dict_data['iagotchi'], indent=4, separators=(',', ': ')))
         with open(self.output_iagotchig5, 'w', encoding='utf8') as fp:
-            #json.dump(self.dict_data['iagotchig5'], fp)
             fp.write(json.dumps(self.dict_data['iagotchig5'], indent=4, separators=(',', ': ')))
         print(self.dict_data)
+        
+    
+                    
                     
                     
     def extract_data(self, filename, bot, top):
@@ -39,4 +41,5 @@ class Rules(object):
         
 if __name__ == "__main__":
     r = Rules()
-    r.generateJson()
+    r.initialJson()
+    #r.generateJson()

@@ -48,11 +48,38 @@ class ProcessLog(object):
         for botname in self.botnames:
             self.browse_folder(botname)
             with open('{}/{}.json'.format(self.log_folder, botname), 'w', encoding='utf8') as fp:
-                fp.write(json.dumps(self.bot_data[botname], indent=4, separators=(',', ': ')))
+                fp.write(json.dumps(self.bot_data[botname], ensure_ascii=False, indent=4, separators=(',', ': ')))
+                
+    def initial_data(self, filename, output):
+        content = dict()
+        with open(filename, 'r', encoding='utf8') as f:
+            for line in f:
+                if line.strip().startswith('#!'):
+                    line = line.strip().split('#!')
+                    for l in line:
+                        self.datas.append(l)
+                    question = line[1].strip()
+                    response = '#!'.join(line[2:])
+                    content[question] = response
+        with open(output, 'w', encoding='utf8') as fp:
+            fp.write(json.dumps(content, ensure_ascii=False, indent=4, separators=(',', ': ')))
+        with open('data/texts.sent', 'w', encoding='utf8') as f:
+            f.write('\n'.join(self.datas))
+            
+    def initialJson(self):
+        self.initial_data('data/rencontre27092019.txt', 'data/rencontre27092019.json')
+        self.initial_data('data/g527092019.txt', 'data/g527092019.json')
+        
+    def merge_texts_sent(self):
+        with open('data/texts.sent', 'a', encoding='utf8') as f:
+            f.write('\n'.join(self.datas))
+        
         
         
 if __name__ == "__main__":
     pl = ProcessLog('data/logs/')
+    #pl.initialJson()
     pl.run()
+    pl.merge_texts_sent()
                         
             

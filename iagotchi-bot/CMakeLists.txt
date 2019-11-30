@@ -60,6 +60,7 @@ install(
       data.py
       rules.py
       process_log.py
+      requirements.txt
   DESTINATION ${CMAKE_INSTALL_PREFIX}
   
 )
