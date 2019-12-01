@@ -8,8 +8,8 @@
             "rencontre",
             "g5"
         ],
-        "rencontre": "data/rencontre27092019.txt",
-        "g5": "data/g527092019.txt"
+        "rencontre": "data/rencontre27092019.json",
+        "g5": "data/g527092019.json"
     },
     "session": {
         "stop": 3500,
