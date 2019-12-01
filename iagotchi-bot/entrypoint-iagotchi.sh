@@ -18,13 +18,12 @@ fetchstatus() {
 #       done
 #       echo ready
      ;;
-     "similarity")
-     python3 similarity.py
+     "similarity-with-topics")
+     python3 similarity.py --topics y
      ;;
-     "similarité")
-      python3 similarity.py
-     ;;
-     *)
+     "similarity-without-topics")
+     python3 similarity.py --topics n
+     ;;*)
      echo "You have failed to specify what to do correctly in data/config.json."
      exit 1
      ;;

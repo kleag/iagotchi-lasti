@@ -3,21 +3,24 @@ import gensim
 from nltk.tokenize import word_tokenize
 from gensim import corpora
 from nltk.corpus import stopwords
-from lima import Lima
+#from lima import Lima
 import codecs
-import sys, json
+import sys, json, datetime
 import sent2vec
 import numpy as np
 import pickle, bz2, re
 from scipy.spatial.distance import cdist
 from collections import Counter
-import random
+import random, argparse
 from random import randint
+import subprocess, smart_open
+from process_log import ProcessLog
 
 print('similarity module loading')
 raw_stopword_list = stopwords.words('french')
 print('similarity Lima connection')
-lima = Lima()
+#lima = Lima()
+lima = None
 
 
 class ProcessCorpus(object):
@@ -200,11 +203,13 @@ class sent2vecProcess():
                     self.sent2vecValues[param] = self.configurations['sent2vec'][param]
                 except:
                     self.sent2vecValues[param] = value
-        self.model_name = self.sent2vecValues['embeddings']
+        #self.model_name = self.sent2vecValues['embeddings']
+        self.model_name = 'data/iagotchiEmbedings.bin'
         self.model = sent2vec.Sent2vecModel()
         print('load model  {}'.format(self.model_name))
         try:
-            self.model.load_model(self.model_name, inference_mode=True)
+            if os.path.isfile(self.model_name):
+                self.model.load_model(self.model_name, inference_mode=True)
         except:
             sys.exit("[Iagotchi Error] Impossible to load model from {}. {}".format(self.model_name, e))
         
@@ -222,6 +227,11 @@ class sent2vecProcess():
     
     def lima_process(self, q):
         return self.lima.text_lima_tagger(q)
+    
+    def loadJsonContent(self, filename):
+        with open(filename) as f:
+            data = json.load(f)
+        return data
             
     def getText(self, file_, topic):
         """
@@ -231,17 +241,22 @@ class sent2vecProcess():
         if os.path.exists(file_):
             text = list()
             ids = list()
-            with open(file_, 'r') as in_stream:
-                for idline, line in enumerate(in_stream):
-                    if line.strip() and line.startswith('#!'):
-                        line = self.getQuestion(line.strip())
-                        line = self.clean_text(line)
-                        line = self.lima_process(line)
-                        text.append(line.strip())
-                        ids.append(idline)
+            data = self.loadJsonContent(file_)
+            for idline, (q, r) in enumerate(data.items()):
+                line = self.clean_text(q)
+                text.append(line.strip())
+                ids.append(idline)
+            #with open(file_, 'r') as in_stream:
+                #for idline, line in enumerate(in_stream):
+                    #if line.strip() and line.startswith('#!'):
+                        #line = self.getQuestion(line.strip())
+                        #line = self.clean_text(line)
+                        #line = self.lima_process(line)
+                        #text.append(line.strip())
+                        #ids.append(idline)
 
-                numpy_text = np.array(text) # for line in text
-                numpy_ids = np.array(ids)
+            numpy_text = np.array(text) # for line in text
+            numpy_ids = np.array(ids)
             return text, numpy_text, numpy_ids
         else:
             sys.exit('[Iagotchi Error] {} does not exist'.format(file_))
@@ -323,8 +338,8 @@ class EmbeddingsSimilarity(object):
                 self.sentences_embeddings[topic.lower()] = pickle.load(f)
         self.allmodel = sent2vec.Sent2vecModel()
         print('similarity.EmbeddingsSimilarity fr_model loading...')
-        if os.path.exists(os.path.join(os.getcwd(), self.configurations['sent2vec']['embeddings'])):
-            modelfile = os.path.join(os.getcwd(), self.configurations['sent2vec']['embeddings'])
+        if os.path.exists(os.path.join(os.getcwd(), 'data/iagotchiEmbedings.bin')):
+            modelfile = os.path.join(os.getcwd(), 'data/iagotchiEmbedings.bin')
             self.allmodel.load_model(modelfile)
             print('similarity.EmbeddingsSimilarity fr_model loaded ...')
         try:
@@ -356,6 +371,12 @@ class EmbeddingsSimilarity(object):
     
     def lima_process(self, q):
         return self.lima.text_lima_tagger(q)
+    
+    
+    def loadJsonContent(self, filename):
+        with open(filename) as f:
+            data = json.load(f)
+        return data
             
     def getText(self, file_, topic):
         """
@@ -366,27 +387,57 @@ class EmbeddingsSimilarity(object):
             text = list()
             ids = list()
             responses = dict()
-            with open(file_, 'r') as in_stream:
-                for idline, line in enumerate(in_stream):
-                    if line.strip():
-                        line, resp = self.getQuestion(line.strip())
-                        line = self.clean_text(line)
-                        text.append(line.strip())
-                        ids.append(idline)
-                        responses[idline] = resp
+            data = self.loadJsonContent(file_)
+            for idline, (q, r) in enumerate(data.items()):
+                line = self.clean_text(q)
+                text.append(line.strip())
+                ids.append(idline)
+                responses[idline] = r.split('#!')
 
-                numpy_text = np.array(text) # for line in text
-                numpy_ids = np.array(ids)
+            numpy_text = np.array(text) # for line in text
+            numpy_ids = np.array(ids)
             return text, numpy_text, numpy_ids, responses
         else:
             sys.exit('[Iagotchi Error] {} does not exist'.format(file_))
+    
+    
+    
+    
+    
+    
+    
+    
+            
+    #def getText(self, file_, topic):
+        #"""
+        #Si topic == g5, on récupère les questions avec un id impaire dans le fichier. Les réponses étant à l'id pair.
+        #Si topic == rencontre, on récupère tout le contenu du fichier. 
+        #"""
+        #if os.path.exists(file_):
+            #text = list()
+            #ids = list()
+            #responses = dict()
+            #with open(file_, 'r') as in_stream:
+                #for idline, line in enumerate(in_stream):
+                    #if line.strip():
+                        #line, resp = self.getQuestion(line.strip())
+                        #line = self.clean_text(line)
+                        #text.append(line.strip())
+                        #ids.append(idline)
+                        #responses[idline] = resp
+
+                #numpy_text = np.array(text) # for line in text
+                #numpy_ids = np.array(ids)
+            #return text, numpy_text, numpy_ids, responses
+        #else:
+            #sys.exit('[Iagotchi Error] {} does not exist'.format(file_))
       
     def _is_blank(self, s):
         return not bool(s.strip())
     
     def getSimilar(self, texte, topic):
         texte = self.clean_text(texte)
-        texte = self.lima_process(texte)
+        #texte = self.lima_process(texte)
 
         record = self.sentences_embeddings[topic.lower()]
         #print(record)
@@ -453,11 +504,104 @@ class Similarity(object):
             distance, qid,  transcript_similar, repsimilar = self.sim.embeddings_similarity(transcript, topic)
             return distance, qid,  transcript_similar, repsimilar, self.sim.using_topic_responses
             
+            
+            
+class TrainIagotchiSent2vecModel(object):
+    
+    def __init__(self):
+        assert os.path.isfile("data/texts.sent"), "data/texts.sent unavailable"
+        self.source = "data/texts.sent"
+        self.sv = sent2vecProcess("data")
+        
+    def clean_text(self, text):
+        text = text.lower()
+        text = re.sub(r"'", "e ", text)
+        text = re.sub(r"-", " ", text)
+        text = re.sub(r"[-()«<>»\"#/@;:<>{}`+=~|.!?,]", "", text)
+        return text
+    
+    def read_corpus(self):
+        all_docs = list()
+        with open(self.source, encoding='utf8') as f:
+            for line in f:
+                line = line.strip()
+                if len(line) > 0:
+                    line = self.clean_text(line)
+                    tokens = line.split()
+                    tokens = [word for word in tokens if word not in raw_stopword_list]
+                    tokens = [word for word in tokens if word.isalpha()]
+                    all_docs.append(tokens)
+        with smart_open.smart_open('data/sent2vec.txt', 'w') as f:
+            for review in all_docs:
+                for item in review:
+                    f.write("%s " % item)
+                f.write("\n")
+                
+    def trainModel(self):
+        if os.path.isfile('data/iagotchiEmbedings.bin'):
+            os.remove('data/iagotchiEmbedings.bin')
+        command = "../../sent2vec/./fasttext sent2vec -input data/sent2vec.txt  -output data/iagotchiEmbedings -lr 0.2 -dropoutK 0 -epoch 15 -bucket 40000 -dim 200"
+        print(command)
+        _p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+        out, err = _p.communicate()
+        print(out)
+        if _p:
+            print("iagotchiEmbedings has successfully built. \n")
+        else:
+            sys.exit("[Iagotchi Error] iagotchiEmbedings building failed.")
+        if os.path.isfile('data/sent2vec.txt'):
+            os.remove('data/sent2vec.txt')
+            
+    def loadJsonContent(self, filename):
+        with open(filename) as f:
+            data = json.load(f)
+            
+        return data
+            
+    def build_topic_embeddings(self):
+        self.sv.run()
+        
+    def run(self):
+        print("START Corpus Reading %s" % datetime.datetime.now())
+        self.read_corpus()
+        print("END Corpus Reading %s" % str(datetime.datetime.now()))
+        print("START Iagotchi Model Training %s" % datetime.datetime.now())
+        self.trainModel()
+        print("END Iagotchi Model Training %s" % str(datetime.datetime.now()))
+        print("START Topic Embeddings %s" % datetime.datetime.now())
+        self.build_topic_embeddings()
+        print("END Topic Embeddings %s" % str(datetime.datetime.now()))
+        print('Training completed ...')
+                    
                 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__,formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('--topics', dest='topics', help='build model with the logs of topics (y) or without the logs of topics (n)')
+    #parser.add_argument('-similarity-no-topic-logs', dest='similarity-no-topic-logs',  help='build model without the logs of topics')
 
-    sv = sent2vecProcess("data")
-    sv.run()
+    #sv = sent2vecProcess("data")
+    #sv.run()
+    
+    args= parser.parse_args()
+    if args.topics and args.topics.lower() == 'n':
+        pl = ProcessLog('data/logs/')
+        pl.run()
+        pl.merge_texts_sent()
+        tism = TrainIagotchiSent2vecModel()
+        tism.run()
+    elif args.topics and args.topics.lower() == 'y':
+        pl = ProcessLog('data/logs/')
+        pl.run()
+        pl.merge_texts_sent()
+        pl.append_data()
+        tism = TrainIagotchiSent2vecModel()
+        tism.run()
+    else:
+        pl = ProcessLog('data/logs/')
+        pl.run()
+        pl.merge_texts_sent()
+        tism = TrainIagotchiSent2vecModel()
+        tism.run()
     
 
     

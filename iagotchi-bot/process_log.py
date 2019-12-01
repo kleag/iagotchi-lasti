@@ -1,4 +1,4 @@
-import os, json
+import os, json, tarfile, smart_open
 
 class ProcessLog(object):
     
@@ -49,6 +49,13 @@ class ProcessLog(object):
             self.browse_folder(botname)
             with open('{}/{}.json'.format(self.log_folder, botname), 'w', encoding='utf8') as fp:
                 fp.write(json.dumps(self.bot_data[botname], ensure_ascii=False, indent=4, separators=(',', ': ')))
+        if not os.path.isfile('data/texts.sent'):
+            mode = 'w'
+        else:
+            mode = 'a'
+        with open('data/texts.sent', mode, encoding='utf8') as f:
+            f.write('\n'.join(self.datas))
+        
                 
     def initial_data(self, filename, output):
         content = dict()
@@ -70,9 +77,43 @@ class ProcessLog(object):
         self.initial_data('data/rencontre27092019.txt', 'data/rencontre27092019.json')
         self.initial_data('data/g527092019.txt', 'data/g527092019.json')
         
+    #def write_read_texts(self, data, mode='w'):
+        #if mode == 'w':
+            #with smart_open.smart_open('data/texts.sent', 'wb') as f:
+                #for line in data:
+                    #if len(line.strip()) > 0:
+                        #f.write(line.encode("utf-8"))
+            #return None
+        #elif mode == 'a':
+            #assert os.path.isfile("data/texts.sent"), "data/texts.sent unavailable"
+            #all_docs = []
+            #with smart_open.smart_open('aclImdb/alldata-id.txt') as alldata:
+            #tar = tarfile.open(filename, mode='r')
+            #tar.extractall()
+            #tar.close()
+            
+        
     def merge_texts_sent(self):
         with open('data/texts.sent', 'a', encoding='utf8') as f:
+            f.write('\n')
             f.write('\n'.join(self.datas))
+            
+    def loadJsonContent(self, filename):
+        with open(filename) as f:
+            data = json.load(f)
+        return data
+            
+    def append_data(self):
+        for bot, data in self.bot_data.items():
+            if bot == 'iagotchi':
+                filename = 'data/rencontre27092019.json'
+            elif bot == 'iagotchig5':
+                filename = 'data/g527092019.json'
+            if os.path.isfile(filename):
+                contents = self.loadJsonContent(filename)
+                contents.update(data)
+                with open(filename, 'w', encoding='utf8') as fp:
+                    fp.write(json.dumps(contents, ensure_ascii=False, indent=4, separators=(',', ': ')))
         
         
         
@@ -81,5 +122,6 @@ if __name__ == "__main__":
     #pl.initialJson()
     pl.run()
     pl.merge_texts_sent()
+    pl.append_data()
                         
             
