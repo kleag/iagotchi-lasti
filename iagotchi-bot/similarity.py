@@ -540,7 +540,7 @@ class TrainIagotchiSent2vecModel(object):
     def trainModel(self):
         if os.path.isfile('data/iagotchiEmbedings.bin'):
             os.remove('data/iagotchiEmbedings.bin')
-        command = "../../sent2vec/./fasttext sent2vec -input data/sent2vec.txt  -output data/iagotchiEmbedings -lr 0.2 -dropoutK 0 -epoch 15 -bucket 40000 -dim 200"
+        command = ".././fasttext sent2vec -input data/sent2vec.txt  -output data/iagotchiEmbedings -lr 0.2 -dropoutK 0 -epoch 15 -bucket 40000 -dim 200"
         print(command)
         _p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
         out, err = _p.communicate()
