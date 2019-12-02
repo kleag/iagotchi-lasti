@@ -170,7 +170,7 @@ All the configurations needed to run Iagotchi-bot are in the config.json file lo
 The configuration file is read by the system at each restart and the parameters are reset. The fields necessary to fill in the file are:
 
 
-* {`what_run`} -  using to specify what to run:  bot (set to **bot**) or embeddings calculation (set to **similarity**) 
+* {`what_run`} -  using to specify what to run:  bot (set to **bot**), retrain similarity model with topics logs (set to **similarity-with-topics**), retrain similatiry model without topics logs (set to **similarity-without-topics**) 
  * {`bot`} - using to specify what topic to use: for *rencontre* topic set the name to **iagotchi**  and **iagotchig5** for *G5* topic.
 * {`session`} - fill with the durations in second of session time, of the user relaunch, etc ...
 * {`botresponse`} - specify host ip address and port on which the bot must return its response.
