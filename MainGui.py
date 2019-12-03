@@ -34,7 +34,8 @@ class iagotchiGui(object):
         self.btnStart = QPushButton("Start Iagotchi")
         self.btnStop = QPushButton("Stop Iagotchi")
         self.btnBuild = QPushButton("Build Iagotchi (password)")
-        self.btnTrain = QPushButton("Train Iagotchi (similarity)")
+        self.btnTrain = QPushButton("Train Iagotchi (similarity with topics)")
+        self.btnTrain2 = QPushButton("Train Iagotchi 2 (similarity without topics)")
         self.btnDockerConfig = QPushButton("Open docker-compose.yml")
         self.btnIagoConfig = QPushButton("Open config.json")
         self.btnGitPull = QPushButton("Update (git pull)")
@@ -73,7 +74,8 @@ class iagotchiGui(object):
         grid.addWidget(self.btnGitPull,15,0)
         grid.addWidget(self.btnBuild,16,0)
         grid.addWidget(self.btnTrain,17,0)
-        grid.addWidget(self.btnKill,18,0)
+        grid.addWidget(self.btnTrain2,18,0)
+        grid.addWidget(self.btnKill,19,0)
         
         self.btnSave.clicked.connect(self.saveOptions)
         self.btnStart.clicked.connect(self.startIagotchi)
@@ -82,6 +84,7 @@ class iagotchiGui(object):
         self.btnDocker.clicked.connect(self.runDocker)
         self.btnChrome.clicked.connect(self.runChrome)
         self.btnTrain.clicked.connect(self.trainIagotchi)
+        self.btnTrain2.clicked.connect(self.trainIagotchi2)
         self.btnDockerConfig.clicked.connect(self.confDocker)
         self.btnIagoConfig.clicked.connect(self.confIago)
         self.btnGitPull.clicked.connect(self.gitPull)
@@ -139,7 +142,13 @@ class iagotchiGui(object):
         subprocess.run("docker-compose stop &", shell=True)
 
     def trainIagotchi(self):
-        self.what_run = "similarity"
+        self.what_run = "similarity-with-topics"
+        self.saveOptions()
+        print("Train Iagotchi")
+        subprocess.run("docker-compose up &", shell=True)
+        
+    def trainIagotchi2(self):
+        self.what_run = "similarity-without-topics"
         self.saveOptions()
         print("Train Iagotchi")
         subprocess.run("docker-compose up &", shell=True)
