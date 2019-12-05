@@ -1,7 +1,7 @@
 {
     "what_run": "bot",
     "bot": {
-        "name": "iagotchi"
+        "name": "iagotchig5"
     },
     "topic": {
         "list": [
@@ -91,7 +91,7 @@
         "existence"
     ],
     "botresponse": {
-        "ip": "192.168.43.84",
+        "ip": "192.168.0.33",
         "port": 5005
     },
     "synthesize": false

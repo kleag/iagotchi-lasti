@@ -27,6 +27,7 @@ class iagotchiGui(object):
         self.ipAddress = socket.gethostbyname(socket.gethostname())
 
         self.ipTextEdit = QLineEdit(self.ipAddress)
+        self.btnUpdIp = QPushButton("Refresh IP Address")
         
         self.btnSave = QPushButton("Save Options")
         self.btnDocker = QPushButton("Start Docker")
@@ -55,6 +56,7 @@ class iagotchiGui(object):
         self.error_dialog = QtWidgets.QErrorMessage()
         
         grid = QGridLayout(self.w)
+        grid.setVerticalSpacing(3)
 
         grid.addWidget(self.btnDocker,0,0)
         grid.addWidget(self.btnStart,1,0)
@@ -65,19 +67,21 @@ class iagotchiGui(object):
         grid.addWidget(QLabel("_ Options _"),6,0)
         grid.addWidget(QLabel("Mode :"),7,0)
         grid.addWidget(self.bot,8,0)
-        grid.addWidget(QLabel("IP :"),9,0)
-        grid.addWidget(self.ipTextEdit,10,0)
-        grid.addWidget(self.btnSave,11,0)
-        grid.addWidget(QLabel("_ Advanced _"),12,0)
-        grid.addWidget(self.btnDockerConfig,13,0)
-        grid.addWidget(self.btnIagoConfig,14,0)
-        grid.addWidget(self.btnGitPull,15,0)
-        grid.addWidget(self.btnBuild,16,0)
-        grid.addWidget(self.btnTrain,17,0)
-        grid.addWidget(self.btnTrain2,18,0)
-        grid.addWidget(self.btnKill,19,0)
+        grid.addWidget(QLabel("IP Address :"),9,0)
+        grid.addWidget(self.btnUpdIp,10,0)
+        grid.addWidget(self.ipTextEdit,11,0)
+        grid.addWidget(self.btnSave,12,0)
+        grid.addWidget(QLabel("_ Advanced _"),13,0)
+        grid.addWidget(self.btnDockerConfig,14,0)
+        grid.addWidget(self.btnIagoConfig,15,0)
+        grid.addWidget(self.btnGitPull,16,0)
+        grid.addWidget(self.btnBuild,17,0)
+        grid.addWidget(self.btnTrain,18,0)
+        grid.addWidget(self.btnTrain2,19,0)
+        grid.addWidget(self.btnKill,20,0)
         
         self.btnSave.clicked.connect(self.saveOptions)
+        self.btnUpdIp.clicked.connect(self.updateIp)
         self.btnStart.clicked.connect(self.startIagotchi)
         self.btnStop.clicked.connect(self.stopIagotchi)
         self.btnBuild.clicked.connect(self.buildIagotchi)
@@ -104,7 +108,11 @@ class iagotchiGui(object):
         
     def exit(self):
         sys.exit(self.app.exec_())
-        
+    
+    def updateIp(self):
+        self.ipAddress = socket.gethostbyname(socket.gethostname())
+        self.ipTextEdit.setText(self.ipAddress)  
+    
     def saveOptions(self):
         print("Saving Options...")
         self.jsondata['bot']['name'] = self.botname
