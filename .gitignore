@@ -5,3 +5,5 @@ data/logs/*
 data/wiki.fr.vec
 data/fr_model.bin
 data/iagotchi.sqlite
+test.py
+__pycache__/*
