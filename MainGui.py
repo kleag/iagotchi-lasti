@@ -1,6 +1,6 @@
 import sys, subprocess,json,socket
 from PyQt5.QtWidgets import *
-from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import * 
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
@@ -24,8 +24,13 @@ class iagotchiGui(object):
             self.ipAddress = self.jsondata['botresponse']['ip']
             #print("BOTRESPIP : "+self.ipAddress)
         
-        self.ipAddress = socket.gethostbyname(socket.gethostname())
-
+        try :
+            self.ipAddress = socket.gethostbyname(socket.gethostname())
+        except :
+            text, ok = QInputDialog.getText(self.w, 'IP Address', 'Manually enter IP address:', QLineEdit.Normal, self.ipAddress)
+            if len(text) > 0 & ok:
+                self.ipAddress = text
+                                       
         self.ipTextEdit = QLineEdit(self.ipAddress)
         self.btnUpdIp = QPushButton("Refresh IP Address")
         
@@ -53,7 +58,7 @@ class iagotchiGui(object):
             self.bot.setCurrentText("G5")
         self.bot.currentIndexChanged.connect(self.botChange)
 
-        self.error_dialog = QtWidgets.QErrorMessage()
+        self.error_dialog = QErrorMessage()
         
         grid = QGridLayout(self.w)
         grid.setVerticalSpacing(3)
@@ -95,7 +100,7 @@ class iagotchiGui(object):
         self.btnMax.clicked.connect(self.runMax)
         self.btnConsole.clicked.connect(self.runConsole)
         self.btnKill.clicked.connect(self.killAll)
-        
+            
     def botChange(self,i):
         if self.bot.currentText() == "Rencontre" :
             self.botname = "iagotchi"
