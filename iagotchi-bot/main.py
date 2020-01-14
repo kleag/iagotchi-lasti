@@ -149,24 +149,31 @@ class ASR(object):
                 return None
             if  reps and "_stop_" in reps:
                 #reps = reps.replace('_stop_', '')
-                self.osc_client.sendOscAction('/iagotchi/session/stop')
+                #self.osc_client.sendOscAction('/iagotchi/session/stop')
+                self.sendResponse(action='stop')
             if reps and "synth-" in reps:
                 if self.osc_client:
-                    self.osc_client.sendOsc('/result/botresponse','{}'.format(reps.split(':::')[0]))
+                    #self.osc_client.sendOsc('/result/botresponse','{}'.format(reps.split(':::')[0]))
+                    self.sendResponse(action='result', text=reps.split(':::')[0])
             #TODO implémebnter musique
             if reps and "start_music" in reps:
                 reps = reps.replace('start_music', '')
-                self.osc_client.sendOscAction('/iagotchi/music/start')
+                #self.osc_client.sendOscAction('/iagotchi/music/start')
+                self.sendResponse(action='start_music')
             elif reps and "stop_music" in reps:
                 reps = reps.replace('stop_music', '')
-                self.osc_client.sendOscAction('/iagotchi/music/stop')
+                #self.osc_client.sendOscAction('/iagotchi/music/stop')
+                self.sendResponse(action='stop_music')
             
             if self.osc_client and reps and "synth-" in reps:
-                self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(reps.split(':::')[0].replace('_stop_', '').replace('__hello__', '')))
+                #self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(reps.split(':::')[0].replace('_stop_', '').replace('__hello__', '')))
+                self.sendResponse(action='iagotchi', text=reps.split(':::')[0].replace('_stop_', '').replace('__hello__', ''))
             else:
-                self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(reps.replace('_stop_', '').replace('__hello__', '')))
+                #self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(reps.replace('_stop_', '').replace('__hello__', '')))
+                self.sendResponse(action='iagotchi', text=reps.replace('_stop_', '').replace('__hello__', ''))
             if self.externals.poesie:
-                self.osc_self_client.send('/tmpResponse')
+                #self.osc_self_client.send('/tmpResponse')
+                self.sendResponse(action='poesie')
             return reps
         # ici pour renvoyer en osc la reconnaissance temporaire (sentence = 0)
         else:
@@ -174,6 +181,23 @@ class ASR(object):
             print("words     _" + tmp)
             self.osc_client.sendOsc('/iagotchi/user_tmp','{}'.format(tmp))
             return 'ok'
+
+    def sendResponse(self, action, text=None):
+        print('sending of {}'.format(action))
+        if action == 'stop':
+            self.osc_client.sendOscAction('/iagotchi/session/stop')
+        elif action   == 'start_music':
+            self.osc_client.sendOscAction('/iagotchi/music/start')
+        elif action ==  'stop_music':
+            self.osc_client.sendOscAction('/iagotchi/music/stop')
+        elif action == 'result':
+            self.osc_client.sendOsc('/result/botresponse','{}'.format(text))
+        elif action == 'iagotchi':
+            self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(text))
+        elif action == 'poesie':
+            self.osc_self_client.send('/tmpResponse')
+            
+            
 
   
     def result_testfile(self, in_filename):
