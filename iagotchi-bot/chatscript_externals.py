@@ -20,6 +20,8 @@ from nltk.corpus import stopwords
 import pickle
 from wiki import Wiki
 from time import sleep
+import netifaces
+
 
 wikip = Wiki(language='fr')
 
@@ -64,6 +66,9 @@ for wd in stpwds:
 
 chrono = ChronoThread(log=None)
 chrono.start()
+
+def get_ip_default_route():
+    return netifaces.gateways()['default'][netifaces.AF_INET][0]
 class Externals(object):
     
     def __init__(self, botname='iagotchi'):
@@ -111,7 +116,7 @@ class Externals(object):
         self.chatscriptkeywords = configfile["chatscript_keywords"]
         self.using_topic_responses = None #self.load_responses_pickle_obj()
         try:
-            self.botresponse_host = configfile['botresponse']['ip']
+            self.botresponse_host =  get_ip_default_route() #configfile['botresponse']['ip']
             self.botresponse_port = int(configfile['botresponse']['port'])
             #self.music_host = configfile['musique']['ip']
             #self.music_port = int(configfile['musique']['port'])
