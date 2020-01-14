@@ -183,7 +183,7 @@ class ASR(object):
             return 'ok'
 
     def sendResponse(self, action, text=None):
-        print('sending of {}'.format(action))
+        print('sending of {}'.format(text))
         if action == 'stop':
             self.osc_client.sendOscAction('/iagotchi/session/stop')
         elif action   == 'start_music':
@@ -191,9 +191,9 @@ class ASR(object):
         elif action ==  'stop_music':
             self.osc_client.sendOscAction('/iagotchi/music/stop')
         elif action == 'result':
-            self.osc_client.sendOsc('/result/botresponse','{}'.format(text))
+            self.osc_client.sendOsc('/result/botresponse', text)
         elif action == 'iagotchi':
-            self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(text))
+            self.osc_client.sendOsc('/iagotchi/botresponse', text)
         elif action == 'poesie':
             self.osc_self_client.send('/tmpResponse')
             
