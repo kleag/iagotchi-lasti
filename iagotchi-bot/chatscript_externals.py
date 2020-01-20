@@ -5,7 +5,7 @@ send to the ChatScript engine, postprocess the response obtained
 and some other operations required by the dialogue system.
 """
 
-import re, json, datetime
+import re, json, datetime, sys
 from chatscript import ChatscriptInstance
 import threading
 from synthese import Synthese
@@ -46,10 +46,7 @@ print('chatscript_externals load wikipedia module')
 with open(r'@CMAKE_INSTALL_PREFIX@/data/config.json', 'r') as sv:
     configfile = json.load(sv)
     
-try:
-    syn = Synthese(configfile['synthesize'])
-except:
-    syn = Synthese()
+
     
 lstbonjour = ["allo", "allô", "aloha", "bon après-midi", "bonjour", "bonjour et bienvenue", "bonsoir", "c'est bien de vous revoir", "content de te rencontrer", "enchanté", "hella", "hello", "hey", "hey toi", "hiya", "salutations", "salut", "sympa de te rencontrer", "sympa de te voir", "coucou"]
 stpwds = ['qu', 'que', 'qui', 'ne', 'pas', "n'"]
@@ -68,7 +65,10 @@ chrono = ChronoThread(log=None)
 chrono.start()
 
 def get_ip_default_route():
-    return netifaces.gateways()['default'][netifaces.AF_INET][0]
+    if 'posix' in os.name:
+        return netifaces.gateways()['default'][netifaces.AF_INET][0]
+    else:
+        return 'host.docker.internal'
 class Externals(object):
     
     def __init__(self, botname='iagotchi'):
@@ -105,7 +105,7 @@ class Externals(object):
             self.chrono.session_stop_duration = int(configfile['session']['stop'])
             self.chrono.session_duration = int(configfile['session']['duration'])
             if self.chrono.session_restart_duration > self.chrono.session_stop_duration:
-                sys.exit("[Iagotchi-Bot Error] Value of stop field in session must be less than restart value.")
+                sys.exit("[Iagotchi-Bot Error] Value of stop field in session must not be less than restart value.")
         except:
             sys.exit("[Iagotchi-Bot Error] Stop, Restart and Duration values must be integers.")
         # End duration parameters getting
@@ -139,6 +139,11 @@ class Externals(object):
                 res = self.log.getDefinition(th)
                 if not res is None:
                     self.definitions_from_db[th] = res
+        self.user_is_speaking = False
+        try:
+            self.syn = Synthese(configfile['synthesize'])
+        except:
+            self.syn = Synthese()
         
     def startup(self):
         print('startup at {}'.format(datetime.datetime.now()))
@@ -163,6 +168,11 @@ class Externals(object):
         self.poesie = False
         if self.osc_client is not None:
             self.osc_client.sendOsc('/iagotchi/session/start','{}'.format(self.chrono.start_time))
+        self.user_is_speaking = False
+        try:
+            self.syn = Synthese(configfile['synthesize'])
+        except:
+            self.syn = Synthese()
         print('End startup at {}'.format(datetime.datetime.now()))
         
     
@@ -641,13 +651,14 @@ class Externals(object):
         self.osc_self_client = osc_self_client
         if self.chrono.botresponse_object is None:
             self.chrono.botresponse_object = osc_client
-            
         if self.poesie:
-            return None            
+            return None   
+        elif self.chrono.waiting_to_stop:
+            return None
         elif any(bn in transcript.lower() for bn in lstbonjour) and (self.session_status == 'stop' or self.session_status is None):
             self.startup()
             return '{} __hello__'.format(self.process(transcript))
-        elif self.session_status == 'start':
+        elif self.session_status == 'start' and not self.syn.reading:
             return self.process(transcript)
 
         return 'stop'
@@ -669,7 +680,7 @@ class Externals(object):
         if self.need_restart_postprocessing:
             response = self.postprocessing(response)
             self.need_restart_postprocessing = False
-        synth_response = syn.synthese(response)
+        synth_response = self.syn.synthese(response)
         self.log.save_in_file(transcript, response)
         if self.need_stop:
             self.stop()

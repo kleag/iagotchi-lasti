@@ -67,13 +67,19 @@ var recognizing = false;
 var name = 'User'
 var botname = "Iagotchi"
 var sent = 0
+var user_stop = false
+var test_start = 0
 recognition.continuous = true;
 recognition.interimResults = true;
 recognition.maxAlternatives = 1;
 recognition.lang = "fr-FR";
 recognition.onresult = detect;
-recognition.onend = function(event) { recognition.start(); console.log('event: end'); }
-recognition.onstart = function(event) { recognizing=true; intervalManager(true); console.log('event: start'); }
+recognition.onend = function(event) { test_start = 1; console.log('event: end'); 
+    if (!user_stop) {recognition.start();} }
+recognition.onstart = function(event) { recognizing=true; user_stop=false; test_start = 0; intervalManager(true);
+console.log('event: start'); }
+// recognition.onspeechstart = function(event) { recognizing=true; user_stop=false; intervalManager(true);
+// console.log('event: start'); }
 recognition.start();
 
 
@@ -89,6 +95,7 @@ function detect(event) {
         clearTimeout(timer);
     }
     if (!recognizing) {
+    user_stop = true
     recognition.stop();
     return;
   }
@@ -107,6 +114,8 @@ function detect(event) {
             if (displayUser){
             addUser(event.results[i][0].transcript);
             }
+            user_stop = true;
+            recognition.stop()
             //update(youSaid);
         } else {
             //youSaid = '<strong>' + name + ':</strong> ' + event.results[i][0].transcript + "<br>";
@@ -118,6 +127,7 @@ function detect(event) {
         if (event.results[i].isFinal){
         sent = 1
         intervalManager(false)
+//         recognition.abort();
         }else{
         sent = 0
         }
@@ -139,8 +149,10 @@ function detect(event) {
                             //youSaid = '<strong>' + botname + ':</strong> ' + response.split(":")[0] + "<br>";
                             //update(youSaid);
                             if (displayUser || response.includes('__hello__')){
-                            addIago(response.split(":::")[0]);
+                            addIago(response);
                             }
+                            try { recognition.start(); } catch (e) { console.log('starting error') }
+                            user_stop = false
                             recognition.continuous = true;
                             console.log(response);  
                         }
@@ -155,10 +167,10 @@ function detect(event) {
                 confidence: event.results[i][0].confidence, 
                 sentence: event.results[i].isFinal ? 1 : 0
                 });*/
-        timer = setTimeout(function() {
-            recognition.stop();
-            timer = null;
-        }, 5000);
+//         timer = setTimeout(function() {
+//             recognition.stop();
+//             timer = null;
+//         }, 5000);
 
     }
 }
@@ -179,6 +191,7 @@ function addUser(text) {
 }
 
 function addIago(text) {
+    console.log(text)
     if (text.includes('_stop_')){
     text = text.replace('_stop_', ' ')
     displayUser = false
@@ -188,6 +201,7 @@ function addIago(text) {
     addUser(trs)
     displayUser = true
     }
+    text = text.split(":::")[0]
     $('#responseHolder').append("<p><span class='name_iago'>Iagotchi&nbsp;:&nbsp;</span><span class='iago'>"+text+"</span></p>");
     $('#responseHolder').append("<p></p>");
     window.scrollBy({ top: 100, left: 0, behavior: 'smooth' });
@@ -233,6 +247,8 @@ interval_timer = setTimeout(function() {
    $.get('/tmpResponse', function(data) {
     if (data.length > 0){
      addIago(data)
+     try { recognition.start(); } catch (e) { console.log('starting error') }
+     user_stop = false
      // return;
     }
    })
@@ -241,6 +257,7 @@ interval_timer = setTimeout(function() {
 }else{
 clearTimeout(interval_timer)
 }
+
 }
 
 

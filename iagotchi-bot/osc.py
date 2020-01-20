@@ -61,10 +61,10 @@ class Server:
         self.thread = None
         self.finished = False
 
-    def callback(self, message):
+    def callback(self, message, args):
         #print('OSC: Received [%s]' % message)
         if self._callback != None:
-                self._callback(message)
+            self._callback(message,  ' '.join(args))
 
     def run(self, non_blocking=False):
         if non_blocking:

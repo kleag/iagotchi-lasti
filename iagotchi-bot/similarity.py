@@ -383,6 +383,7 @@ class EmbeddingsSimilarity(object):
         Si topic == g5, on récupère les questions avec un id impaire dans le fichier. Les réponses étant à l'id pair.
         Si topic == rencontre, on récupère tout le contenu du fichier. 
         """
+        print('getText.file {}'.format(file_))
         if os.path.exists(file_):
             text = list()
             ids = list()

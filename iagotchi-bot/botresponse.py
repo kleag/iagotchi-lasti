@@ -28,12 +28,12 @@ class BotResponse(object):
         print("Ready For Getting Bot Response")
 
 
-    def osc_server_message(self, message):
-        print("message entrant {}".format(message))
+    def osc_server_message(self, message, args):
+        print("message entrant {}".format(args))
             
         if '/iagotchi/botresponse' in message:
             message = message.replace('/iagotchi/botresponse', '')
-            print('botresponse : {}'.format(message))
+            print('botresponse : {}'.format(args))
         
         elif '/iagotchi/user_tmp' in message:
             message = message.replace('/iagotchi/user', '')

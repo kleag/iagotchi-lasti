@@ -105,7 +105,7 @@ class ASR(object):
         
         
 
-    def osc_server_message(self, message):
+    def osc_server_message(self, message, text=None):
         # print('OSC message = "%s"' % message)
         if message == '/record':
             self.silent = False
@@ -123,9 +123,6 @@ class ASR(object):
         #elif message == '/botresponse':
             
         #elif message == '/synthese':
-            
-             
-            
 
     def result(self):
         result = {'transcript': bottle.request.forms.getunicode('transcript'),
@@ -138,13 +135,16 @@ class ASR(object):
                 self.sentence_num += 1
             else:
                 print("(pause)mots    _" + mess)
+                self.externals.user_is_speaking = True
             return 'ok'
         if result['sentence'] == 1:
             print("phraseee  _" + mess.decode('utf8'))
+            self.externals.user_is_speaking = False
             self.transcript = mess.decode('utf8')
             self.sentence_num += 1
             self.osc_client.sendOsc('/iagotchi/user','{}'.format(self.transcript))
             reps = self.externals.run(self.transcript, self.osc_client, self.osc_self_client)
+            print('from reps {}'.format(reps))
             if reps and reps == "stop":
                 return None
             if  reps and "_stop_" in reps:

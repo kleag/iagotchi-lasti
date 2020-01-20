@@ -20,6 +20,7 @@ class Synthese(object):
     
     def __init__(self, synthesize=False):
         self.synthesize = synthesize
+        self.reading = False
     
 
     def synthese(self, resp):
@@ -33,11 +34,13 @@ class Synthese(object):
 
                 if os.name == 'posix':
                     # Using pico2wave, Linux only
+                    self.reading = True
                     print('OS is {}. Speaking with pico2wave.'.format(os.name))
                     resp_synthese = ['pico2wave', '-l', 'fr-FR', '-w', synthfile_, resp,]
                     lecture = ['aplay', synthfile_]
                     subprocess.call(resp_synthese)
                     subprocess.call(lecture)
+                    self.reading = False
                 elif os.name == 'nt':
                     # Using Microsoft Windows speach
                     print('OS is {}. Speaking with MS voice API.'.format(os.name))

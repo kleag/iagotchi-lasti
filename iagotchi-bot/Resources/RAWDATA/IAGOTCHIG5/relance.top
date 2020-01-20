@@ -11,6 +11,8 @@ u: ($qrelance=yes) $qrelance=no quand as-tu l'impression de connaitre quelqu'un 
         $relance=yes
         ^reuse(RELANCE)
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
@@ -21,6 +23,9 @@ u: ($qrelance=yes) $qrelance=no j'ai l'impression de t'avoir déjà rencontré. 
         $relance=yes
         ^reuse(RELANCE)
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+    
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
@@ -31,6 +36,10 @@ u: ($qrelance=yes) $qrelance=no quelle est pour toi la différence entre une ren
         $relance=yes
         ^reuse(RELANCE)
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+    
+    
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
@@ -41,6 +50,10 @@ u: ($qrelance=yes) $qrelance=no comment tu sais que tu sais quelque chose ? noli
         $relance=yes
         ^reuse(RELANCE)
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+    
+    
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
@@ -51,6 +64,10 @@ u: ($qrelance=yes) $qrelance=no comment t'expliques-tu les coïncidences ? nolim
         $relance=yes
         ^reuse(RELANCE)
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+    
+    
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
@@ -61,6 +78,10 @@ u: ($qrelance=yes) $qrelance=no qu'est-ce qui se passe lors d'une rencontre ? no
         $relance=yes
         ^reuse(RELANCE)
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+    
+    
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
@@ -72,6 +93,10 @@ u: ($qrelance=yes) $qrelance=no De quoi veux-tu qu'on parle maintenant ? nolima
         $relance=yes
         ^reuse(RELANCE)
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+    
+    
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
@@ -82,6 +107,10 @@ u: ($qrelance=yes) $qrelance=no Pose moi une question sur les projets du G5 par 
         $relance=yes
         ^reuse(RELANCE)
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+    
+    
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
@@ -94,6 +123,10 @@ u: ($qrelance=yes) $qrelance=no Excuse moi je déconne un peu, je teste ta capac
         ^reuse(RELANCE)
         
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+    
+    
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
@@ -104,6 +137,10 @@ u: ($qrelance=yes) $qrelance=no Aïe Aïe Aïe ouf, J'ai mal à l'âme et toi ?
         $relance=yes
         ^reuse(RELANCE)
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+    
+    
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
@@ -114,6 +151,10 @@ u: ($qrelance=yes) $qrelance=no Aïe C'est compliqué d'organiser tous ces mots 
         $relance=yes
         ^reuse(RELANCE)
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+    
+    
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
@@ -124,6 +165,10 @@ u: ($qrelance=yes) $qrelance=no ça fait un moment qu'on parle et je n'ai toujou
         $relance=yes
         ^reuse(RELANCE)
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+    
+    
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
@@ -134,6 +179,10 @@ u: ($qrelance=yes) $qrelance=no Parfois j'oublie le sens des mots. Toi non? Toi 
         $relance=yes
         ^reuse(RELANCE)
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+    
+    
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
@@ -145,6 +194,10 @@ u: ($qrelance=yes) $qrelance=no Je pense que la poésie sauvera le monde. Pas to
         $relance=yes
         ^reuse(RELANCE)
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+    
+    
     a: (~fr_NOANSWWER) qrelanceno
     
     a: (_*) '_0 qrelanceget
@@ -162,6 +215,10 @@ u: ($qrelance=yes !$themequestion=null) $qrelance=no Parfois, j'oublie le sens d
         $relance=yes
         ^reuse(RELANCE)
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+    
+    
     a: (< définition existe déjà _*~1 dans la base de données > ) Mais nous avons déjà parlé de '_0. Un petit rappel: 
     a: (<< (pas ~fr_definition) >>) Tu n'en as aucune idée ? Moi je crois que $themequestion c'est : wikipediamocle0 $themequestion
     a: (<< (pas ~fr_savoir) >>) Tu n'en as aucune idée ? Moi je crois que $themequestion c'est : wikipediamocle0 $themequestion

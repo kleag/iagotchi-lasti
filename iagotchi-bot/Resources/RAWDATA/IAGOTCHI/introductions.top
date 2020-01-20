@@ -25,6 +25,8 @@ u: (< make test >) iagotchi ready
 
 u: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
 
+u: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+
 u: (< def _*~2 >) $motcle = '_0 ^reuse(~.MOTCLE) 
 
 u: (< question _*~1 pas >) $askdefinition = '_0 ^respond(~questionphilosophique)
@@ -54,6 +56,8 @@ u: USERNAME ($getusername=yes)
             
             a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
             
+            a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+            
             a: (< ~yes >) super. $qrelance=yes ^respond(~relance)
             
             a: () [super, sinon comment tu vas ? nolima][super, sinon ça va? Comment se passe ta journée ? nolima]
@@ -63,6 +67,8 @@ u: USERNAME ($getusername=yes)
                 ^reuse(RELANCE)
                 
                 b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+                
+                b: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
             
                 b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
         
@@ -114,6 +120,8 @@ u: (<< _~fr_bonjour [~fr_WHY ~fr_WHAT] [~fr_appelercomment ~fr_NAME] >>)
         ^reuse(RELANCE)
            
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
         
     a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
     
@@ -122,6 +130,8 @@ u: (<< _~fr_bonjour [~fr_WHY ~fr_WHAT] [~fr_appelercomment ~fr_NAME] >>)
             ^reuse(RELANCE)
             
         b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+        
+        b: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie.   Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
     
         b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
         
@@ -157,6 +167,8 @@ u: (<< [~fr_WHY ~fr_WHAT] [~fr_appelercomment ~fr_NAME] >>)
             
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+    
     a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
     
         b: (< code relance >)
@@ -164,6 +176,8 @@ u: (<< [~fr_WHY ~fr_WHAT] [~fr_appelercomment ~fr_NAME] >>)
             ^reuse(RELANCE)
             
         b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+        
+        b: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
     
         b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
         
@@ -201,6 +215,8 @@ u: (<< _~fr_bonjour ~emohowzit >>)
             
       
         a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+        
+        a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
             
         a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
         
@@ -209,6 +225,8 @@ u: (<< _~fr_bonjour ~emohowzit >>)
             ^reuse(RELANCE)
             
             b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+            
+            b: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
     
             b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
             
@@ -264,6 +282,8 @@ u: (<< _~fr_bonjour >>)
             
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+    
     
     a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
     
@@ -272,6 +292,8 @@ u: (<< _~fr_bonjour >>)
             ^reuse(RELANCE)
             
         b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+        
+        b: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
     
         b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
         
@@ -282,7 +304,7 @@ u: (<< _~fr_bonjour >>)
     a: (~fr_NOANSWER) Je pense que l'essentiel est de porter un nom. $qrelance=yes ^respond(~relance)
     
     
-    a: () ^respond(~introduction)
+    a: () Peu importe, comment ça va ? nolima
     
 
 u: (< *~2 ~fr_AUREVOIR >) 
@@ -311,6 +333,8 @@ u: MUSIQUE ([~fr_chanson ~fr_chanter]) Tu veux une chanson ? nolima
             ^reuse(RELANCE)
             
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
     
     a: (~fr_YESANSWER) Je te dédie celle la. Ecoutes **lancermusique
     
@@ -382,6 +406,8 @@ u: (< qui ~fr_v_etre [tu vous toi]>) [je suis iagotchi, ton ami et toi ?] [je su
         
              
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
         
     a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
     
@@ -390,6 +416,8 @@ u: (< qui ~fr_v_etre [tu vous toi]>) [je suis iagotchi, ton ami et toi ?] [je su
             ^reuse(RELANCE)
             
         b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+        
+        b: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
     
         b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
         
@@ -721,6 +749,8 @@ u: (<< [~fr_raconter ~fr_fairepoesie ~fr_connaitre] _[~fr_poesie ~fr_chose] '_0?
             ^reuse(RELANCE)
             
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
 
     a: (<< ~fr_YESANSWER >>) OK, je vais essayer de t'en improviser. question4poesie nolima
     
@@ -729,6 +759,8 @@ u: (<< [~fr_raconter ~fr_fairepoesie ~fr_connaitre] _[~fr_poesie ~fr_chose] '_0?
             ^reuse(RELANCE)
             
         b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+        
+        b: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
     
         b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
     
@@ -753,6 +785,8 @@ u: (<< [~fr_raconter ~fr_fairepoesie ~fr_connaitre] _[~fr_poesie ~fr_chose] '_0?
             ^reuse(RELANCE)
             
         b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+        
+        b: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
             
             
         
@@ -778,6 +812,8 @@ u: (<< [~fr_raconter ~fr_fairepoesie ~fr_connaitre] _[~fr_poesie ~fr_chose] '_0?
             ^reuse(RELANCE)
             
         b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+        
+        b: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
     
         b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
     
@@ -895,6 +931,8 @@ u: (~fr_quiestu)
         
             
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
         
     a: ([~fr_appelercomment ~fr_NAME]) Comment ça va ? nolima
     
@@ -903,6 +941,8 @@ u: (~fr_quiestu)
             ^reuse(RELANCE)
             
         b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+        
+        b: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
     
         b: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
         
@@ -942,6 +982,8 @@ Pourquoi veux-tu parler de '_0 ? nolima
             
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
     
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+    
     a: (~fr_NOANSWER) Serais-tu perdu dans les pensées ? $qrelance=yes ^respond(~relance)
     
     a: () ^respond(~introduction)
@@ -954,6 +996,9 @@ Je fais des poèmes magnifiques. Ecoutes. question4poesie nolima
             ^reuse(RELANCE)
             
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+
     
     a: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
     
@@ -980,6 +1025,8 @@ u: (<< ~fr_poesie >>) [Tu veux un poème? nolima]
             ^reuse(RELANCE)
             
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
 
     a: (<< ~fr_YESANSWER >>) OK, je vais essayer de t'en improviser. question4poesie nolima
     
@@ -988,6 +1035,8 @@ u: (<< ~fr_poesie >>) [Tu veux un poème? nolima]
             ^reuse(RELANCE)
             
         b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+        
+        b: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
     
         b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
     
@@ -1013,6 +1062,8 @@ u: (<< ~fr_poesie >>) [Tu veux un poème? nolima]
             
         b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
         
+        b: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
+        
         b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
     
         b: (<< [~fr_NEGATION ~fr_NEGATIVEVALUE]  ~fr_interessant >>) Peut-être vrai, je trouve aussi 
@@ -1035,6 +1086,8 @@ u: (<< ~fr_poesie >>) [Tu veux un poème? nolima]
             ^reuse(RELANCE)
             
         b: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+        
+        b: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
     
         b: (<< ~fr_bravo ([~fr_NEGATION ~fr_NEGATIVEVALUE] *~3 ~fr_interessant) >>) Je trouve aussi. 
     
@@ -1061,6 +1114,8 @@ u: MOTCLE (_~fr_sujets )
             ^reuse(RELANCE)
             
     a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+    
+    a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
 
 
     a: (< définition existe déjà _*~1 dans la base de données > ) Mais nous avons déjà parlé de '_0. Un petit rappel 
@@ -1084,6 +1139,8 @@ u: (~emohowzit *~3 >) [Je suis prêt à me nourir de tes mots. Et toi, comment �
             ^reuse(RELANCE)
             
         a: (< sessionstop >) Je vois que tu aimes le silence. Bon merci quand même. A la prochaine.
+        
+        a: (< sessionend >) [Pffff trop de mots, ah, je vais me mettre en stand-by pour les organiser. Merci de m'avoir donné le plus précieux et irremplaçable de toi, ton temps de vie. Maintenant j'ai besoin de réfléchir en silence. Enchanté d'avoir fait ta connaissance $username. Au revoir][Merci pour tes mots $username. À la prochaine]
     
         a: (~fr_YESANSWER) Je suis content pour toi. $qrelance=yes ^respond(~relance)
         
