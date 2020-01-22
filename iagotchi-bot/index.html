@@ -102,12 +102,7 @@ function detect(event) {
     for (var i = event.resultIndex; i < event.results.length; i++) {
         console.log(event.results[i]);
         if(event.results[i][0].confidence < .5) continue;
-        // $(p).text(event.results[i][0].transcript);
-        /*$.post('/result', {transcript: String(event.results[i][0].transcript), 
-                confidence: event.results[i][0].confidence, 
-                sentence: event.results[i].isFinal ? 1 : 0
-                });//*/
-        //$('p').text(event.results[i][0].transcript);
+
         console.log('display '+displayUser)
         if(event.results[i].isFinal) {
 
@@ -146,8 +141,7 @@ function detect(event) {
                     success: function(response) {
                         if(response != 'ok')
                         {
-                            //youSaid = '<strong>' + botname + ':</strong> ' + response.split(":")[0] + "<br>";
-                            //update(youSaid);
+
                             if (displayUser || response.includes('__hello__')){
                             addIago(response);
                             }
@@ -161,16 +155,6 @@ function detect(event) {
                     }
                 });
         intervalManager(true);
-
-        
-        /*$.post('/result', {transcript: String(event.results[i][0].transcript), 
-                confidence: event.results[i][0].confidence, 
-                sentence: event.results[i].isFinal ? 1 : 0
-                });*/
-//         timer = setTimeout(function() {
-//             recognition.stop();
-//             timer = null;
-//         }, 5000);
 
     }
 }
@@ -214,12 +198,9 @@ function modifyUser(text) {
 }
 
 function playAudio(url) {
-        //$('#audio').html('<audio autoplay><source src="{% static 'chat/synth.wav?ts=12345' %}"></audio>');
-      //$('#audio').html('<audio id = "plysnd"><source src="synth.wav"></audio>');
+
       var plysnd = document.getElementById('plysnd');
-      //var tim = new Date().getTime()
-      //var sc = "{% static filename %}"
-      //var sc = filename
+
       plysnd.setAttribute('src', url);;
       plysnd.load();
       plysnd.play();
@@ -245,6 +226,14 @@ interval_timer = setTimeout(function() {
     }
    })
    $.get('/tmpResponse', function(data) {
+    if (data.length > 0){
+     addIago(data)
+     try { recognition.start(); } catch (e) { console.log('starting error') }
+     user_stop = false
+     // return;
+    }
+   })
+   $.get('/relance', function(data) {
     if (data.length > 0){
      addIago(data)
      try { recognition.start(); } catch (e) { console.log('starting error') }

@@ -132,6 +132,7 @@ class Externals(object):
         self.tmp_message = None
         self.tmp_message_sent = False
         self.poesie = False
+        self.relance = None
         self.log = self.chatscript.start_iagotchi_bot()
         self.chrono.log = self.log
         if len(self.themes) > 0:
@@ -144,6 +145,7 @@ class Externals(object):
             self.syn = Synthese(configfile['synthesize'])
         except:
             self.syn = Synthese()
+            
         
     def startup(self):
         print('startup at {}'.format(datetime.datetime.now()))
@@ -160,6 +162,7 @@ class Externals(object):
         self.need_stop = False
         self.stop_message = None
         self.tmp_message = None
+        self.relance = None
         
         
         self.user_name = None

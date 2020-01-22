@@ -113,15 +113,20 @@ class ChronoThread (threading.Thread):
 
         if not self.botresponse_object is None:
             if 'synth-' in rep:
-                rep = rep.split(':::')[0]
-            self.botresponse_object.sendOsc('/iagotchi/botresponse','{}'.format(rep))
+                rep_ = rep.split(':::')[0]
+            self.botresponse_object.sendOsc('/iagotchi/botresponse','{}'.format(rep_))
+            self.botresponse_object.sendOsc('/iagotchi/synthfile','{}'.format(rep.split(':::')[1].replace('_stop_', '').replace('__hello__', '')))
             if text == 'sessionstop' or text == 'sessionend':
                 self.botresponse_object.sendOsc('/iagotchi/session/stop','{}'.format(datetime.datetime.now()))
         if self.osc_self_client  is not None:
-            self.externals.stop_message = "sessionstop {}".format(rep)
-            # ???? aucun script ne répond au message osc /sessionsstop
-            # seul le serveur du script main.py repond à /sessionstop mais pas en osc en http ????
-            self.osc_self_client.send('/sessionstop')
+            if text == 'sessionstop':
+                self.externals.stop_message = "sessionstop {}".format(rep)
+                # ???? aucun script ne répond au message osc /sessionsstop
+                # seul le serveur du script main.py repond à /sessionstop mais pas en osc en http ????
+                self.osc_self_client.send('/sessionstop')
+            elif 'code' in text:
+                self.externals.relance = rep 
+                self.osc_self_client.send('relance')
                     
     def sendAndReceiveChatScript(self, text, user, bot, server, port, timeout=10):
         print('ChronoThread.sendAndReceiveChatScript "{}", "{}", "{}" ; {}'

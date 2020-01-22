@@ -101,6 +101,7 @@ class ASR(object):
         self.http_server.route('/need_restart', method="GET", callback=self.need_restart)
         self.http_server.route('/sessionstop', method="GET", callback=self.sessionstop)
         self.http_server.route('/tmpResponse', method="GET", callback=self.tmpResponse)
+        self.http_server.route('/relance', method="GET", callback=self.relance)
         self.http_server.route('/static/assets/<filename>', method="GET", callback=self.server_static)
         
         
@@ -148,29 +149,22 @@ class ASR(object):
             if reps and reps == "stop":
                 return None
             if  reps and "_stop_" in reps:
-                #reps = reps.replace('_stop_', '')
-                #self.osc_client.sendOscAction('/iagotchi/session/stop')
                 self.sendResponse(action='stop')
             if reps and "synth-" in reps:
                 if self.osc_client:
-                    #self.osc_client.sendOsc('/result/botresponse','{}'.format(reps.split(':::')[0]))
-                    self.sendResponse(action='result', text=reps.split(':::')[0])
+                    self.sendResponse(action='result', text=reps.split(':::')[0], synthfile=reps.split(':::')[1].replace('_stop_', '').replace('__hello__', ''))
             #TODO implémebnter musique
             if reps and "start_music" in reps:
                 reps = reps.replace('start_music', '')
-                #self.osc_client.sendOscAction('/iagotchi/music/start')
                 self.sendResponse(action='start_music')
             elif reps and "stop_music" in reps:
                 reps = reps.replace('stop_music', '')
-                #self.osc_client.sendOscAction('/iagotchi/music/stop')
                 self.sendResponse(action='stop_music')
             
             if self.osc_client and reps and "synth-" in reps:
-                #self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(reps.split(':::')[0].replace('_stop_', '').replace('__hello__', '')))
                 self.sendResponse(action='iagotchi', text=reps.split(':::')[0].replace('_stop_', '').replace('__hello__', ''))
             else:
-                #self.osc_client.sendOsc('/iagotchi/botresponse','{}'.format(reps.replace('_stop_', '').replace('__hello__', '')))
-                self.sendResponse(action='iagotchi', text=reps.replace('_stop_', '').replace('__hello__', ''))
+                self.sendResponse(action='iagotchi', text=reps.replace('_stop_', '').replace('__hello__', ''), synthfile=reps.split(':::')[1].replace('_stop_', '').replace('__hello__', ''))
             if self.externals.poesie:
                 #self.osc_self_client.send('/tmpResponse')
                 self.sendResponse(action='poesie')
@@ -182,7 +176,7 @@ class ASR(object):
             self.osc_client.sendOsc('/iagotchi/user_tmp','{}'.format(tmp))
             return 'ok'
 
-    def sendResponse(self, action, text=None):
+    def sendResponse(self, action, text=None, synthfile=None):
         print('sending of {}'.format(text))
         if action == 'stop':
             self.osc_client.sendOscAction('/iagotchi/session/stop')
@@ -192,8 +186,10 @@ class ASR(object):
             self.osc_client.sendOscAction('/iagotchi/music/stop')
         elif action == 'result':
             self.osc_client.sendOsc('/result/botresponse', text)
+            self.osc_client.sendOsc('/result/synthfile', synthfile)
         elif action == 'iagotchi':
             self.osc_client.sendOsc('/iagotchi/botresponse', text)
+            self.osc_client.sendOsc('/iagotchi/synthfile', synthfile)
         elif action == 'poesie':
             self.osc_self_client.send('/tmpResponse')
             
@@ -207,21 +203,6 @@ class ASR(object):
                 if line:
                     line = line.replace("#!", "")
                     reps = self.externals.run(line.strip(), self.osc_client)
-                    #if  "_stop_" in reps:
-                        #reps = reps.replace('_stop_', '')
-                    #if reps and "synth-" in reps:
-                        #if self.osc_client:
-                            #reps = reps.split(':')[0]
-                            
-                    ##TODO implémebnter musique
-                    #if reps and "start_music" in reps:
-                        #reps = reps.replace('start_music', '')
-                    #elif reps and "stop_music" in reps:
-                        #reps = reps.replace('stop_music', '')                            
-                    #if self.osc_client and reps and "synth-" in reps:
-                        #reps = reps.split(':')[0]
-                    #else:
-                        #reps = reps
                     with open('G5results_from_testfile.txt', 'a', encoding='utf8') as out:
                         out.write("{}::{}\n".format(line, reps))
 
@@ -244,6 +225,10 @@ class ASR(object):
             #self.externals.tmp_message = None
             #self.externals.tmp_message_sent = True
             return tmpmsg
+    def relance(self):
+        tmprelance = self.externals.relance
+        self.externals.relance = None
+        return tmprelance
         
     
     def start(self):
