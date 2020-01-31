@@ -91,7 +91,8 @@
         "existence"
     ],
     "botresponse": {
+        "ip": "192.168.0.19",
         "port": 5005
     },
-    "synthesize": false
+    "synthesize": true
 }

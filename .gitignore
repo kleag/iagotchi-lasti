@@ -7,3 +7,5 @@ data/fr_model.bin
 data/iagotchi.sqlite
 test.py
 __pycache__/*
+data/sounds/*
+*.tar.gz

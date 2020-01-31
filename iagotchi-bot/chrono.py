@@ -107,8 +107,8 @@ class ChronoThread (threading.Thread):
         #response = self.externals.postprocessing(response)
         if "lastoutput" in response.lower():
             response = self.externals.last_response
-        print("thread run {}".format(response))
         rep = syn.synthese(response)
+        print(">>>CHRONO>>> {}".format(rep))
         self.log.save_in_file("-", response)
 
         if not self.botresponse_object is None:

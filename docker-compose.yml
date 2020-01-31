@@ -13,8 +13,8 @@ services:
             - demo
         volumes:
             #- ~/Projects/Iagotchi/Dist/data:/Dist/data
-            - /Users/theanimal/Documents/IAGO_2/iagotchi-lasti/data:/Dist/data
-            #- /Volumes/backMeUp/Docker/iagotchi-lasti/data:/Dist/data
+            #- /Users/theanimal/Documents/IAGO_2/iagotchi-lasti/data:/Dist/data
+            - /Volumes/backMeUp/Docker/iagotchi-lasti/data:/Dist/data
         #devices:
             #- "/dev/snd:/dev/snd"
         environment:
