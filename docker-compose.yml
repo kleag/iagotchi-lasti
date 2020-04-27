@@ -16,13 +16,11 @@ services:
             #- /Users/theanimal/Documents/IAGO_2/iagotchi-lasti/data:/Dist/data
             #- /Volumes/backMeUp/Docker/iagotchi-lasti/data:/Dist/data
             - /home/rocio/Bureau/iagotchi-lasti/data/:/Dist/data
-        #devices:
-            #- "/dev/snd:/dev/snd"
+        devices:
+            - "/dev/snd:/dev/snd"
         environment:
             PYTHONUNBUFFERED: 1
-            #BOT_RESPONSE_ENDPOINT: http://10.8.29.154:5007
-            #BOT_RESPONSE_ENDPOINT: http://is227204.intra.cea.fr:5007
-            #BOT_RESPONSE_ENDPOINT: http://172.17.0.1:5007
+
         links:
             - limaserver
         environment:

@@ -30,19 +30,6 @@ all_raw_stopword = stopwords.words('french')
 raw_stopword_top_list = all_raw_stopword[0:64]
 
 
-    
-
-print('chatscript_externals load wikipedia module')
-#wikipedia.set_lang("fr")
-#sim = Similarity(using='embeddings')
-#generator = Generator('generator/iagotchi.model')
-
-
-
-# TODO à remplacer par lima
-#nlp = spacy.load('fr')
-
-
 with open(r'@CMAKE_INSTALL_PREFIX@/data/config.json', 'r') as sv:
     configfile = json.load(sv)
     
@@ -59,7 +46,6 @@ for wd in stpwds:
         raw_stopword_top_list.remove(wd)
     except:
         continue
-#ext_similarity = Similarity(using=configfile['similarity']['ToUse'])
 
 chrono = ChronoThread(log=None)
 chrono.start()
