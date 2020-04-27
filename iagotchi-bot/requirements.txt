@@ -11,7 +11,7 @@ tqdm
 pandas
 cython
 pathlib
-torch
-torchvision
+torch==1.2.0
+torchvision==0.4.0
 requests
 netifaces

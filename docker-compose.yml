@@ -12,11 +12,11 @@ services:
         networks:
             - demo
         volumes:
-            #- ~/Projects/Iagotchi/Dist/data:/Dist/data
-            - /Users/theanimal/Documents/IAGO_2/iagotchi-lasti/data:/Dist/data
+            - /home/frejus/Projects/IAGOTCHI/data/:/Dist/data
+            #- /Users/theanimal/Documents/IAGO_2/iagotchi-lasti/data:/Dist/data
             #- /Volumes/backMeUp/Docker/iagotchi-lasti/data:/Dist/data
-        #devices:
-            #- "/dev/snd:/dev/snd"
+        devices:
+            - "/dev/snd:/dev/snd"
         environment:
             PYTHONUNBUFFERED: 1
             #BOT_RESPONSE_ENDPOINT: http://10.8.29.154:5007

@@ -503,7 +503,8 @@ class Externals(object):
                     r = False
             result = "{}. C'est beau non ?".format(result)
             
-        except:
+        except Exception as e:
+            print(e)
             result = "Oups, mon cerveau ne fonctionne plus"
         result = "{}.".format(result) 
         try:
