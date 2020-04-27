@@ -33,14 +33,20 @@ class Synthese(object):
             if self.synthesize:
                 synthfile = 'synth-{}.wav'.format(datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))
                 synthfile_ = '/Dist/data/sounds/{}'.format(synthfile)
+                soxfile = 'sox_{}'.format(synthfile)
+                soxfile_ = '/Dist/data/sounds/{}'.format(soxfile)
 
                 if os.name == 'posix':
                     # Using pico2wave, Linux only
                     self.reading = True
-                    print('OS is {}. Speaking with pico2wave.'.format(os.name))
+                    #print('OS is {}. Speaking with pico2wave.'.format(os.name))
                     resp_synthese = ['pico2wave', '-l', 'fr-FR', '-w', synthfile_, resp,]
+                    conv_synthese = ['sox', synthfile_, '-r', '44100', soxfile_]
                     lecture = ['aplay', synthfile_]
                     subprocess.call(resp_synthese)
+                    #print('SYNTHESIS {} > {}'.format(resp_synthese, synthfile_))
+                    subprocess.call(conv_synthese)
+                    #print('SAMPLE RATE CONV {} > {}'.format(conv_synthese, soxfile_))
                     if play_audio:
                         subprocess.call(lecture)
                     self.reading = False
@@ -55,7 +61,7 @@ class Synthese(object):
                         print('Unsupported os {}. No speech synthesis is available.'
                             .format(os.name))
                         
-                return "{}:::{}".format(resp, synthfile)
+                return "{}:::{}".format(resp, soxfile)
             else:
                    
                 return resp

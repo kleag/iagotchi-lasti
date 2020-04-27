@@ -45,8 +45,8 @@ class iagotchiGui(object):
         self.btnDockerConfig = QPushButton("Open docker-compose.yml")
         self.btnIagoConfig = QPushButton("Open config.json")
         self.btnGitPull = QPushButton("Update (git pull)")
-        self.btnMax = QPushButton("Start Max patch")
-        self.btnConsole = QPushButton("Start Processing Console")
+        self.btnMax = QPushButton("Start Max/Pd patch")
+        self.btnConsole = QPushButton("Start Console")
         self.btnKill = QPushButton("Stop everything (killall)")
         
         self.bot = QComboBox()
@@ -63,7 +63,7 @@ class iagotchiGui(object):
         grid = QGridLayout(self.w)
         grid.setVerticalSpacing(3)
 
-        grid.addWidget(self.btnDocker,0,0)
+        #grid.addWidget(self.btnDocker,0,0)
         grid.addWidget(self.btnStart,1,0)
         grid.addWidget(self.btnChrome,2,0)
         grid.addWidget(self.btnMax,3,0)
@@ -142,7 +142,7 @@ class iagotchiGui(object):
     def runChrome(self):
         print("Starting Chrome")
         #subprocess.run(["open", "-a", "Google Chrome", "http://localhost:8088", "&"], shell=True)
-        subprocess.run("open -a \"Google Chrome\" http://localhost:8088 &", shell=True)
+        subprocess.run("/var/opt/google/chrome/chrome http://localhost:8088 &", shell=True)
         
     def startIagotchi(self):
         self.what_run = "bot"
@@ -173,23 +173,23 @@ class iagotchiGui(object):
         
     def confDocker(self):
         print("opening Docker Config")
-        subprocess.run("open docker-compose.yml &", shell=True)
+        subprocess.run("kate ./docker-compose.yml &", shell=True)
         
     def confIago(self):
         print("opening Iagotchi Config")
-        subprocess.run("open data/config.json &", shell=True)
+        subprocess.run("kate ./data/config.json &", shell=True)
         
     def gitPull(self):
         print("updating Iagotchi")
         subprocess.run("git pull &", shell=True)
         
     def runMax(self):
-        print("Starting Max Patch")
-        subprocess.run("open ../patch/Iagotchi.app &", shell=True)
+        print("Starting Max/Pd Patch")
+        subprocess.run("pd /home/rocio/Bureau/IAGO_SOUND_PD/__IAGO_SOUND__.pd &", shell=True)
 
     def runConsole(self):
         print("Starting Console")
-        subprocess.run("open ../patch/console.app &", shell=True)
+        subprocess.run("/home/rocio/Bureau/console/application.linux64/console &", shell=True)
 
     def killAll(self):
         print("Killing Console")
@@ -200,8 +200,8 @@ class iagotchiGui(object):
         subprocess.run("killall \"Google Chrome\"", shell=True)
         print("Stopping Iagotchi")
         subprocess.run("docker-compose stop", shell=True)
-        print("Killing Docker")
-        subprocess.run("killall Docker", shell=True)
+        #print("Killing Docker")
+        #subprocess.run("killall Docker", shell=True)
 
 if __name__ == "__main__":
 

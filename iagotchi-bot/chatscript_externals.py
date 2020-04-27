@@ -116,7 +116,10 @@ class Externals(object):
         self.chatscriptkeywords = configfile["chatscript_keywords"]
         self.using_topic_responses = None #self.load_responses_pickle_obj()
         try:
-            self.botresponse_host =  get_ip_default_route() #configfile['botresponse']['ip']
+            ip = get_ip_default_route()
+            print(">>>>IP>>>> {}".format(ip))
+            self.botresponse_host = get_ip_default_route()
+            #self.botresponse_host = configfile['botresponse']['ip']
             self.botresponse_port = int(configfile['botresponse']['port'])
             #self.music_host = configfile['musique']['ip']
             #self.music_port = int(configfile['musique']['port'])
