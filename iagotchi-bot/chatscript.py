@@ -1,13 +1,25 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Mon May  7 13:12:42 2018
-
-@author: frejus
 
 This script is used to interact with the ChatScript server.
 It allows you to run the server, start the dialog system of a bot, send requests and receive responses.
 """
+
+#
+# Copyright 2020 CEA LIST
+# This file is part of Iagotchi-bot.
+# Iagotchi-bot is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# Iagotchi-bot is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+# You should have received a copy of the GNU Affero General Public License
+# along with Iagotchi-bot.  If not, see <http://www.gnu.org/licenses/>
+# 
+#
 
 import socket
 from pathlib import Path
