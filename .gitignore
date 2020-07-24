@@ -9,3 +9,4 @@ test.py
 __pycache__/*
 data/sounds/*
 *.tar.gz
+IaGenerator
