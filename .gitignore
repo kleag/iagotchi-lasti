@@ -6,6 +6,7 @@ data/wiki.fr.vec
 data/fr_model.bin
 data/iagotchi.sqlite
 test.py
+iagotchi-bot/__pycache__/*
 __pycache__/*
 data/sounds/*
 *.tar.gz
