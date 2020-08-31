@@ -13,7 +13,8 @@
 # along with Iagotchi-bot.  If not, see <http://www.gnu.org/licenses/>
 # 
 #
-import sys, subprocess,json,socket
+import sys, subprocess,json,socket, os
+from subprocess import PIPE
 from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import * 
 from PyQt5.QtGui import *
@@ -58,11 +59,16 @@ class iagotchiGui(object):
         self.btnTrain = QPushButton("Train Iagotchi (similarity with topics)")
         self.btnTrain2 = QPushButton("Train Iagotchi 2 (similarity without topics)")
         self.btnDockerConfig = QPushButton("Open docker-compose.yml")
+        self.btnDockerFile = QPushButton("Auto-config (docker-compose.yml)")
         self.btnIagoConfig = QPushButton("Open config.json")
         self.btnGitPull = QPushButton("Update (git pull)")
         self.btnMax = QPushButton("Start Max/Pd patch")
         self.btnConsole = QPushButton("Start Console")
         self.btnKill = QPushButton("Stop everything (killall)")
+        # message box
+        self.msg = QMessageBox()
+        self.msg.setWindowTitle("Iagotchi")
+        
         
         self.bot = QComboBox()
         self.bot.addItem("Rencontre")
@@ -93,12 +99,13 @@ class iagotchiGui(object):
         grid.addWidget(self.btnSave,12,0)
         grid.addWidget(QLabel("_ Advanced _"),13,0)
         grid.addWidget(self.btnDockerConfig,14,0)
-        grid.addWidget(self.btnIagoConfig,15,0)
-        grid.addWidget(self.btnGitPull,16,0)
-        grid.addWidget(self.btnBuild,17,0)
-        grid.addWidget(self.btnTrain,18,0)
-        grid.addWidget(self.btnTrain2,19,0)
-        grid.addWidget(self.btnKill,20,0)
+        grid.addWidget(self.btnDockerFile,15,0)
+        grid.addWidget(self.btnIagoConfig,16,0)
+        grid.addWidget(self.btnGitPull,17,0)
+        grid.addWidget(self.btnBuild,18,0)
+        grid.addWidget(self.btnTrain,19,0)
+        grid.addWidget(self.btnTrain2,20,0)
+        grid.addWidget(self.btnKill,21,0)
         
         self.btnSave.clicked.connect(self.saveOptions)
         self.btnUpdIp.clicked.connect(self.updateIp)
@@ -110,6 +117,7 @@ class iagotchiGui(object):
         self.btnTrain.clicked.connect(self.trainIagotchi)
         self.btnTrain2.clicked.connect(self.trainIagotchi2)
         self.btnDockerConfig.clicked.connect(self.confDocker)
+        self.btnDockerFile.clicked.connect(self.autoConfig)
         self.btnIagoConfig.clicked.connect(self.confIago)
         self.btnGitPull.clicked.connect(self.gitPull)
         self.btnMax.clicked.connect(self.runMax)
@@ -144,11 +152,34 @@ class iagotchiGui(object):
         self.printOptions()
         print("...Done")
         
+    def autoConfig(self):
+        current_dir = os.getcwd().replace('/', '\/')
+        print(current_dir)
+        cmd = f"sed -i 's/<HOME>/{current_dir}/g' docker-compose.yml"
+        print("Auto config ...")
+        status = self.exec_cmd(cmd)
+        if not status:
+            self.user_messages('Failed', message_type='critical')
+        else:
+            self.user_messages('Success', message_type='information')
+        
     def printOptions(self):
         print("Options")
         print("    BOTNAME "+self.botname)
         print("    WHAT_RUN "+self.what_run)
         print("    IP "+self.ipAddress)
+        
+        
+    def user_messages(self, content, message_type='critical'):
+        if message_type == 'critical':
+            self.msg.setIcon(QMessageBox.Critical)
+        elif message_type == 'warning':
+            self.msg.setIcon(QMessageBox.Warning)
+        elif message_type == 'information':
+            self.msg.setIcon(QMessageBox.Information)
+        self.msg.setText(content)
+        x = self.msg.exec_()  # this will show our messagebox
+        print(x)
         
     def runDocker(self):
         print("Starting Docker")
@@ -181,10 +212,33 @@ class iagotchiGui(object):
         print("Train Iagotchi")
         subprocess.run("docker-compose up &", shell=True)
         
+    def exec_cmd(self, cmd):
+        
+        try:
+            output = subprocess.check_output([cmd], stderr=subprocess.STDOUT, shell=True, universal_newlines=True)
+            #output = subprocess.check_output([], stderr=subprocess.STDOUT, shell=True, universal_newlines=True)
+            return True
+        except subprocess.CalledProcessError as exc:
+            print("Status : FAIL", exc.returncode, exc.output)
+            return False
+        else:
+            print("Output: \n{}\n".format(output))
+        
+        
     def buildIagotchi(self):
         self.saveOptions()
+        print("Download Limaserver Image")
+        status = self.exec_cmd("docker pull aymara/lima")
+        if not status:
+            self.user_messages('Failed', message_type='critical')
         print("Build Iagotchi")
-        subprocess.run("sudo docker-compose build &", shell=True)
+        status = self.exec_cmd("docker-compose build")
+        if not status:
+            self.user_messages('Failed', message_type='critical')
+        else:
+            self.user_messages('Success', message_type='information')
+
+        
         
     def confDocker(self):
         print("opening Docker Config")

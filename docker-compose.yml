@@ -15,7 +15,8 @@ services:
             #- ~/Projects/Iagotchi/Dist/data:/Dist/data
             #- /Users/theanimal/Documents/IAGO_2/iagotchi-lasti/data:/Dist/data
             #- /Volumes/backMeUp/Docker/iagotchi-lasti/data:/Dist/data
-            - /home/rocio/Bureau/iagotchi-lasti/data/:/Dist/data
+            #- /home/rocio/Bureau/iagotchi-lasti/data/:/Dist/data
+            - <HOME>/data/:/Dist/data
         devices:
             - "/dev/snd:/dev/snd"
         environment:
@@ -32,7 +33,7 @@ services:
         
             
     limaserver:
-        image: limaserver:latest
+        image: aymara/lima:latest
         ports:
             - "8090:8080"
         environment:
