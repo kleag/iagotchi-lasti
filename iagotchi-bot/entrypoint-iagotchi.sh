@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 # Copyright 2020 CEA LIST
 # This file is part of Iagotchi-bot.
@@ -13,9 +15,9 @@
 # along with Iagotchi-bot.  If not, see <http://www.gnu.org/licenses/>
 # 
 
-#!/bin/bash
 
 
+echo "entrypoint..."
 exec_var=$( cat data/config.json | jq -r '.what_run' )
 
 echo $exec_var
