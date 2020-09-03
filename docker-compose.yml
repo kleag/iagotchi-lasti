@@ -12,11 +12,7 @@ services:
         networks:
             - demo
         volumes:
-            #- ~/Projects/Iagotchi/Dist/data:/Dist/data
-            #- /Users/theanimal/Documents/IAGO_2/iagotchi-lasti/data:/Dist/data
-            #- /Volumes/backMeUp/Docker/iagotchi-lasti/data:/Dist/data
-            #- /home/rocio/Bureau/iagotchi-lasti/data/:/Dist/data
-            - <HOME>/data/:/Dist/data
+            - /media/frejus/db33d580-a3b2-4743-b703-57b41aeed6d71/frejus/Projects/IAGOTCHI/data/:/Dist/data
         devices:
             - "/dev/snd:/dev/snd"
         environment:
@@ -24,10 +20,12 @@ services:
 
         links:
             - limaserver
+            #- puredata
         environment:
             NAME: iagotchi
         shm_size: '4G'
         tty: true 
+        #restart: unless-stopped
         #depends_on:
             #- limaserver
         
@@ -41,8 +39,26 @@ services:
         networks:
             - demo
         tty: true
+        #restart: unless-stopped
         command: limaserver
-
+        
+    #puredata:
+        #image: puredata:latest
+        #build:
+            #context: ./puredata/
+            #dockerfile: Dockerfile
+        ##ports:
+            ##- "5005:5005"
+            ##- "5007:5007"
+        #networks:
+            #- demo
+        #volumes:
+            #- /media/frejus/db33d580-a3b2-4743-b703-57b41aeed6d71/frejus/Projects/IAGOTCHI/data/:/data
+        #devices:
+            #- "/dev/snd:/dev/snd"
+        #environment:
+            #PYTHONUNBUFFERED: 1
+        #tty: true
         
 networks:
   demo:

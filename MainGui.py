@@ -59,7 +59,7 @@ class iagotchiGui(object):
         self.btnTrain = QPushButton("Train Iagotchi (similarity with topics)")
         self.btnTrain2 = QPushButton("Train Iagotchi 2 (similarity without topics)")
         self.btnDockerConfig = QPushButton("Open docker-compose.yml")
-        self.btnDockerFile = QPushButton("Auto-config (docker-compose.yml)")
+        self.btnDockerFile = QPushButton("Auto-config")
         self.btnIagoConfig = QPushButton("Open config.json")
         self.btnGitPull = QPushButton("Update (git pull)")
         self.btnMax = QPushButton("Start Max/Pd patch")
@@ -154,9 +154,12 @@ class iagotchiGui(object):
         
     def autoConfig(self):
         current_dir = os.getcwd().replace('/', '\/')
-        print(current_dir)
-        cmd = f"sed -i 's/<HOME>/{current_dir}/g' docker-compose.yml"
         print("Auto config ...")
+        cmd = f"sed -i 's/<HOME>/{current_dir}/g' docker-compose.yml"
+        status = self.exec_cmd(cmd)
+        if not status:
+            self.user_messages('Failed', message_type='critical')
+        cmd = f"sed -i 's/<HOME>/{current_dir}/g' puredata/IAGO_SOUND_PD/__IAGO_SOUND__.pd"
         status = self.exec_cmd(cmd)
         if not status:
             self.user_messages('Failed', message_type='critical')
@@ -188,13 +191,35 @@ class iagotchiGui(object):
     def runChrome(self):
         print("Starting Chrome")
         #subprocess.run(["open", "-a", "Google Chrome", "http://localhost:8088", "&"], shell=True)
-        subprocess.run("/var/opt/google/chrome/chrome http://localhost:8088 &", shell=True)
+#         subprocess.run("/var/opt/google/chrome/chrome http://localhost:8088 &", shell=True)
+        subprocess.run("/usr/bin/google-chrome http://localhost:8088 &", shell=True)
+        
+    def checkContainers(self):
+        print('Check Containers')
+        statusl = self.exec_cmd("docker ps -q --no-trunc | grep $(docker-compose ps -q limaserver)")
+        statusi = self.exec_cmd("docker ps -q --no-trunc | grep $(docker-compose ps -q iagotchi)")
+        return statusl, statusi
         
     def startIagotchi(self):
         self.what_run = "bot"
         self.saveOptions()
         print("Starting Iagotchi")
-        subprocess.run("docker-compose up &", shell=True)
+        lima, iagotchi = self.checkContainers()
+        if not lima or not iagotchi:
+            status = self.exec_cmd("docker-compose up --no-recreate")
+            lima, iagotchi = self.checkContainers()
+            if not lima or not iagotchi:
+                self.user_messages('Failed', message_type='critical')
+            elif lima and iagotchi:
+                self.runChrome()
+        elif lima and iagotchi:
+            self.runChrome()
+        
+    #         if not status:
+    #             self.user_messages('Failed', message_type='critical')
+    #         else:
+    #             self.user_messages('Success', message_type='information')
+        #subprocess.run("docker-compose up &", shell=True)
 
     def stopIagotchi(self):
         print("Stopping Iagotchi")
@@ -217,6 +242,7 @@ class iagotchiGui(object):
         try:
             output = subprocess.check_output([cmd], stderr=subprocess.STDOUT, shell=True, universal_newlines=True)
             #output = subprocess.check_output([], stderr=subprocess.STDOUT, shell=True, universal_newlines=True)
+            print("Output: \n{}\n".format(output))
             return True
         except subprocess.CalledProcessError as exc:
             print("Status : FAIL", exc.returncode, exc.output)
@@ -233,6 +259,10 @@ class iagotchiGui(object):
             self.user_messages('Failed', message_type='critical')
         print("Build Iagotchi")
         status = self.exec_cmd("docker-compose build")
+        if not status:
+            self.user_messages('Failed', message_type='critical')
+        print("Install PureData")
+        status = self.exec_cmd("sh install_puredata.sh")
         if not status:
             self.user_messages('Failed', message_type='critical')
         else:
@@ -254,11 +284,11 @@ class iagotchiGui(object):
         
     def runMax(self):
         print("Starting Max/Pd Patch")
-        subprocess.run("pd /home/rocio/Bureau/IAGO_SOUND_PD/__IAGO_SOUND__.pd &", shell=True)
+        subprocess.run("pd /home/frejus/Bureau/rocio/IAGO_SOUND_PD/__IAGO_SOUND__.pd &", shell=True)
 
     def runConsole(self):
         print("Starting Console")
-        subprocess.run("/home/rocio/Bureau/console/application.linux64/console &", shell=True)
+        subprocess.run("/home/frejus/Bureau/rocio/console/application.linux64/console &", shell=True)
 
     def killAll(self):
         print("Killing Console")
