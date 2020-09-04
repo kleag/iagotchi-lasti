@@ -1,3 +1,3 @@
 #!/bin/bash
 cd $(dirname $0)
-python3 MainGui.py
+python3 SimpleMainGui.py

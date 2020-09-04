@@ -13,7 +13,7 @@
 # along with Iagotchi-bot.  If not, see <http://www.gnu.org/licenses/>
 # 
 #
-import sys, subprocess,json,socket, os
+import sys, subprocess,json,socket, os, shlex
 from subprocess import PIPE
 from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import * 
@@ -47,21 +47,22 @@ class iagotchiGui(object):
             if len(text) > 0 & ok:
                 self.ipAddress = text
                                        
-        self.ipTextEdit = QLineEdit(self.ipAddress)
-        self.btnUpdIp = QPushButton("Refresh IP Address")
+        #self.ipTextEdit = QLineEdit(self.ipAddress)
+        #self.btnUpdIp = QPushButton("Refresh IP Address")
         
         self.btnSave = QPushButton("Save Options")
-        self.btnDocker = QPushButton("Start Docker")
-        self.btnChrome = QPushButton("Start Chrome")
+        #self.btnDocker = QPushButton("Start Docker")
+        #self.btnChrome = QPushButton("Start Chrome")
         self.btnStart = QPushButton("Start Iagotchi")
+        #self.btnStop = QPushButton("Stop Iagotchi")
         self.btnStop = QPushButton("Stop Iagotchi")
         self.btnBuild = QPushButton("Build Iagotchi (password)")
-        self.btnTrain = QPushButton("Train Iagotchi (similarity with topics)")
-        self.btnTrain2 = QPushButton("Train Iagotchi 2 (similarity without topics)")
-        self.btnDockerConfig = QPushButton("Open docker-compose.yml")
+        #self.btnTrain = QPushButton("Train Iagotchi (similarity with topics)")
+        self.btnTrain2 = QPushButton("Re-train Iagotchi")
+        #self.btnDockerConfig = QPushButton("Open docker-compose.yml")
         self.btnDockerFile = QPushButton("Auto-config")
-        self.btnIagoConfig = QPushButton("Open config.json")
-        self.btnGitPull = QPushButton("Update (git pull)")
+        #self.btnIagoConfig = QPushButton("Open config.json")
+        #self.btnGitPull = QPushButton("Update (git pull)")
         self.btnMax = QPushButton("Start Max/Pd patch")
         self.btnConsole = QPushButton("Start Console")
         self.btnKill = QPushButton("Stop everything (killall)")
@@ -78,6 +79,7 @@ class iagotchiGui(object):
         else:
             self.bot.setCurrentText("G5")
         self.bot.currentIndexChanged.connect(self.botChange)
+        self.current_bot = self.botname
 
         self.error_dialog = QErrorMessage()
         
@@ -86,40 +88,40 @@ class iagotchiGui(object):
 
         #grid.addWidget(self.btnDocker,0,0)
         grid.addWidget(self.btnStart,1,0)
-        grid.addWidget(self.btnChrome,2,0)
-        grid.addWidget(self.btnMax,3,0)
-        grid.addWidget(self.btnConsole,4,0)
-        grid.addWidget(self.btnStop,5,0)
-        grid.addWidget(QLabel("_ Options _"),6,0)
-        grid.addWidget(QLabel("Mode :"),7,0)
-        grid.addWidget(self.bot,8,0)
-        grid.addWidget(QLabel("IP Address :"),9,0)
-        grid.addWidget(self.btnUpdIp,10,0)
-        grid.addWidget(self.ipTextEdit,11,0)
-        grid.addWidget(self.btnSave,12,0)
-        grid.addWidget(QLabel("_ Advanced _"),13,0)
-        grid.addWidget(self.btnDockerConfig,14,0)
-        grid.addWidget(self.btnDockerFile,15,0)
-        grid.addWidget(self.btnIagoConfig,16,0)
-        grid.addWidget(self.btnGitPull,17,0)
-        grid.addWidget(self.btnBuild,18,0)
-        grid.addWidget(self.btnTrain,19,0)
-        grid.addWidget(self.btnTrain2,20,0)
-        grid.addWidget(self.btnKill,21,0)
+        #grid.addWidget(self.btnChrome,2,0)
+        grid.addWidget(self.btnMax,2,0)
+        grid.addWidget(self.btnConsole,3,0)
+        grid.addWidget(self.btnStop,4,0)
+        grid.addWidget(QLabel("_ Options _"),5,0)
+        grid.addWidget(QLabel("Mode :"),6,0)
+        grid.addWidget(self.bot,7,0)
+        #grid.addWidget(QLabel("IP Address :"),8,0)
+        #grid.addWidget(self.btnUpdIp,9,0)
+        #grid.addWidget(self.ipTextEdit,10,0)
+        grid.addWidget(self.btnSave,8,0)
+        grid.addWidget(QLabel("_ Advanced _"),9,0)
+        #grid.addWidget(self.btnDockerConfig,14,0)
+        grid.addWidget(self.btnDockerFile,10,0)
+        #grid.addWidget(self.btnIagoConfig,16,0)
+        #grid.addWidget(self.btnGitPull,17,0)
+        grid.addWidget(self.btnBuild,11,0)
+        #grid.addWidget(self.btnTrain,12,0)
+        grid.addWidget(self.btnTrain2,12,0)
+        grid.addWidget(self.btnKill,13,0)
         
         self.btnSave.clicked.connect(self.saveOptions)
-        self.btnUpdIp.clicked.connect(self.updateIp)
+        #self.btnUpdIp.clicked.connect(self.updateIp)
         self.btnStart.clicked.connect(self.startIagotchi)
         self.btnStop.clicked.connect(self.stopIagotchi)
         self.btnBuild.clicked.connect(self.buildIagotchi)
-        self.btnDocker.clicked.connect(self.runDocker)
-        self.btnChrome.clicked.connect(self.runChrome)
-        self.btnTrain.clicked.connect(self.trainIagotchi)
+        #self.btnDocker.clicked.connect(self.runDocker)
+        #self.btnChrome.clicked.connect(self.runChrome)
+        #self.btnTrain.clicked.connect(self.trainIagotchi)
         self.btnTrain2.clicked.connect(self.trainIagotchi2)
-        self.btnDockerConfig.clicked.connect(self.confDocker)
+        #self.btnDockerConfig.clicked.connect(self.confDocker)
         self.btnDockerFile.clicked.connect(self.autoConfig)
-        self.btnIagoConfig.clicked.connect(self.confIago)
-        self.btnGitPull.clicked.connect(self.gitPull)
+        #self.btnIagoConfig.clicked.connect(self.confIago)
+        #self.btnGitPull.clicked.connect(self.gitPull)
         self.btnMax.clicked.connect(self.runMax)
         self.btnConsole.clicked.connect(self.runConsole)
         self.btnKill.clicked.connect(self.killAll)
@@ -141,16 +143,19 @@ class iagotchiGui(object):
         self.ipAddress = socket.gethostbyname(socket.gethostname())
         self.ipTextEdit.setText(self.ipAddress)  
     
-    def saveOptions(self):
+    def saveOptions(self, dialog=True):
         print("Saving Options...")
         self.jsondata['bot']['name'] = self.botname
         self.jsondata["what_run"] = self.what_run
-        self.ipAddress = self.ipTextEdit.text()
-        self.jsondata['botresponse']['ip'] = self.ipAddress
+        print(f'To change: {self.what_run}; {self.botname}')
+        #self.ipAddress = self.ipTextEdit.text()
+        #self.jsondata['botresponse']['ip'] = self.ipAddress
         with open('data/config.json', 'w') as json_file:
             json.dump(self.jsondata, json_file, indent=4, ensure_ascii=False)
         self.printOptions()
         print("...Done")
+        if dialog:
+            self.user_messages('Success', message_type='information')
         
     def autoConfig(self):
         current_dir = os.getcwd().replace('/', '\/')
@@ -184,6 +189,45 @@ class iagotchiGui(object):
         x = self.msg.exec_()  # this will show our messagebox
         print(x)
         
+        
+    def invoke_process_popen_blocking(self, command, shellType=False, stdoutType=subprocess.PIPE):
+        """runs subprocess with Popen, but output only returned when process complete"""
+        try:
+            process = subprocess.Popen(
+                shlex.split(command), shell=shellType, stdout=stdoutType)
+            (stdout, stderr) = process.communicate()
+            print(stdout.decode())
+            return True
+        except:
+            print("ERROR {} while running {}".format(sys.exc_info()[1], command))
+            return False
+
+
+    def invoke_process_popen_poll_live(self, command, shellType=False, stdoutType=subprocess.PIPE, operation='start'):
+        """runs subprocess with Popen/poll so that live stdout is shown"""
+        print('process_popen')
+        try:
+            process = subprocess.Popen(
+                shlex.split(command), shell=shellType, stdout=stdoutType)
+        except:
+            print("ERROR {} while running {}".format(sys.exc_info()[1], command))
+            return False
+        while True:
+            output = process.stdout.readline()
+            # used to check for empty output in Python2, but seems
+            # to work with just poll in 2.7.12 and 3.5.2
+            # if output == '' and process.poll() is not None:
+            if output == '' and process.poll() is not None:
+                break
+            if operation == 'start' and 'Please open chrome at' in output.strip().decode():
+                break
+            elif operation == 'train' and 'Training completed ...' in output.strip().decode():
+                break
+            if output:
+                print(output.strip().decode())
+        rc = process.poll()
+        return rc
+        
     def runDocker(self):
         print("Starting Docker")
         subprocess.run("open -a Docker &", shell=True)
@@ -193,56 +237,91 @@ class iagotchiGui(object):
         #subprocess.run(["open", "-a", "Google Chrome", "http://localhost:8088", "&"], shell=True)
 #         subprocess.run("/var/opt/google/chrome/chrome http://localhost:8088 &", shell=True)
         subprocess.run("/usr/bin/google-chrome http://localhost:8088 &", shell=True)
+
         
     def checkContainers(self):
         print('Check Containers')
-        statusl = self.exec_cmd("docker ps -q --no-trunc | grep $(docker-compose ps -q limaserver)")
-        statusi = self.exec_cmd("docker ps -q --no-trunc | grep $(docker-compose ps -q iagotchi)")
+        statusl = self.exec_cmd("sudo docker ps -q --no-trunc | grep $(sudo docker-compose ps -q limaserver)")
+        statusi = self.exec_cmd("sudo docker ps -q --no-trunc | grep $(sudo docker-compose ps -q iagotchi)")
         return statusl, statusi
         
-    def startIagotchi(self):
+    def startIagotchi(self, refresh=False):
         self.what_run = "bot"
-        self.saveOptions()
+        self.saveOptions(dialog=False)
         print("Starting Iagotchi")
-        lima, iagotchi = self.checkContainers()
+        
+        if not refresh:
+            lima, iagotchi = self.checkContainers()
+        else:
+            lima = False
+            iagotchi = False
+        ct = False
+        print(lima, iagotchi)
         if not lima or not iagotchi:
-            status = self.exec_cmd("docker-compose up --no-recreate")
+            #status = self.exec_cmd("sudo docker-compose up ")
+            status = self.invoke_process_popen_poll_live("sudo docker-compose up ")
+            #subprocess.run("sudo docker-compose up &", shell=True)
             lima, iagotchi = self.checkContainers()
             if not lima or not iagotchi:
                 self.user_messages('Failed', message_type='critical')
+                return
             elif lima and iagotchi:
-                self.runChrome()
+                ct = True
+            else:
+                ct = False
         elif lima and iagotchi:
+            ct = True
+            #self.runChrome()
+        if not ct:
+            self.user_messages('Failed', message_type='critical')
+            return
+        else:
             self.runChrome()
-        
-    #         if not status:
-    #             self.user_messages('Failed', message_type='critical')
-    #         else:
-    #             self.user_messages('Success', message_type='information')
-        #subprocess.run("docker-compose up &", shell=True)
+           
+            
 
+    #def stopIagotchi(self):
+        #print("Stopping Iagotchi")
+        #subprocess.run("docker-compose stop &", shell=True)
+        
     def stopIagotchi(self):
-        print("Stopping Iagotchi")
-        subprocess.run("docker-compose stop &", shell=True)
+        print(f"Stopping: {self.current_bot}#{self.botname}")
+        subprocess.run("sudo docker-compose stop ", shell=True)
+        status = self.exec_cmd("sudo docker-compose rm -f")
+        if not status:
+            self.user_messages('Failed', message_type='critical')
+        else:
+            self.user_messages('Success', message_type='information')
+     
 
     def trainIagotchi(self):
         self.what_run = "similarity-with-topics"
-        self.saveOptions()
+        self.saveOptions(dialog=False)
         print("Train Iagotchi")
         subprocess.run("docker-compose up &", shell=True)
         
     def trainIagotchi2(self):
         self.what_run = "similarity-without-topics"
-        self.saveOptions()
+        self.saveOptions(dialog=False)
         print("Train Iagotchi")
-        subprocess.run("docker-compose up &", shell=True)
+        status = self.invoke_process_popen_poll_live("sudo docker-compose up ", operation='train')
+        if status == False:
+            self.user_messages('Failed', message_type='critical')
+        else:
+            self.user_messages('Success', message_type='information')
+            
+        #subprocess.run("docker-compose up &", shell=True)
         
     def exec_cmd(self, cmd):
         
         try:
+            #output = subprocess.check_output([cmd], stderr=subprocess.STDOUT, stdout=subprocess.PIPE, shell=True, universal_newlines=True)
+            #popen = subprocess.Popen(cmd, shell=True, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf8')
             output = subprocess.check_output([cmd], stderr=subprocess.STDOUT, shell=True, universal_newlines=True)
-            #output = subprocess.check_output([], stderr=subprocess.STDOUT, shell=True, universal_newlines=True)
             print("Output: \n{}\n".format(output))
+            #(out, err) = popen.communicate()
+            #print(out)
+            #print(err)
             return True
         except subprocess.CalledProcessError as exc:
             print("Status : FAIL", exc.returncode, exc.output)
@@ -252,19 +331,19 @@ class iagotchiGui(object):
         
         
     def buildIagotchi(self):
-        self.saveOptions()
+        self.saveOptions(dialog=False)
         print("Download Limaserver Image")
         status = self.exec_cmd("sudo docker pull aymara/lima")
         if not status:
             self.user_messages('Failed', message_type='critical')
             return
         print("Build Iagotchi")
-        status = self.exec_cmd("docker-compose build")
+        status = self.exec_cmd("sudo docker-compose build")
         if not status:
             self.user_messages('Failed', message_type='critical')
             return
         print("Install PureData")
-        status = self.exec_cmd("sh install_puredata.sh")
+        status = self.exec_cmd("sudo sh install_puredata.sh")
         if not status:
             self.user_messages('Failed', message_type='critical')
         else:
@@ -292,15 +371,28 @@ class iagotchiGui(object):
         print("Starting Console")
         subprocess.run("puredata/console/application.linux64/console &", shell=True)
 
-    def killAll(self):
-        print("Killing Console")
-        subprocess.run("killall console", shell=True)
-        print("Killing Max Patch")
-        subprocess.run("killall Iagotchi", shell=True)
+        
+    #def runMax(self):
+        #print("Starting Max/Pd Patch")
+        #status = self.exec_cmd("pd puredata/IAGO_SOUND_PD/__IAGO_SOUND__.pd &")
+        #if not status:
+            #self.user_messages('Failed', message_type='critical')
+            #return
+
+    #def runConsole(self):
+        #print("Starting Console")
+        #subprocess.run("puredata/console/application.linux64/console &", shell=True)
+
+    def killAll(self, refresh=False):
+        if not refresh:
+            print("Killing Console")
+            subprocess.run("killall console", shell=True)
+            print("Killing Max Patch")
+            subprocess.run("killall Iagotchi", shell=True)
         print("Killing Chrome")
         subprocess.run("killall \"Google Chrome\"", shell=True)
         print("Stopping Iagotchi")
-        subprocess.run("docker-compose stop", shell=True)
+        subprocess.run("sudo docker-compose stop", shell=True)
         #print("Killing Docker")
         #subprocess.run("killall Docker", shell=True)
 

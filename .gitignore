@@ -9,7 +9,7 @@ test.py
 iagotchi-bot/__pycache__/*
 __pycache__/*
 data/sounds/*
-*.tar.gz
+#*.tar.gz
 IaGenerator
 Build/
 Dist/
