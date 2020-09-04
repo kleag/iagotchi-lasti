@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry] 
+Version=1.0 
+Exec=/home/frejus/Projects/iagotchi-lasti/IAGOTCHI.command
+Name=Iagotchi
+GenericName=Iagotchi
+Comment=Loads Iagotchi
+Encoding=UTF-8 
+Terminal=true 
+Type=Application 
+Categories=Application;Development;
+Icon=/home/frejus/Projects/iagotchi-lasti/logo/iagotchi.jpg
