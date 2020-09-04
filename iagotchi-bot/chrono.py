@@ -19,7 +19,7 @@ It allows to stop a session or restart a conversation.
 # 
 #
 
-import threading, socket, datetime, json, sys
+import threading, socket, datetime, json, sys, re
 from synthese import Synthese
 import osc
 
@@ -130,6 +130,7 @@ class ChronoThread (threading.Thread):
         if not self.botresponse_object is None:
             if 'synth-' in rep:
                 rep_ = rep.split(':::')[0]
+                rep_ = self.postprocessing(rep_)
             self.botresponse_object.sendOsc('/iagotchi/botresponse','{}'.format(rep_))
             self.botresponse_object.sendOsc('/iagotchi/synthfile','{}'.format(rep.split(':::')[1].replace('_stop_', '').replace('__hello__', '')))
             if text == 'sessionstop' or text == 'sessionend':
@@ -143,6 +144,16 @@ class ChronoThread (threading.Thread):
             elif 'code' in text:
                 self.externals.relance = rep 
                 self.osc_self_client.send('relance')
+                
+    def postprocessing(self, response):
+        response = response.lower()
+        lst = ['wikipediamo', 'wikipedia4']
+        for w in lst:
+            rx = re.findall(r'{}\w+'.format(w), response)
+            if len(rx) > 0:
+                ind =  response.split().index(rx[0])
+                response = ' '.join(response.split()[:-ind])
+        return response
                     
     def sendAndReceiveChatScript(self, text, user, bot, server, port, timeout=10):
         print('ChronoThread.sendAndReceiveChatScript "{}", "{}", "{}" ; {}'

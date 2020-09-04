@@ -30,6 +30,7 @@ class ProcessLog(object):
                 print('[ProcessLog warning: {} does not exists]'.format(folder))
         self.bot_data = {'iagotchi':dict(), 'iagotchig5':dict()}
         self.datas = list()
+        self.fake_words = ['wikipedia', 'émoticones', 'parler avec moi']
         
         
     def get_content_from_file(self, bot, filename):
@@ -43,10 +44,10 @@ class ProcessLog(object):
                     question = line[1].strip().replace('User:', '')
                     question = question.strip()
                     if len(question) > 0:
-                        self.datas.append(question)
                         response = line[2].strip().replace('Iagotchi:', '')
                         response = response.strip()
-                        if len(response) > 0:
+                        if len(response) > 0 and any(w not in response.lower() for w in self.fake_words):
+                            self.datas.append(question)
                             self.datas.append(response)
                             self.bot_data[bot][question] = response
                             

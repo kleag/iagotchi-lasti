@@ -14,7 +14,7 @@
 # 
 #
 from __future__ import print_function
-import bottle, osc, sys
+import bottle, osc, sys, re
 from synthese import Synthese
 
 from chatscript import ChatscriptInstance
@@ -160,6 +160,7 @@ class ASR(object):
             self.sentence_num += 1
             self.osc_client.sendOsc('/iagotchi/user','{}'.format(self.transcript))
             reps = self.externals.run(self.transcript, self.osc_client, self.osc_self_client)
+            reps = self.postprocessing(reps)
             print('>>>REPS>>> {}'.format(reps))
             if reps and reps == "stop":
                 return None
@@ -214,6 +215,15 @@ class ASR(object):
             
             
 
+    def postprocessing(self, response):
+        response = response.lower()
+        lst = ['wikipediamo', 'wikipedia4']
+        for w in lst:
+            rx = re.findall(r'{}\w+'.format(w), response)
+            if len(rx) > 0:
+                ind =  response.split().index(rx[0])
+                response = ' '.join(response.split()[:-ind])
+        return response
   
     def result_testfile(self, in_filename):
         with open(in_filename, 'r', encoding='utf8') as f:
