@@ -667,7 +667,10 @@ class Externals(object):
             self.startup()
             return '{} __hello__'.format(self.process(transcript))
         elif self.session_status == 'start' and not self.syn.reading:
-            return self.process(transcript)
+            response = self.process(transcript)
+            if 'lastoutput' in response.lower():
+                response = self.last_response
+            return response
 
         return 'stop'
     
