@@ -66,7 +66,7 @@ class CHAT(object):
 class ASR(object):
     global is_restart_needed
 
-    def __init__(self, osc_server_port=9000, osc_client_host='0.0.0.0', osc_client_port=9001, http_server_port=8088, botname='iagotchi'):
+    def __init__(self, osc_server_port=9000, osc_client_host='0.0.0.0', osc_client_port=9001, http_server_port=8088, botname='iagotchi', text=False):
         self.ready = False
         self.osc_server_port = osc_server_port
         self.osc_client_host = osc_client_host
@@ -91,6 +91,7 @@ class ASR(object):
         #For CEA's modules
         self.transcript = None
         self.botresponse = None
+        self.text_mode = text
 
         #END
         
@@ -141,7 +142,11 @@ class ASR(object):
         #elif message == '/synthese':
 
     def result(self):
-        result = {'transcript': bottle.request.forms.getunicode('transcript'),
+        if self.text_mode:
+            result = {'transcript': bottle.request.forms.getunicode('transcript'),
+                      'sentence': int(bottle.request.forms.sentence)}
+        else:
+            result = {'transcript': bottle.request.forms.getunicode('transcript'),
                 'confidence': float(bottle.request.forms.get('confidence', 0)),
                 'sentence': int(bottle.request.forms.sentence)}
         mess = ("   " + result['transcript'] + "   ").encode('utf-8') #.strip('<eos>')
@@ -274,7 +279,10 @@ class ASR(object):
     
     #@route('/')
     def index(self):
-        return template('index')
+        if self.text_mode:
+            return template('editor')
+        else:
+            return template('index')
 
 
 class BuildSimilarityResponses(object):
@@ -393,8 +401,12 @@ if __name__ == '__main__':
         if args.runbot and  args.runbot.lower() in bots:
             asr = ASR(botname=args.runbot.lower())
             asr.start()
-        elif configfile['bot']['name'] in bots:
-            asr = ASR(botname=configfile['bot']['name'])
+        elif configfile['bot']['name'].lower() in bots:
+            if configfile['what_run'].strip() == 'text':
+                text = True
+            else:
+                text = False
+            asr = ASR(botname=configfile['bot']['name'], text=text)
             asr.start()
         
         

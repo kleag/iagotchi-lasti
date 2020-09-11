@@ -1,0 +1,418 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>
+      Renault Assistant
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+	      html, body {
+        margin: 0 auto;
+        padding: 0;
+        text-align: left;
+        font-family: sans-serif;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: normal;
+      }
+
+      h1 {
+        font-family: sans-serif;
+        margin: 10px 0 0 0;
+        font-size: 20px;
+        line-height: 20px;
+        color: #700000;
+        float: left;
+      }
+
+      h3 {
+        color: black;
+        font-size: 14px;
+        margin: 0;
+      }
+
+      h4 {
+        font-size: 14px;
+        margin: 0;
+      }
+
+      .container {
+          margin: 0 auto;
+          width: 80vw;
+      }
+      
+      #allPanel {
+        min-width: 200px;
+        min-height: 200px;
+        width: 100%;
+        height: 5vh;
+        margin: 0px auto;
+      } 
+      
+      #topPanel {
+        min-width: 200px;
+        min-height: 200px;
+        width: 100%;
+        height: 5vh;
+        margin: 0px auto;
+      }	
+      
+      #main .container {
+          overflow: hidden;
+      }
+      
+    .line {
+        color: white;
+        height: 120px;
+      }
+      
+      #chatbox {
+        width: 80%;
+        height: 50;
+        float:  right;
+        margin: 20px 0 30px 5%;
+        padding-bottom: 50px;
+        overflow: auto;
+      }
+      
+      #responseHolder {
+        min-width: 400px;
+        min-height: 250px;
+        width: 80%;
+        margin: 1px auto;
+        background-color: lightgrey;
+        border-radius: 12px;
+        padding: 10px;
+        font-family: Arial;
+        font-size: 10pt;
+        font-style: normal;
+        font-weight: normal;
+      }
+      
+      #avatarbox {
+        width: 20%;
+        height: 100%;
+        float:  left;
+        margin: 20px 0 30px 5%;
+        padding-bottom: 50px;
+      }
+	    
+      .avatarHolder {
+        border-radius: 5px;
+        width: 20%;
+        height: 20%;
+        max-height: 50vh;
+        padding: 0;
+        float: left;
+        margin: 20px 0 30px 0;
+      }
+
+      #avatarImage {
+        max-height: 50vh;
+        height: auto;
+      }
+        
+      #formpanel {
+	min-width: 400px;
+	min-height: 200px;
+	width: 70%;
+        overflow: auto;
+	margin: 0px auto;
+	font-family: Arial;
+	font-size: 10pt;
+	font-style: normal;
+	font-weight: normal;
+      }
+      #form_table {
+        width: 100%;
+        overflow: auto;
+        margin: 0px auto;
+        border-collapse: separate;
+        border-spacing: 2px 15px; /* Nombre de pixels d'espace horizontal (5px), vertical (8px) */ 
+      }
+      #txtUser {
+	padding: 2px;
+	padding-bottom: 10px;
+      }
+      #onclik {
+      width: 100px;
+	  height: 50px;
+	  font-size: 8pt;
+      }
+      #txtMessage {
+        width: 550px;
+        margin-left: 280px;
+        padding: 2px;
+        padding-bottom: 10px;
+        font-size:20px;
+      }
+      #submitbutton {
+      font-size:20px;
+      margin: auto;
+      }
+      #speechcontainer {
+	margin: 10px auto;
+        border-style: solid;
+        border-width: 1px;
+	border-radius: 12px;
+	border-color: darkgrey;
+	width: 100%;
+	height: 80px;
+	padding: 10px;
+	font: Arial;
+	font-size: 13pt;
+	font-style: normal;
+	font-weight: normal;
+	color: black;
+      }
+      #button_panel {
+        width: 80%;
+      }
+      #btnMicrophone { 
+	margin: 10px;
+	float: left;	
+	}
+      #results {
+	font-family: cursive,Arial;
+	font-size: 14pt;
+	font-style: italic;
+	font-weight: normal;
+	color: darkgrey;
+    margin: 10px;
+
+      }
+      
+      body {
+                font-family:helvetica;
+                background-color: black;
+            }
+      
+	.marge {
+	margin-bottom:40px;
+	margin-top: 25px;
+	}
+    </style>
+    
+  </head>
+  <body>
+
+
+    <div class="line"></div>
+    <div id="allPanel">
+      <div id="topPanel">
+        
+      <div id="formpanel">
+        <form id="frmChat" action="#">
+          <table id="form_table" >
+           <p class="marge">
+            <tr>
+              <td><input type="text" name="message" id="txtMessage" size="30" /></td>
+              <td><input type="submit" name="send1" value="Submit" id="submitbutton" /></td>
+            </tr>
+            
+            </p>
+          </table>
+        </form>
+      </div> <!-- end formPanel -->
+      <div id="chatbox">
+          <div id="responseHolder"></div>
+      </div>
+    </div> <!-- end topPanel -->
+  </div> <!-- end allPanel -->
+
+
+  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script type="text/javascript">
+
+
+var name = 'User'
+var botname = "Iagotchi"
+
+// declare timer variables
+// var alarm = null;
+// var callback = null;
+// var loopback = null;
+// var yousaid = null;
+// 
+// var state = 0;
+// var leftchannel = [];
+// var rightchannel = [];
+// var recorder = null;
+// var recordingLength = 0;
+// var volume = null;
+// var mediaStream = null;
+// var sampleRate = 44100;
+// var context = null;
+// var blob = null;
+// var form = null;
+// var buffer = null;
+
+var displayUser = true;
+var timer = null;
+var interval_timer = null;
+
+$(function(){
+	$('#frmChat').submit(function(e){
+	// this function overrides the form's submit() method, allowing us to use AJAX calls to communicate with the ChatScript server
+	e.preventDefault();  // Prevent the default submit() method
+     name = $('#txtUser').val();
+    if (name == '') {
+		alert('Please provide your name.');
+		document.getElementById('txtUser').focus();
+    }
+    mesmm = $('#txtMessage').val();
+	var chatLog = $('#responseHolder').html();
+	
+//     youSaid = '<strong>' + name + ':</strong> ' + $('#txtMessage').val() + "<br>\n";
+//     
+// 	update(youSaid);
+// 	
+	if (displayUser){
+        addUser(mesmm);
+    }
+    intervalManager(false)
+	var data = $(this).serialize();
+	sendMessage(1);
+	intervalManager(true);
+	$('#txtMessage').val('').focus();
+	});
+
+	// any user typing cancels loopback or callback for this round
+	$('#txtMessage').keypress(function(){
+          window.clearInterval(loopback);
+          window.clearTimeout(callback);
+        });
+});
+
+
+
+function sendMessage(data){ 
+$.ajax({
+	url: '/result',
+	dataType: 'text',
+	data: {
+	      transcript:$('#txtMessage').val(),
+	      sentence: data
+	      },
+    type: 'post',
+    success: function(response){
+    
+        if(response != 'ok')
+            {
+
+                if (displayUser || response.includes('__hello__')){
+                addIago(response);
+                }
+                console.log(response);  
+            }
+    
+    },
+    error: function(xhr, status, error){
+		alert('oops? Status = ' + status + ', error message = ' + error + "\nResponse = " + xhr.responseText);
+    }
+  });
+}
+
+function intervalManager(flag){
+console.log(flag)
+if (flag){
+interval_timer = setTimeout(function() {
+   $.get('/need_restart', function(data) {
+       if(data == 'yes') {
+            console.log('/need_restart');
+            window.location.reload(false);
+       }
+   })
+   $.get('/sessionstop', function(data) {
+    if (data.length > 0){
+    displayUser = false
+    console.log('display sessionstop '+displayUser)
+    addIago(data)
+     
+     // return;
+    }
+   })
+   $.get('/tmpResponse', function(data) {
+    if (data.length > 0){
+     addIago(data)
+    }
+   })
+   $.get('/relance', function(data) {
+    if (data.length > 0){
+     addIago(data)
+
+    }
+   })
+}, 100);
+// intervalManager(true);
+}else{
+clearTimeout(interval_timer)
+}
+
+}
+
+
+function addUser(text) {
+    $("#responseHolder p:last-child").remove();
+    $('#responseHolder').append("<p><span class='name_user'>User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;</span><span class='user'>"+text+"</span></p>");
+    window.scrollBy({ top: 100, left: 0, behavior: 'smooth' });
+//    $('#responseHolder').children().last().text(text);
+}
+
+function addIago(text) {
+    console.log(text)
+    if (text.includes('_stop_')){
+    text = text.replace('_stop_', ' ')
+    displayUser = false
+    }
+    if (text.includes('__hello__')){
+    text = text.replace('__hello__', ' ')
+    addUser(trs)
+    displayUser = true
+    }
+    text = text.split(":::")[0]
+    $('#responseHolder').append("<p><span class='name_iago'>Iagotchi&nbsp;:&nbsp;</span><span class='iago'>"+text+"</span></p>");
+    $('#responseHolder').append("<p></p>");
+    window.scrollBy({ top: 100, left: 0, behavior: 'smooth' });
+}
+
+function modifyUser(text) {
+    $("#responseHolder p:last-child").remove();
+    $('#responseHolder').append("<p><span class='name_user'>User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;</span><span class='user_tmp'>"+text+"</span></p>");
+    window.scrollBy({ top: 100, left: 0, behavior: 'smooth' });
+}
+
+function update(text){ // text is  HTML code to append to the 'chat log' div. This appends the input text to the response div
+	var chatLog = $('#responseHolder').html();
+	$('#responseHolder').html(text + chatLog);
+	var rhd = $('#responseHolder');
+	var h = rhd.get(0).scrollHeight;
+	rhd.scrollTop(h);
+}
+
+function processResponse(response) { 
+
+    console.log(text)
+    if (text.includes('_stop_')){
+    text = text.replace('_stop_', ' ')
+    displayUser = false
+    }
+    if (text.includes('__hello__')){
+    text = text.replace('__hello__', ' ')
+    addUser(trs)
+    displayUser = true
+    }
+
+	var botSaid = '<strong>' + botName + ':</strong> ' + response + "<br>\n";
+	update(botSaid);
+}
+
+
+
+
+
+
+</script>
+
+  </body>
+  </html> 

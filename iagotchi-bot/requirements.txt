@@ -2,6 +2,7 @@ cython
 gensim
 nltk
 numpy
+cython
 pyliblo
 scipy
 SQLAlchemy

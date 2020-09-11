@@ -41,24 +41,7 @@ services:
         tty: true
         #restart: unless-stopped
         command: limaserver
-        
-    #puredata:
-        #image: puredata:latest
-        #build:
-            #context: ./puredata/
-            #dockerfile: Dockerfile
-        ##ports:
-            ##- "5005:5005"
-            ##- "5007:5007"
-        #networks:
-            #- demo
-        #volumes:
-            #- /media/frejus/db33d580-a3b2-4743-b703-57b41aeed6d71/frejus/Projects/IAGOTCHI/data/:/data
-        #devices:
-            #- "/dev/snd:/dev/snd"
-        #environment:
-            #PYTHONUNBUFFERED: 1
-        #tty: true
+
         
 networks:
   demo:
