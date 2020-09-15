@@ -52,6 +52,7 @@ class ChronoThread (threading.Thread):
         self.externals = None
         self.osc_self_client = None
         self.waiting_to_stop = False
+        self.input_mode = None
         
         
     def run(self):
@@ -128,20 +129,25 @@ class ChronoThread (threading.Thread):
         self.log.save_in_file("-", response)
 
         if not self.botresponse_object is None:
-            if 'synth-' in rep:
-                rep_ = rep.split(':::')[0]
-                rep_ = self.postprocessing(rep_)
-            self.botresponse_object.sendOsc('/iagotchi/botresponse','{}'.format(rep_))
-            self.botresponse_object.sendOsc('/iagotchi/synthfile','{}'.format(rep.split(':::')[1].replace('_stop_', '').replace('__hello__', '')))
-            if text == 'sessionstop' or text == 'sessionend':
-                self.botresponse_object.sendOsc('/iagotchi/session/stop','{}'.format(datetime.datetime.now()))
+            print(">>>MODE>>> {}".format(self.input_mode))
+            if self.output_mode != "text":
+                print(">>>>>> {}".format(self.input_mode))
+                if 'synth-' in rep:
+                    rep_ = rep.split(':::')[0]
+                    rep_ = self.postprocessing(rep_)
+                self.botresponse_object.sendOsc('/iagotchi/botresponse','{}'.format(rep_))
+                self.botresponse_object.sendOsc('/iagotchi/synthfile','{}'.format(rep.split(':::')[1].replace('_stop_', '').replace('__hello__', '')))
+                if text == 'sessionstop' or text == 'sessionend':
+                    self.botresponse_object.sendOsc('/iagotchi/session/stop','{}'.format(datetime.datetime.now()))
         if self.osc_self_client  is not None:
             if text == 'sessionstop':
+                print(">>>STOP>>> {}".format(rep))
                 self.externals.stop_message = "sessionstop {}".format(rep)
                 # ???? aucun script ne répond au message osc /sessionsstop
                 # seul le serveur du script main.py repond à /sessionstop mais pas en osc en http ????
                 self.osc_self_client.send('/sessionstop')
             elif 'code' in text:
+                print(">>>RELANCE>>> {}".format(rep))
                 self.externals.relance = rep 
                 self.osc_self_client.send('relance')
                 

@@ -1,7 +1,7 @@
 {
     "what_run": "bot",
     "bot": {
-        "name": "iagotchig5"
+        "name": "iagotchi"
     },
     "topic": {
         "list": [
@@ -94,5 +94,9 @@
         "ip": "127.0.1.1",
         "port": 5005
     },
-    "synthesize": true
+    "synthesize": true,
+    "mode": {
+        "input": "text",
+        "output": "audio"
+    }
 }

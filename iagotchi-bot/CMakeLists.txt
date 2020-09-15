@@ -51,6 +51,7 @@ install(
       ${CMAKE_CURRENT_BINARY_DIR}/lima.py
       log.py
       index.html
+      editor.html
       similarity.py
       model.py
       entrypoint-iagotchi.sh

@@ -176,6 +176,8 @@ class Externals(object):
         if self.osc_client is not None:
             self.osc_client.sendOsc('/iagotchi/session/start','{}'.format(self.chrono.start_time))
         self.user_is_speaking = False
+        self.input_mode = None
+        self.Output_mode = None
         try:
             self.syn = Synthese(configfile['synthesize'])
         except:
@@ -521,7 +523,7 @@ class Externals(object):
         """
         No use lima preprocessing for the next utterence
         """
-        if 'nolima' in response.lower():
+        if response and 'nolima' in response.lower():
             response = response.replace('nolima', '')
             self.no_use_lima = True
         return response
@@ -655,6 +657,8 @@ class Externals(object):
         Output: "stop" if user says bye bye else None.
         """
         self.chrono.osc_self_client = osc_self_client
+        self.chrono.input_mode = self.input_mode
+        print('<<CHRONO IN EXTERNALS>>', self.chrono.input_mode)
         self.osc_client = osc_client
         self.osc_self_client = osc_self_client
         if self.chrono.botresponse_object is None:

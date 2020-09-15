@@ -50,7 +50,12 @@ class iagotchiGui(object):
         #self.ipTextEdit = QLineEdit(self.ipAddress)
         #self.btnUpdIp = QPushButton("Refresh IP Address")
         
+        #self.ingroupBox.setCheckable(True)
+        #self.ingroupBox.setChecked(False)
         self.btnSave = QPushButton("Save Options")
+        self.ingroupBox, self.inText, self.inAudio = self.createTextAudioButtons("Input")
+        self.outgroupBox, self.outText, self.outAudio = self.createTextAudioButtons("Output")
+        #self.btnText.setChecked(True)
         #self.btnDocker = QPushButton("Start Docker")
         #self.btnChrome = QPushButton("Start Chrome")
         self.btnStart = QPushButton("Start Iagotchi")
@@ -87,27 +92,29 @@ class iagotchiGui(object):
         grid.setVerticalSpacing(3)
 
         #grid.addWidget(self.btnDocker,0,0)
-        grid.addWidget(self.btnStart,1,0)
+        grid.addWidget(self.ingroupBox, 1, 0)
+        grid.addWidget(self.outgroupBox, 2, 0)
+        grid.addWidget(self.btnStart,3,0)
         #grid.addWidget(self.btnChrome,2,0)
-        grid.addWidget(self.btnMax,2,0)
-        grid.addWidget(self.btnConsole,3,0)
-        grid.addWidget(self.btnStop,4,0)
-        grid.addWidget(QLabel("_ Options _"),5,0)
-        grid.addWidget(QLabel("Mode :"),6,0)
-        grid.addWidget(self.bot,7,0)
+        grid.addWidget(self.btnMax,4,0)
+        grid.addWidget(self.btnConsole,5,0)
+        grid.addWidget(self.btnStop,6,0)
+        grid.addWidget(QLabel("_ Options _"),7,0)
+        grid.addWidget(QLabel("Mode :"),8,0)
+        grid.addWidget(self.bot,9,0)
         #grid.addWidget(QLabel("IP Address :"),8,0)
         #grid.addWidget(self.btnUpdIp,9,0)
         #grid.addWidget(self.ipTextEdit,10,0)
-        grid.addWidget(self.btnSave,8,0)
-        grid.addWidget(QLabel("_ Advanced _"),9,0)
+        grid.addWidget(self.btnSave,10,0)
+        grid.addWidget(QLabel("_ Advanced _"),11,0)
         #grid.addWidget(self.btnDockerConfig,14,0)
-        grid.addWidget(self.btnDockerFile,10,0)
+        grid.addWidget(self.btnDockerFile,12,0)
         #grid.addWidget(self.btnIagoConfig,16,0)
         #grid.addWidget(self.btnGitPull,17,0)
-        grid.addWidget(self.btnBuild,11,0)
+        grid.addWidget(self.btnBuild,13,0)
         #grid.addWidget(self.btnTrain,12,0)
-        grid.addWidget(self.btnTrain2,12,0)
-        grid.addWidget(self.btnKill,13,0)
+        grid.addWidget(self.btnTrain2,14,0)
+        grid.addWidget(self.btnKill,15,0)
         
         self.btnSave.clicked.connect(self.saveOptions)
         #self.btnUpdIp.clicked.connect(self.updateIp)
@@ -126,6 +133,19 @@ class iagotchiGui(object):
         self.btnConsole.clicked.connect(self.runConsole)
         self.btnKill.clicked.connect(self.killAll)
             
+    def createTextAudioButtons(self, mode):
+        ingroupBox = QGroupBox(mode)
+        btnText = QRadioButton ("Text")
+        btnAudio = QRadioButton ("Audio")
+        btnText.setChecked(True)
+        vbox = QVBoxLayout()
+        vbox.addWidget(btnText)
+        vbox.addWidget(btnAudio)
+        vbox.addStretch(1)
+        ingroupBox.setLayout(vbox)
+        
+        return ingroupBox, btnText, btnAudio
+            
     def botChange(self,i):
         if self.bot.currentText() == "Rencontre" :
             self.botname = "iagotchi"
@@ -143,10 +163,12 @@ class iagotchiGui(object):
         self.ipAddress = socket.gethostbyname(socket.gethostname())
         self.ipTextEdit.setText(self.ipAddress)  
     
-    def saveOptions(self, dialog=True):
+    def saveOptions(self, input_mode="text", output_mode="text", dialog=True):
         print("Saving Options...")
         self.jsondata['bot']['name'] = self.botname
         self.jsondata["what_run"] = self.what_run
+        self.jsondata["mode"]["input"] = input_mode
+        self.jsondata["mode"]["output"] = output_mode
         print(f'To change: {self.what_run}; {self.botname}')
         #self.ipAddress = self.ipTextEdit.text()
         #self.jsondata['botresponse']['ip'] = self.ipAddress
@@ -246,8 +268,13 @@ class iagotchiGui(object):
         return statusl, statusi
         
     def startIagotchi(self, refresh=False):
+        input_checked = self.inText.text().lower() if self.inText.isChecked()  else self.inAudio.text().lower()
+        output_checked = self.outText.text().lower() if self.outText.isChecked()  else self.outAudio.text().lower()
         self.what_run = "bot"
-        self.saveOptions(dialog=False)
+        self.saveOptions(input_mode=input_checked, output_mode=output_checked, dialog=False)
+        print(f"Stopping: {self.current_bot}#{self.botname}")
+        subprocess.run("sudo docker-compose stop ", shell=True)
+        status = self.exec_cmd("sudo docker-compose rm -f")
         print("Starting Iagotchi")
         
         if not refresh:

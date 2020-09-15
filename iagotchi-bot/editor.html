@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+    <!DOCTYPE HTML>
 <html>
   <head>
     <title>
@@ -70,7 +70,7 @@
         width: 80%;
         height: 50;
         float:  right;
-        margin: 20px 0 30px 5%;
+        margin: 20px 0 30px 1%;
         padding-bottom: 50px;
         overflow: auto;
       }
@@ -93,7 +93,7 @@
         width: 20%;
         height: 100%;
         float:  left;
-        margin: 20px 0 30px 5%;
+        margin: 20px 0 30px 1%;
         padding-bottom: 50px;
       }
 	    
@@ -230,8 +230,8 @@ var botname = "Iagotchi"
 
 // declare timer variables
 // var alarm = null;
-// var callback = null;
-// var loopback = null;
+ var callback = null;
+ var loopback = null;
 // var yousaid = null;
 // 
 // var state = 0;
@@ -267,21 +267,29 @@ $(function(){
 //     
 // 	update(youSaid);
 // 	
-	if (displayUser){
+	
+//     intervalManager(false)
+     if (mesmm == '') {
+// 		alert('Please provide your name.');
+// 		document.getElementById('txtUser').focus();
+    }else{  
+    if (displayUser){
         addUser(mesmm);
     }
-    intervalManager(false)
 	var data = $(this).serialize();
-	sendMessage(1);
+	sendMessage($('#txtMessage').val());
 	intervalManager(true);
-	$('#txtMessage').val('').focus();
-	});
+ 	$('#txtMessage').val('').focus();
+	}
+	}); 
+	
 
 	// any user typing cancels loopback or callback for this round
-	$('#txtMessage').keypress(function(){
-          window.clearInterval(loopback);
-          window.clearTimeout(callback);
-        });
+// 	$('#txtMessage').keypress(function(){
+//           window.clearInterval(loopback);
+//           window.clearTimeout(callback);
+//         });
+ 
 });
 
 
@@ -291,8 +299,8 @@ $.ajax({
 	url: '/result',
 	dataType: 'text',
 	data: {
-	      transcript:$('#txtMessage').val(),
-	      sentence: data
+	      transcript:data,
+	      sentence: 1
 	      },
     type: 'post',
     success: function(response){
@@ -301,6 +309,9 @@ $.ajax({
             {
 
                 if (displayUser || response.includes('__hello__')){
+                    if (!displayUser){
+                    addUser(data);
+                    }
                 addIago(response);
                 }
                 console.log(response);  
@@ -320,7 +331,8 @@ interval_timer = setTimeout(function() {
    $.get('/need_restart', function(data) {
        if(data == 'yes') {
             console.log('/need_restart');
-            window.location.reload(false);
+//             console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+//             window.location.reload(false);
        }
    })
    $.get('/sessionstop', function(data) {
@@ -344,8 +356,9 @@ interval_timer = setTimeout(function() {
     }
    })
 }, 100);
-// intervalManager(true);
+ intervalManager(true);
 }else{
+console.log('text..')
 clearTimeout(interval_timer)
 }
 
@@ -353,9 +366,9 @@ clearTimeout(interval_timer)
 
 
 function addUser(text) {
-    $("#responseHolder p:last-child").remove();
-    $('#responseHolder').append("<p><span class='name_user'>User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;</span><span class='user'>"+text+"</span></p>");
-    window.scrollBy({ top: 100, left: 0, behavior: 'smooth' });
+//     $("#responseHolder p:last-child").remove();
+    $('#responseHolder').prepend("<p><span class='name_user'>User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;</span><span class='user'>"+text+"</span></p>");
+//     window.scrollBy({ top: 100, left: 0, behavior: 'smooth' });
 //    $('#responseHolder').children().last().text(text);
 }
 
@@ -367,13 +380,13 @@ function addIago(text) {
     }
     if (text.includes('__hello__')){
     text = text.replace('__hello__', ' ')
-    addUser(trs)
+//     addUser($('#txtMessage').val())
     displayUser = true
     }
     text = text.split(":::")[0]
-    $('#responseHolder').append("<p><span class='name_iago'>Iagotchi&nbsp;:&nbsp;</span><span class='iago'>"+text+"</span></p>");
-    $('#responseHolder').append("<p></p>");
-    window.scrollBy({ top: 100, left: 0, behavior: 'smooth' });
+    $('#responseHolder').prepend("<p><span class='name_iago' style='color:blue;'>Iagotchi&nbsp;:&nbsp;</span><span class='iago' style='color:blue;'>"+text+"</span></p>");
+//     $('#responseHolder').prepend("<p></p>");
+//     window.scrollBy({ top: 100, left: 0, behavior: 'smooth' });
 }
 
 function modifyUser(text) {

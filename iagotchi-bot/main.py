@@ -66,7 +66,7 @@ class CHAT(object):
 class ASR(object):
     global is_restart_needed
 
-    def __init__(self, osc_server_port=9000, osc_client_host='0.0.0.0', osc_client_port=9001, http_server_port=8088, botname='iagotchi', text=False):
+    def __init__(self, osc_server_port=9000, osc_client_host='0.0.0.0', osc_client_port=9001, http_server_port=8088, botname='iagotchi', input_mode="text", output_mode="text"):
         self.ready = False
         self.osc_server_port = osc_server_port
         self.osc_client_host = osc_client_host
@@ -91,7 +91,10 @@ class ASR(object):
         #For CEA's modules
         self.transcript = None
         self.botresponse = None
-        self.text_mode = text
+        self.input_mode = input_mode
+        self.output_mode = output_mode
+        self.externals.input_mode = self.input_mode
+        self.externals.output_mode = self.output_mode
 
         #END
         
@@ -142,7 +145,7 @@ class ASR(object):
         #elif message == '/synthese':
 
     def result(self):
-        if self.text_mode:
+        if self.input_mode == 'text':
             result = {'transcript': bottle.request.forms.getunicode('transcript'),
                       'sentence': int(bottle.request.forms.sentence)}
         else:
@@ -201,21 +204,24 @@ class ASR(object):
 
     def sendResponse(self, action, text=None, synthfile=None):
         print('>SEND> {} | {} | {}'.format(action, text, synthfile))
-        if action == 'stop':
-            self.osc_client.sendOscAction('/iagotchi/session/stop')
-        elif action   == 'start_music':
-            self.osc_client.sendOscAction('/iagotchi/music/start')
-        elif action ==  'stop_music':
-            self.osc_client.sendOscAction('/iagotchi/music/stop')
-        elif action == 'result':
-            self.osc_client.sendOsc('/result/botresponse', text)
-            self.osc_client.sendOsc('/result/synthfile', synthfile)
-        elif action == 'iagotchi':
-            self.osc_client.sendOsc('/iagotchi/botresponse', text)
-            self.osc_client.sendOsc('/iagotchi/synthfile', synthfile)
-        elif action == 'iagotchi_nosynth':
-            self.osc_client.sendOsc('/iagotchi/botresponse', text)
-        elif action == 'poesie':
+        if self.output_mode == "audio":
+            if action == 'stop':
+                self.osc_client.sendOscAction('/iagotchi/session/stop')
+            elif action   == 'start_music':
+                self.osc_client.sendOscAction('/iagotchi/music/start')
+            elif action ==  'stop_music':
+                self.osc_client.sendOscAction('/iagotchi/music/stop')
+            elif action == 'result':
+                self.osc_client.sendOsc('/result/botresponse', text)
+                self.osc_client.sendOsc('/result/synthfile', synthfile)
+            elif action == 'iagotchi':
+                self.osc_client.sendOsc('/iagotchi/botresponse', text)
+                self.osc_client.sendOsc('/iagotchi/synthfile', synthfile)
+            elif action == 'iagotchi_nosynth':
+                self.osc_client.sendOsc('/iagotchi/botresponse', text)
+            elif action == 'poesie':
+                self.osc_self_client.send('/tmpResponse')
+        elif self.output_mode == "audio" and action == 'poesie':
             self.osc_self_client.send('/tmpResponse')
             
             
@@ -279,7 +285,7 @@ class ASR(object):
     
     #@route('/')
     def index(self):
-        if self.text_mode:
+        if self.input_mode=='text':
             return template('editor')
         else:
             return template('index')
@@ -402,11 +408,10 @@ if __name__ == '__main__':
             asr = ASR(botname=args.runbot.lower())
             asr.start()
         elif configfile['bot']['name'].lower() in bots:
-            if configfile['what_run'].strip() == 'text':
-                text = True
-            else:
-                text = False
-            asr = ASR(botname=configfile['bot']['name'], text=text)
+
+            input_mode = configfile['mode']['input'].strip()
+            output_mode = configfile['mode']['output'].strip()
+            asr = ASR(botname=configfile['bot']['name'], input_mode=input_mode, output_mode=output_mode)
             asr.start()
         
         
