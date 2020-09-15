@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>
-      Renault Assistant
+      IAGOTCHI
     </title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style type="text/css">
@@ -70,23 +70,25 @@
         width: 80%;
         height: 50;
         float:  right;
-        margin: 20px 0 30px 1%;
+        margin: 0px 0 0px 0%;
         padding-bottom: 50px;
         overflow: auto;
       }
       
       #responseHolder {
-        min-width: 400px;
-        min-height: 250px;
+        min-width: auto;
+        min-height: 150px;
         width: 80%;
         margin: 1px auto;
+        margin-top: -30px auto;
         background-color: lightgrey;
         border-radius: 12px;
         padding: 10px;
         font-family: Arial;
-        font-size: 10pt;
+        font-size: 1em;
         font-style: normal;
         font-weight: normal;
+        line-height: 0.5em;
       }
       
       #avatarbox {
@@ -117,7 +119,7 @@
 	min-height: 200px;
 	width: 70%;
         overflow: auto;
-	margin: 0px auto;
+	margin: -80px auto;
 	font-family: Arial;
 	font-size: 10pt;
 	font-style: normal;
@@ -126,7 +128,7 @@
       #form_table {
         width: 100%;
         overflow: auto;
-        margin: 0px auto;
+        margin:  auto;
         border-collapse: separate;
         border-spacing: 2px 15px; /* Nombre de pixels d'espace horizontal (5px), vertical (8px) */ 
       }
@@ -140,8 +142,9 @@
 	  font-size: 8pt;
       }
       #txtMessage {
-        width: 550px;
-        margin-left: 280px;
+        min-width: 300px;
+        margin-left: 520px;
+        margin-top: auto;
         padding: 2px;
         padding-bottom: 10px;
         font-size:20px;
@@ -207,50 +210,37 @@
            <p class="marge">
             <tr>
               <td><input type="text" name="message" id="txtMessage" size="30" /></td>
-              <td><input type="submit" name="send1" value="Submit" id="submitbutton" /></td>
+<!--               <td><input type="submit" name="send1" value="Submit" id="submitbutton" /></td> -->
             </tr>
             
             </p>
           </table>
         </form>
       </div> <!-- end formPanel -->
-      <div id="chatbox">
-          <div id="responseHolder"></div>
-      </div>
+        <div id="chatbox">
+            <div id="responseHolder"></div>
+        </div>
     </div> <!-- end topPanel -->
   </div> <!-- end allPanel -->
 
 
   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  
   <script type="text/javascript">
 
 
 var name = 'User'
 var botname = "Iagotchi"
 
-// declare timer variables
-// var alarm = null;
+
  var callback = null;
  var loopback = null;
-// var yousaid = null;
-// 
-// var state = 0;
-// var leftchannel = [];
-// var rightchannel = [];
-// var recorder = null;
-// var recordingLength = 0;
-// var volume = null;
-// var mediaStream = null;
-// var sampleRate = 44100;
-// var context = null;
-// var blob = null;
-// var form = null;
-// var buffer = null;
 
 var displayUser = true;
 var timer = null;
 var interval_timer = null;
 
+// setInterval(intervalManager(true), 1500);
 $(function(){
 	$('#frmChat').submit(function(e){
 	// this function overrides the form's submit() method, allowing us to use AJAX calls to communicate with the ChatScript server
@@ -262,13 +252,7 @@ $(function(){
     }
     mesmm = $('#txtMessage').val();
 	var chatLog = $('#responseHolder').html();
-	
-//     youSaid = '<strong>' + name + ':</strong> ' + $('#txtMessage').val() + "<br>\n";
-//     
-// 	update(youSaid);
-// 	
-	
-//     intervalManager(false)
+
      if (mesmm == '') {
 // 		alert('Please provide your name.');
 // 		document.getElementById('txtUser').focus();
@@ -278,17 +262,12 @@ $(function(){
     }
 	var data = $(this).serialize();
 	sendMessage($('#txtMessage').val());
-	intervalManager(true);
+	setInterval(intervalManager(true), 1500);
  	$('#txtMessage').val('').focus();
 	}
 	}); 
 	
 
-	// any user typing cancels loopback or callback for this round
-// 	$('#txtMessage').keypress(function(){
-//           window.clearInterval(loopback);
-//           window.clearTimeout(callback);
-//         });
  
 });
 
@@ -324,18 +303,17 @@ $.ajax({
   });
 }
 
-function intervalManager(flag){
-console.log(flag)
-if (flag){
-interval_timer = setTimeout(function() {
-   $.get('/need_restart', function(data) {
+function intervalManager(){
+// if (flag){
+console.log("cards");
+    $.get('/need_restart', function(data) {
        if(data == 'yes') {
             console.log('/need_restart');
-//             console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-//             window.location.reload(false);
+
        }
    })
    $.get('/sessionstop', function(data) {
+   console.log("sessionstop");
     if (data.length > 0){
     displayUser = false
     console.log('display sessionstop '+displayUser)
@@ -345,25 +323,31 @@ interval_timer = setTimeout(function() {
     }
    })
    $.get('/tmpResponse', function(data) {
+   console.log("tmpresponse");
     if (data.length > 0){
      addIago(data)
     }
    })
    $.get('/relance', function(data) {
+   console.log("relance");
     if (data.length > 0){
      addIago(data)
 
     }
    })
-}, 100);
- intervalManager(true);
-}else{
-console.log('text..')
-clearTimeout(interval_timer)
-}
 
-}
+//     }else{
+//     clearTimeout(interval_timer)
+//    
+//     }
 
+ }
+
+ 
+ window.onload = function() {
+  console.log("cards");  
+  var intervalId = setInterval( function() { intervalManager(); }, 150);
+}
 
 function addUser(text) {
 //     $("#responseHolder p:last-child").remove();

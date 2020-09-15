@@ -53,6 +53,7 @@ class ChronoThread (threading.Thread):
         self.osc_self_client = None
         self.waiting_to_stop = False
         self.input_mode = None
+        self.output_mode = None
         
         
     def run(self):
