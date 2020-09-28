@@ -263,8 +263,8 @@ class iagotchiGui(object):
         
     def checkContainers(self):
         print('Check Containers')
-        statusl = self.exec_cmd("sudo docker ps -q --no-trunc | grep $(sudo docker-compose ps -q limaserver)")
-        statusi = self.exec_cmd("sudo docker ps -q --no-trunc | grep $(sudo docker-compose ps -q iagotchi)")
+        statusl = self.exec_cmd(" docker ps -q --no-trunc | grep $( docker-compose ps -q limaserver)")
+        statusi = self.exec_cmd(" docker ps -q --no-trunc | grep $( docker-compose ps -q iagotchi)")
         return statusl, statusi
         
     def startIagotchi(self, refresh=False):
@@ -273,8 +273,8 @@ class iagotchiGui(object):
         self.what_run = "bot"
         self.saveOptions(input_mode=input_checked, output_mode=output_checked, dialog=False)
         print(f"Stopping: {self.current_bot}#{self.botname}")
-        subprocess.run("sudo docker-compose stop ", shell=True)
-        status = self.exec_cmd("sudo docker-compose rm -f")
+        subprocess.run(" docker-compose stop ", shell=True)
+        status = self.exec_cmd(" docker-compose rm -f")
         print("Starting Iagotchi")
         
         if not refresh:
@@ -285,9 +285,9 @@ class iagotchiGui(object):
         ct = False
         print(lima, iagotchi)
         if not lima or not iagotchi:
-            #status = self.exec_cmd("sudo docker-compose up ")
-            status = self.invoke_process_popen_poll_live("sudo docker-compose up ")
-            #subprocess.run("sudo docker-compose up &", shell=True)
+            #status = self.exec_cmd(" docker-compose up ")
+            status = self.invoke_process_popen_poll_live(" docker-compose up ")
+            #subprocess.run(" docker-compose up &", shell=True)
             lima, iagotchi = self.checkContainers()
             if not lima or not iagotchi:
                 self.user_messages('Failed', message_type='critical')
@@ -313,8 +313,8 @@ class iagotchiGui(object):
         
     def stopIagotchi(self):
         print(f"Stopping: {self.current_bot}#{self.botname}")
-        subprocess.run("sudo docker-compose stop ", shell=True)
-        status = self.exec_cmd("sudo docker-compose rm -f")
+        subprocess.run(" docker-compose stop ", shell=True)
+        status = self.exec_cmd(" docker-compose rm -f")
         if not status:
             self.user_messages('Failed', message_type='critical')
         else:
@@ -331,7 +331,7 @@ class iagotchiGui(object):
         self.what_run = "similarity-without-topics"
         self.saveOptions(dialog=False)
         print("Train Iagotchi")
-        status = self.invoke_process_popen_poll_live("sudo docker-compose up ", operation='train')
+        status = self.invoke_process_popen_poll_live(" docker-compose up ", operation='train')
         if status == False:
             self.user_messages('Failed', message_type='critical')
         else:
@@ -359,20 +359,20 @@ class iagotchiGui(object):
         
     def buildIagotchi(self):
         self.saveOptions(dialog=False)
-        print("Download Limaserver Image")
-        status = self.exec_cmd("sudo docker pull aymara/lima")
-        if not status:
-            self.user_messages('Failed', message_type='critical')
-            return
-        print("Build Iagotchi")
-        status = self.exec_cmd("sudo docker-compose build")
-        if not status:
-            self.user_messages('Failed', message_type='critical')
-            return
         print("Install PureData")
-        status = self.exec_cmd("sudo sh install_puredata.sh")
+        status = self.exec_cmd(" sh install_puredata.sh")
         if not status:
             self.user_messages('Failed', message_type='critical')
+        print("Download Limaserver Image")
+        #status = self.exec_cmd(" docker pull aymara/lima")
+        #if not status:
+        #    self.user_messages('Failed', message_type='critical')
+        #    return
+        print("Build Iagotchi")
+        status = self.exec_cmd(" docker-compose build")
+        if not status:
+            self.user_messages('Failed', message_type='critical')
+            return
         else:
             self.user_messages('Success', message_type='information')
 
@@ -419,7 +419,7 @@ class iagotchiGui(object):
         print("Killing Chrome")
         subprocess.run("killall \"Google Chrome\"", shell=True)
         print("Stopping Iagotchi")
-        subprocess.run("sudo docker-compose stop", shell=True)
+        subprocess.run(" docker-compose stop", shell=True)
         #print("Killing Docker")
         #subprocess.run("killall Docker", shell=True)
 
